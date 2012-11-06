@@ -1,0 +1,9 @@
+.project
+*.settings/
+.classpath
+*target/
+*~
+*logs/
+*build/
+/sidewalk-core/build
+/sidewalk-examples/build
