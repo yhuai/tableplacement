@@ -73,7 +73,7 @@
           <manifest>  
             <addClasspath>true</addClasspath>
             <classpathPrefix>lib/</classpathPrefix>
-            <MainClass>edu.osu.cse.hpcs.sidewalk.examples.SideWalkExampleDriver</MainClass>
+            <MainClass>edu.osu.cse.hpcs.tableplacement.Driver</MainClass>
           </manifest>
         </archive>
         </configuration>
@@ -86,7 +86,7 @@
           </descriptorRefs>
           <archive>
           <manifest>
-            <mainClass>edu.osu.cse.hpcs.sidewalk.examples.SideWalkExampleDriver</mainClass>
+            <mainClass>edu.osu.cse.hpcs.tableplacement.Driver</mainClass>
           </manifest>
           </archive>
         </configuration>
