@@ -34,7 +34,12 @@ public class TableProperty {
 
   // Hive properties
   // Refer to org.apache.hadoop.hive.serde.Constants
-
+  public final static String SERDE_CLASS = "serde.class";
+  
+  // DEFAULT Hive properties
+  public final static String DEFAULT_SERDE_CLASS =
+      "org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe.ColumnarSerDe";
+  
   // RCFile properties
   public final static String RCFILE_ROWGROUP_SIZE_STR = RCFile.Writer.COLUMNS_BUFFER_SIZE_CONF_STR;
 
@@ -176,6 +181,10 @@ public class TableProperty {
     for (Entry<Object, Object> entry : prop.entrySet()) {
       conf.set((String) entry.getKey(), (String) entry.getValue());
     }
+  }
+  
+  public Properties getProperties() {
+    return prop;
   }
 
 }
