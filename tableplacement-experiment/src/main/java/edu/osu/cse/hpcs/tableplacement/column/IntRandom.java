@@ -2,7 +2,7 @@ package edu.osu.cse.hpcs.tableplacement.column;
 
 import java.util.Random;
 
-public class IntRandom extends RandomWrapper {
+public class IntRandom extends RandomWrapper<Integer> {
 
   public IntRandom(int range) {
     this.range = range;
@@ -10,7 +10,7 @@ public class IntRandom extends RandomWrapper {
   }
 
   @Override
-  public Object nextValue() {
+  public Integer nextValue() {
     return new Integer(random.nextInt(range));
   }
 
@@ -18,5 +18,5 @@ public class IntRandom extends RandomWrapper {
   public String toString() {
     return "IntRandom[range=" + range + "]";
   }
-  
+
 }

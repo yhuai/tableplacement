@@ -2,7 +2,7 @@ package edu.osu.cse.hpcs.tableplacement.column;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
-public class IntColumn extends Column {
+public class IntColumn extends Column<Integer> {
 
   public final String INT_RANGE_STR = "range.int";
   public final int DEFAULT_INT_RANGE = 10000;
@@ -17,7 +17,7 @@ public class IntColumn extends Column {
   }
 
   @Override
-  public Object nextValue() {
+  public Integer nextValue() {
     return random.nextValue();
   }
 
@@ -25,6 +25,11 @@ public class IntColumn extends Column {
   public String toString() {
     return "Column[name:" + name + ", type:" + type + ", random: "
         + random.toString() + "]";
+  }
+
+  @Override
+  public String nextValueAsString() {
+    return Integer.toString(nextValue());
   }
 
 }

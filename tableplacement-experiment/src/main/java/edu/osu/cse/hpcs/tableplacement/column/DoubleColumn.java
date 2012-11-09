@@ -2,7 +2,7 @@ package edu.osu.cse.hpcs.tableplacement.column;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
-public class DoubleColumn extends Column {
+public class DoubleColumn extends Column<Double> {
 
   public final String DOUBLE_RANGE_STR = "range.double";
   public final int DEFAULT_DOUBLE_RANGE = 20000;
@@ -17,7 +17,7 @@ public class DoubleColumn extends Column {
   }
 
   @Override
-  public Object nextValue() {
+  public Double nextValue() {
     return random.nextValue();
   }
 
@@ -25,5 +25,10 @@ public class DoubleColumn extends Column {
   public String toString() {
     return "Column[name:" + name + ", type:" + type + ", random: "
         + random.toString() + "]";
+  }
+
+  @Override
+  public String nextValueAsString() {
+    return Double.toString(nextValue());
   }
 }

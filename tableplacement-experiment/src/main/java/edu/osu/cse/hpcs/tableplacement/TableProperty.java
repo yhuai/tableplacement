@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.ql.io.RCFile;
 import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
@@ -155,7 +157,7 @@ public class TableProperty {
         columns.add(column);
       } else if (type.getTypeName().startsWith(DataType.MAP_STR)) {
         String typeStr = type.getTypeName();
-        String[] kv = typeStr.substring(4, typeStr.length()-1).split(",");
+        String[] kv = typeStr.substring(4, typeStr.length() - 1).split(",");
         assert kv.length == 2;
         String keyType = kv[0];
         String valueType = kv[1];
@@ -168,6 +170,12 @@ public class TableProperty {
     }
 
     return columns;
+  }
+
+  public void copyToHadoopConf(Configuration conf) {
+    for (Entry<Object, Object> entry : prop.entrySet()) {
+      conf.set((String) entry.getKey(), (String) entry.getValue());
+    }
   }
 
 }

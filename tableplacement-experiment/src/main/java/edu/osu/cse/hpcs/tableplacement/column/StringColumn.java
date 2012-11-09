@@ -2,7 +2,7 @@ package edu.osu.cse.hpcs.tableplacement.column;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
-public class StringColumn extends Column {
+public class StringColumn extends Column<String> {
 
   public final String DOUBLE_LENGTH_STR = "length.string";
   public final int DEFAULT_STRING_LENGTH = 30;
@@ -17,7 +17,7 @@ public class StringColumn extends Column {
   }
 
   @Override
-  public Object nextValue() {
+  public String nextValue() {
     // Generate a random string with characters chosen from the set of
     // alpha-numeric characters
     return random.nextValue();
@@ -27,5 +27,10 @@ public class StringColumn extends Column {
   public String toString() {
     return "Column[name:" + name + ", type:" + type + ", random: "
         + random.toString() + "]";
+  }
+
+  @Override
+  public String nextValueAsString() {
+    return nextValue();
   }
 }
