@@ -5,5 +5,5 @@
 *~
 *logs/
 *build/
-/sidewalk-core/build
-/sidewalk-examples/build
+/tableplacement-costanalysis/build
+/tableplacement-experiment/build

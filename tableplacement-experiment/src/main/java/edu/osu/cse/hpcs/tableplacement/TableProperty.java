@@ -14,21 +14,22 @@ public class TableProperty {
   public final static String COLUMN_NAME_STR = "column.name.string";
   public final static String COLUMN_TYPE_STR = "column.type.string";
   public final static String HADOOP_IO_BUFFER_SIZE = "io.file.buffer.size";
-  
+
   // RCFile properties
   public final static String RCFILE_ROWGROUP_SIZE_STR = RCFile.Writer.COLUMNS_BUFFER_SIZE_CONF_STR;
-  
+
   Logger log = Logger.getLogger(TableProperty.class);
-  
+
   private Properties prop;
-    
+
   private TableProperty() {
     prop = new Properties();
   }
-  
+
   /**
    * Load a table property from a file.
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
   public TableProperty(File propsFile) throws IOException {
     this();
@@ -37,5 +38,5 @@ public class TableProperty {
     prop.load(fis);
     fis.close();
   }
-  
+
 }

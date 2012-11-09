@@ -2,6 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.osu.cse.hpcs</groupId>
   <artifactId>tableplacement</artifactId>
+  <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <repositories>
     <repository>
@@ -144,4 +145,8 @@
     	</plugins>
     </pluginManagement>
   </build>
+  <modules>
+  	<module>tableplacement-experiment</module>
+  	<module>tableplacement-costanalysis</module>
+  </modules>
 </project>
