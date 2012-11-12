@@ -1,5 +1,7 @@
 package edu.osu.cse.hpcs.tableplacement.column;
 
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
+
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
 public class IntColumn extends Column<Integer> {
@@ -14,6 +16,7 @@ public class IntColumn extends Column<Integer> {
     this.type = Column.Type.INT;
     int range = prop.getInt(INT_RANGE_STR, DEFAULT_INT_RANGE);
     this.random = new IntRandom(range);
+    this.hiveObjectInspector = PrimitiveObjectInspectorFactory.javaIntObjectInspector;
   }
 
   @Override

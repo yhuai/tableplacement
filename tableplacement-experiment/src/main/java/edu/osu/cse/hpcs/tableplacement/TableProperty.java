@@ -12,6 +12,8 @@ import java.util.Properties;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.ql.io.RCFile;
 import org.apache.hadoop.hive.serde.Constants;
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoUtils;
 import org.apache.log4j.Logger;
@@ -35,11 +37,10 @@ public class TableProperty {
   // Hive properties
   // Refer to org.apache.hadoop.hive.serde.Constants
   public final static String SERDE_CLASS = "serde.class";
-  
+
   // DEFAULT Hive properties
-  public final static String DEFAULT_SERDE_CLASS =
-      "org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe.ColumnarSerDe";
-  
+  public final static String DEFAULT_SERDE_CLASS = "org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe.ColumnarSerDe";
+
   // RCFile properties
   public final static String RCFILE_ROWGROUP_SIZE_STR = RCFile.Writer.COLUMNS_BUFFER_SIZE_CONF_STR;
 
@@ -50,6 +51,11 @@ public class TableProperty {
 
   private Properties prop;
   private File propsFile;
+
+  private List<Column> columns;
+  private List<String> columnNames;
+  private List<ObjectInspector> columnHiveObjectInspectors;
+  private ObjectInspector rowHiveObjectInspector;
 
   private TableProperty() {
     prop = new Properties();
@@ -69,6 +75,11 @@ public class TableProperty {
     FileInputStream fis = new FileInputStream(propsFile);
     prop.load(fis);
     fis.close();
+    genColumns();
+    genHiveObjectInspectors();
+    this.rowHiveObjectInspector = ObjectInspectorFactory
+        .getStandardStructObjectInspector(columnNames,
+            columnHiveObjectInspectors);
   }
 
   public void set(String key, String value) {
@@ -120,14 +131,14 @@ public class TableProperty {
     return Boolean.parseBoolean(valueString);
   }
 
-  public List<Column> getColumns() throws TablePropertyException {
+  private void genColumns() throws TablePropertyException {
     String columnsStr = get(Constants.LIST_COLUMNS);
     if (columnsStr == null || columnsStr.length() == 0) {
       throw new TablePropertyException("Columns (key: "
           + Constants.LIST_COLUMNS + ") are not defined in the property file "
           + propsFile.getPath());
     }
-    List<String> columnNames = Arrays.asList(columnsStr.split(","));
+    columnNames = Arrays.asList(columnsStr.split(","));
     log.info("columnNames is " + columnNames);
 
     String columnsTypesStr = get(Constants.LIST_COLUMN_TYPES);
@@ -145,7 +156,7 @@ public class TableProperty {
           "The number of column names and that of column types are not equal");
     }
 
-    List<Column> columns = new ArrayList<Column>();
+    columns = new ArrayList<Column>();
 
     for (int i = 0; i < columnNames.size(); i++) {
       String name = columnNames.get(i);
@@ -173,7 +184,24 @@ public class TableProperty {
             + " provided in " + this.propsFile.getPath() + " is not supported");
       }
     }
+  }
 
+  private void genHiveObjectInspectors() {
+    columnHiveObjectInspectors = new ArrayList<ObjectInspector>(columns.size());
+    for (Column col : columns) {
+      columnHiveObjectInspectors.add(col.getHiveObjectInspector());
+    }
+  }
+
+  public List<ObjectInspector> getHiveObjectInspectors() {
+    return columnHiveObjectInspectors;
+  }
+
+  public ObjectInspector getHiveRowObjectInspector() {
+    return rowHiveObjectInspector;
+  }
+
+  public List<Column> getColumns() throws TablePropertyException {
     return columns;
   }
 
@@ -182,7 +210,7 @@ public class TableProperty {
       conf.set((String) entry.getKey(), (String) entry.getValue());
     }
   }
-  
+
   public Properties getProperties() {
     return prop;
   }

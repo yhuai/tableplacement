@@ -1,5 +1,7 @@
 package edu.osu.cse.hpcs.tableplacement.column;
 
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+
 public abstract class Column<T> {
 
   public static enum Type {
@@ -8,6 +10,8 @@ public abstract class Column<T> {
 
   protected String name;
   protected Type type;
+
+  protected ObjectInspector hiveObjectInspector;
 
   /**
    * @return next value
@@ -39,4 +43,12 @@ public abstract class Column<T> {
   public String getTypeString() {
     return type.toString();
   }
+
+  /**
+   * @return the Hive object inspector of this column
+   */
+  public ObjectInspector getHiveObjectInspector() {
+    return hiveObjectInspector;
+  }
+
 }

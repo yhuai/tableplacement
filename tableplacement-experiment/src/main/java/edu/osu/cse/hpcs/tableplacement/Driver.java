@@ -9,7 +9,8 @@ public class Driver {
     int exitCode = -1;
     ProgramDriver pgd = new ProgramDriver();
     try {
-      pgd.addClass("WriteRCFileToLocal", WriteRCFileToLocal.class, "WriteRCFileToLocal");
+      pgd.addClass("WriteRCFileToLocal", WriteRCFileToLocal.class,
+          "WriteRCFileToLocal");
       pgd.driver(argv);
 
       // Success

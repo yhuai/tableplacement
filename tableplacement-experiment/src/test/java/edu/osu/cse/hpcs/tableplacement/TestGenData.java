@@ -39,7 +39,7 @@ public class TestGenData extends TestBase {
       System.out.println("Column name:" + col.getName() + ", Column type:"
           + col.getTypeString() + ", Column value:" + col.nextValue());
     }
-    
+
     for (Column col : columns) {
       System.out.println("Column name:" + col.getName() + ", Column type:"
           + col.getTypeString() + ", Column value:" + col.nextValueAsString());

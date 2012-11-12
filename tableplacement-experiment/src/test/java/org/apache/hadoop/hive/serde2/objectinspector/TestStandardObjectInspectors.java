@@ -45,7 +45,7 @@ import org.apache.hadoop.io.Text;
 
 /**
  * TestStandardObjectInspectors.
- *
+ * 
  */
 public class TestStandardObjectInspectors extends TestCase {
 
@@ -54,23 +54,26 @@ public class TestStandardObjectInspectors extends TestCase {
     try {
       PrimitiveObjectInspector oi1 = PrimitiveObjectInspectorFactory
           .getPrimitiveWritableObjectInspector(PrimitiveObjectInspectorUtils
-          .getTypeEntryFromPrimitiveWritableClass(writableClass).primitiveCategory);
+              .getTypeEntryFromPrimitiveWritableClass(writableClass).primitiveCategory);
       PrimitiveObjectInspector oi2 = PrimitiveObjectInspectorFactory
           .getPrimitiveWritableObjectInspector(PrimitiveObjectInspectorUtils
-          .getTypeEntryFromPrimitiveWritableClass(writableClass).primitiveCategory);
+              .getTypeEntryFromPrimitiveWritableClass(writableClass).primitiveCategory);
       assertEquals(oi1, oi2);
       assertEquals(Category.PRIMITIVE, oi1.getCategory());
       assertEquals(writableClass, oi1.getPrimitiveWritableClass());
       assertEquals(javaClass, oi1.getJavaPrimitiveClass());
       // Cannot create NullWritable instances
       if (!NullWritable.class.equals(writableClass)) {
-        assertEquals(writableClass, oi1.getPrimitiveWritableObject(
-            writableClass.newInstance()).getClass());
-        assertEquals(javaClass, oi1.getPrimitiveJavaObject(
-            writableClass.newInstance()).getClass());
+        assertEquals(writableClass,
+            oi1.getPrimitiveWritableObject(writableClass.newInstance())
+                .getClass());
+        assertEquals(javaClass,
+            oi1.getPrimitiveJavaObject(writableClass.newInstance()).getClass());
       }
-      assertEquals(PrimitiveObjectInspectorUtils
-          .getTypeNameFromPrimitiveWritable(writableClass), oi1.getTypeName());
+      assertEquals(
+          PrimitiveObjectInspectorUtils
+              .getTypeNameFromPrimitiveWritable(writableClass),
+          oi1.getTypeName());
     } catch (Throwable e) {
       e.printStackTrace();
       throw e;
@@ -89,7 +92,8 @@ public class TestStandardObjectInspectors extends TestCase {
       doTestStandardPrimitiveObjectInspector(FloatWritable.class, Float.class);
       doTestStandardPrimitiveObjectInspector(DoubleWritable.class, Double.class);
       doTestStandardPrimitiveObjectInspector(Text.class, String.class);
-      doTestStandardPrimitiveObjectInspector(BytesWritable.class, ByteArrayRef.class);
+      doTestStandardPrimitiveObjectInspector(BytesWritable.class,
+          ByteArrayRef.class);
     } catch (Throwable e) {
       e.printStackTrace();
       throw e;
@@ -101,10 +105,10 @@ public class TestStandardObjectInspectors extends TestCase {
     try {
       PrimitiveObjectInspector oi1 = PrimitiveObjectInspectorFactory
           .getPrimitiveJavaObjectInspector(PrimitiveObjectInspectorUtils
-          .getTypeEntryFromPrimitiveJavaClass(javaClass).primitiveCategory);
+              .getTypeEntryFromPrimitiveJavaClass(javaClass).primitiveCategory);
       PrimitiveObjectInspector oi2 = PrimitiveObjectInspectorFactory
           .getPrimitiveJavaObjectInspector(PrimitiveObjectInspectorUtils
-          .getTypeEntryFromPrimitiveJavaClass(javaClass).primitiveCategory);
+              .getTypeEntryFromPrimitiveJavaClass(javaClass).primitiveCategory);
       assertEquals(oi1, oi2);
       assertEquals(Category.PRIMITIVE, oi1.getCategory());
       assertEquals(javaClass, oi1.getJavaPrimitiveClass());
@@ -116,8 +120,9 @@ public class TestStandardObjectInspectors extends TestCase {
             .getClass());
       }
 
-      assertEquals(PrimitiveObjectInspectorUtils
-          .getTypeNameFromPrimitiveJava(javaClass), oi1.getTypeName());
+      assertEquals(
+          PrimitiveObjectInspectorUtils.getTypeNameFromPrimitiveJava(javaClass),
+          oi1.getTypeName());
     } catch (Throwable e) {
       e.printStackTrace();
       throw e;
@@ -142,8 +147,9 @@ public class TestStandardObjectInspectors extends TestCase {
           (double) 1);
       doTestJavaPrimitiveObjectInspector(Text.class, String.class, "a");
       ByteArrayRef ba = new ByteArrayRef();
-      ba.setData(new byte[]{'3'});
-      doTestJavaPrimitiveObjectInspector(BytesWritable.class, ByteArrayRef.class, ba);
+      ba.setData(new byte[] { '3' });
+      doTestJavaPrimitiveObjectInspector(BytesWritable.class,
+          ByteArrayRef.class, ba);
 
     } catch (Throwable e) {
       e.printStackTrace();
@@ -161,17 +167,17 @@ public class TestStandardObjectInspectors extends TestCase {
 
       // metadata
       assertEquals(Category.LIST, loi1.getCategory());
-      assertEquals(PrimitiveObjectInspectorFactory.javaIntObjectInspector, loi1
-          .getListElementObjectInspector());
+      assertEquals(PrimitiveObjectInspectorFactory.javaIntObjectInspector,
+          loi1.getListElementObjectInspector());
 
       // null
       assertNull("loi1.getList(null) should be null.", loi1.getList(null));
-      assertEquals("loi1.getListLength(null) should be -1.", loi1
-          .getListLength(null), -1);
-      assertNull("loi1.getListElement(null, 0) should be null", loi1
-          .getListElement(null, 0));
-      assertNull("loi1.getListElement(null, 100) should be null", loi1
-          .getListElement(null, 100));
+      assertEquals("loi1.getListLength(null) should be -1.",
+          loi1.getListLength(null), -1);
+      assertNull("loi1.getListElement(null, 0) should be null",
+          loi1.getListElement(null, 0));
+      assertNull("loi1.getListElement(null, 100) should be null",
+          loi1.getListElement(null, 100));
 
       // ArrayList
       ArrayList<Integer> list = new ArrayList<Integer>();
@@ -210,12 +216,12 @@ public class TestStandardObjectInspectors extends TestCase {
     try {
       StandardMapObjectInspector moi1 = ObjectInspectorFactory
           .getStandardMapObjectInspector(
-          PrimitiveObjectInspectorFactory.javaStringObjectInspector,
-          PrimitiveObjectInspectorFactory.javaIntObjectInspector);
+              PrimitiveObjectInspectorFactory.javaStringObjectInspector,
+              PrimitiveObjectInspectorFactory.javaIntObjectInspector);
       StandardMapObjectInspector moi2 = ObjectInspectorFactory
           .getStandardMapObjectInspector(
-          PrimitiveObjectInspectorFactory.javaStringObjectInspector,
-          PrimitiveObjectInspectorFactory.javaIntObjectInspector);
+              PrimitiveObjectInspectorFactory.javaStringObjectInspector,
+              PrimitiveObjectInspectorFactory.javaIntObjectInspector);
       assertEquals(moi1, moi2);
 
       // metadata
@@ -230,12 +236,12 @@ public class TestStandardObjectInspectors extends TestCase {
       assertNull(moi1.getMapValueElement(null, null));
       assertNull(moi1.getMapValueElement(null, "nokey"));
       assertEquals(-1, moi1.getMapSize(null));
-      assertEquals("map<"
-          + PrimitiveObjectInspectorFactory.javaStringObjectInspector
-          .getTypeName()
-          + ","
-          + PrimitiveObjectInspectorFactory.javaIntObjectInspector
-          .getTypeName() + ">", moi1.getTypeName());
+      assertEquals(
+          "map<"
+              + PrimitiveObjectInspectorFactory.javaStringObjectInspector.getTypeName()
+              + ","
+              + PrimitiveObjectInspectorFactory.javaIntObjectInspector.getTypeName()
+              + ">", moi1.getTypeName());
 
       // HashMap
       HashMap<String, Integer> map = new HashMap<String, Integer>();
@@ -292,31 +298,28 @@ public class TestStandardObjectInspectors extends TestCase {
     fieldObjectInspectors
         .add(PrimitiveObjectInspectorFactory.javaBooleanObjectInspector);
     ArrayList<String> fieldComments = new ArrayList<String>(3);
-    if(testComments) {
+    if (testComments) {
       fieldComments.add("firstInteger comment");
       fieldComments.add("secondString comment");
       fieldComments.add("thirdBoolean comment");
     } else { // should have null for non-specified comments
-      for(int i = 0; i < 3; i++) {
+      for (int i = 0; i < 3; i++) {
         fieldComments.add(null);
-    }
+      }
     }
 
-    StandardStructObjectInspector soi1 = testComments ?
-        ObjectInspectorFactory
+    StandardStructObjectInspector soi1 = testComments ? ObjectInspectorFactory
         .getStandardStructObjectInspector(fieldNames, fieldObjectInspectors,
-            fieldComments)
-      : ObjectInspectorFactory
+            fieldComments) : ObjectInspectorFactory
         .getStandardStructObjectInspector(fieldNames, fieldObjectInspectors);
-    StandardStructObjectInspector soi2 = testComments ?
-        ObjectInspectorFactory
-        .getStandardStructObjectInspector((ArrayList<String>) fieldNames
-        .clone(), (ArrayList<ObjectInspector>) fieldObjectInspectors
-        .clone(), (ArrayList<String>)fieldComments.clone())
-        : ObjectInspectorFactory
-        .getStandardStructObjectInspector((ArrayList<String>) fieldNames
-        .clone(), (ArrayList<ObjectInspector>) fieldObjectInspectors
-        .clone());
+    StandardStructObjectInspector soi2 = testComments ? ObjectInspectorFactory
+        .getStandardStructObjectInspector(
+            (ArrayList<String>) fieldNames.clone(),
+            (ArrayList<ObjectInspector>) fieldObjectInspectors.clone(),
+            (ArrayList<String>) fieldComments.clone()) : ObjectInspectorFactory
+        .getStandardStructObjectInspector(
+            (ArrayList<String>) fieldNames.clone(),
+            (ArrayList<ObjectInspector>) fieldObjectInspectors.clone());
     assertEquals(soi1, soi2);
 
     // metadata
@@ -385,14 +388,13 @@ public class TestStandardObjectInspectors extends TestCase {
       // add a list
       objectInspectors
           .add(ObjectInspectorFactory
-          .getStandardListObjectInspector(PrimitiveObjectInspectorFactory.javaIntObjectInspector));
+              .getStandardListObjectInspector(PrimitiveObjectInspectorFactory.javaIntObjectInspector));
 
       // add a map
-      objectInspectors
-          .add(ObjectInspectorFactory
+      objectInspectors.add(ObjectInspectorFactory
           .getStandardMapObjectInspector(
-          PrimitiveObjectInspectorFactory.javaIntObjectInspector,
-          PrimitiveObjectInspectorFactory.javaStringObjectInspector));
+              PrimitiveObjectInspectorFactory.javaIntObjectInspector,
+              PrimitiveObjectInspectorFactory.javaStringObjectInspector));
 
       // add a struct
       List<String> fieldNames = new ArrayList<String>();
@@ -403,15 +405,14 @@ public class TestStandardObjectInspectors extends TestCase {
           .add(PrimitiveObjectInspectorFactory.javaDoubleObjectInspector);
       fieldObjectInspectors
           .add(PrimitiveObjectInspectorFactory.javaLongObjectInspector);
-      objectInspectors
-          .add(ObjectInspectorFactory
+      objectInspectors.add(ObjectInspectorFactory
           .getStandardStructObjectInspector(fieldNames, fieldObjectInspectors));
 
       StandardUnionObjectInspector uoi1 = ObjectInspectorFactory
           .getStandardUnionObjectInspector(objectInspectors);
       StandardUnionObjectInspector uoi2 = ObjectInspectorFactory
-          .getStandardUnionObjectInspector(
-          (ArrayList<ObjectInspector>) objectInspectors.clone());
+          .getStandardUnionObjectInspector((ArrayList<ObjectInspector>) objectInspectors
+              .clone());
       assertEquals(uoi1, uoi2);
       assertEquals(ObjectInspectorUtils.getObjectInspectorName(uoi1),
           ObjectInspectorUtils.getObjectInspectorName(uoi2));
@@ -421,8 +422,8 @@ public class TestStandardObjectInspectors extends TestCase {
       assertFalse(ObjectInspectorUtils.compareSupported(uoi1));
 
       // construct unionObjectInspector without Map field.
-      ArrayList<ObjectInspector> ois =
-          (ArrayList<ObjectInspector>) objectInspectors.clone();
+      ArrayList<ObjectInspector> ois = (ArrayList<ObjectInspector>) objectInspectors
+          .clone();
       ois.set(4, PrimitiveObjectInspectorFactory.javaIntObjectInspector);
       assertTrue(ObjectInspectorUtils.compareSupported(ObjectInspectorFactory
           .getStandardUnionObjectInspector(ois)));
@@ -447,19 +448,21 @@ public class TestStandardObjectInspectors extends TestCase {
       // TypeInfo
       TypeInfo typeInfo1 = TypeInfoUtils.getTypeInfoFromObjectInspector(uoi1);
       assertEquals(Category.UNION, typeInfo1.getCategory());
-      assertEquals(UnionTypeInfo.class.getName(), typeInfo1.getClass().getName());
+      assertEquals(UnionTypeInfo.class.getName(), typeInfo1.getClass()
+          .getName());
       assertEquals(typeInfo1.getTypeName(), uoi1.getTypeName());
       assertEquals(typeInfo1,
           TypeInfoUtils.getTypeInfoFromTypeString(uoi1.getTypeName()));
       TypeInfo typeInfo2 = TypeInfoUtils.getTypeInfoFromObjectInspector(uoi2);
       assertEquals(typeInfo1, typeInfo2);
-      assertEquals(TypeInfoUtils.
-          getStandardJavaObjectInspectorFromTypeInfo(typeInfo1), TypeInfoUtils.
-          getStandardJavaObjectInspectorFromTypeInfo(typeInfo2));
-      assertEquals(TypeInfoUtils.
-          getStandardWritableObjectInspectorFromTypeInfo(typeInfo1),
-          TypeInfoUtils.getStandardWritableObjectInspectorFromTypeInfo(
-          typeInfo2));
+      assertEquals(
+          TypeInfoUtils.getStandardJavaObjectInspectorFromTypeInfo(typeInfo1),
+          TypeInfoUtils.getStandardJavaObjectInspectorFromTypeInfo(typeInfo2));
+      assertEquals(
+          TypeInfoUtils
+              .getStandardWritableObjectInspectorFromTypeInfo(typeInfo1),
+          TypeInfoUtils
+              .getStandardWritableObjectInspectorFromTypeInfo(typeInfo2));
 
       // null
       assertNull(uoi1.getField(null));
@@ -472,8 +475,8 @@ public class TestStandardObjectInspectors extends TestCase {
       assertEquals("{0:1}", SerDeUtils.getJSONString(union, uoi1));
       assertEquals(0, ObjectInspectorUtils.compare(union, uoi1,
           new StandardUnion((byte) 0, 1), uoi2));
-      assertTrue(ObjectInspectorUtils.copyToStandardObject(
-          union, uoi1).equals(1));
+      assertTrue(ObjectInspectorUtils.copyToStandardObject(union, uoi1).equals(
+          1));
 
       union = new StandardUnion((byte) 1, "two");
       assertEquals(1, uoi1.getTag(union));
@@ -481,8 +484,8 @@ public class TestStandardObjectInspectors extends TestCase {
       assertEquals("{1:\"two\"}", SerDeUtils.getJSONString(union, uoi1));
       assertEquals(0, ObjectInspectorUtils.compare(union, uoi1,
           new StandardUnion((byte) 1, "two"), uoi2));
-      assertTrue(ObjectInspectorUtils.copyToStandardObject(
-          union, uoi1).equals("two"));
+      assertTrue(ObjectInspectorUtils.copyToStandardObject(union, uoi1).equals(
+          "two"));
 
       union = new StandardUnion((byte) 2, true);
       assertEquals(2, uoi1.getTag(union));
@@ -490,8 +493,8 @@ public class TestStandardObjectInspectors extends TestCase {
       assertEquals("{2:true}", SerDeUtils.getJSONString(union, uoi1));
       assertEquals(0, ObjectInspectorUtils.compare(union, uoi1,
           new StandardUnion((byte) 2, true), uoi2));
-      assertTrue(ObjectInspectorUtils.copyToStandardObject(
-          union, uoi1).equals(true));
+      assertTrue(ObjectInspectorUtils.copyToStandardObject(union, uoi1).equals(
+          true));
 
       ArrayList<Integer> iList = new ArrayList<Integer>();
       iList.add(4);
@@ -502,8 +505,8 @@ public class TestStandardObjectInspectors extends TestCase {
       assertEquals("{3:[4,5]}", SerDeUtils.getJSONString(union, uoi1));
       assertEquals(0, ObjectInspectorUtils.compare(union, uoi1,
           new StandardUnion((byte) 3, iList.clone()), uoi2));
-      assertTrue(ObjectInspectorUtils.copyToStandardObject(
-          union, uoi1).equals(iList));
+      assertTrue(ObjectInspectorUtils.copyToStandardObject(union, uoi1).equals(
+          iList));
 
       HashMap<Integer, String> map = new HashMap<Integer, String>();
       map.put(6, "six");
@@ -516,16 +519,15 @@ public class TestStandardObjectInspectors extends TestCase {
           SerDeUtils.getJSONString(union, uoi1));
       Throwable th = null;
       try {
-        ObjectInspectorUtils.compare(union, uoi1,
-            new StandardUnion((byte) 4, map.clone()), uoi2, null);
+        ObjectInspectorUtils.compare(union, uoi1, new StandardUnion((byte) 4,
+            map.clone()), uoi2, null);
       } catch (Throwable t) {
         th = t;
       }
       assertNotNull(th);
       assertEquals("Compare on map type not supported!", th.getMessage());
-      assertTrue(ObjectInspectorUtils.copyToStandardObject(
-          union, uoi1).equals(map));
-
+      assertTrue(ObjectInspectorUtils.copyToStandardObject(union, uoi1).equals(
+          map));
 
       ArrayList<Object> struct = new ArrayList<Object>(2);
       struct.add(9.0);
@@ -537,8 +539,8 @@ public class TestStandardObjectInspectors extends TestCase {
           SerDeUtils.getJSONString(union, uoi1));
       assertEquals(0, ObjectInspectorUtils.compare(union, uoi1,
           new StandardUnion((byte) 5, struct.clone()), uoi2));
-      assertTrue(ObjectInspectorUtils.copyToStandardObject(
-          union, uoi1).equals(struct));
+      assertTrue(ObjectInspectorUtils.copyToStandardObject(union, uoi1).equals(
+          struct));
 
     } catch (Throwable e) {
       e.printStackTrace();

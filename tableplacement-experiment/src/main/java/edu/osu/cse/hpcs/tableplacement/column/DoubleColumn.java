@@ -1,5 +1,7 @@
 package edu.osu.cse.hpcs.tableplacement.column;
 
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
+
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
 public class DoubleColumn extends Column<Double> {
@@ -14,6 +16,7 @@ public class DoubleColumn extends Column<Double> {
     this.type = Column.Type.DOUBLE;
     int range = prop.getInt(DOUBLE_RANGE_STR, DEFAULT_DOUBLE_RANGE);
     this.random = new DoubleRandom(range);
+    this.hiveObjectInspector = PrimitiveObjectInspectorFactory.javaDoubleObjectInspector;
   }
 
   @Override

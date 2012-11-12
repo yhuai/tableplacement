@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.hive.serde.Constants;
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
+import org.apache.hadoop.hive.serde2.objectinspector.StandardMapObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
@@ -28,6 +32,9 @@ public class MapColumn extends Column<Map> {
   private RandomWrapper keyRandom;
   private RandomWrapper valueRandom;
 
+  private ObjectInspector keyObjectInspector;
+  private ObjectInspector valueObjectInspector;
+
   private int size;
   private String collectionDelim;
   private String mapkeyDelim;
@@ -40,14 +47,17 @@ public class MapColumn extends Column<Map> {
     if (DataType.INT_STR.equals(keyType)) {
       int range = prop.getInt(INT_IN_MAP_RANGE_STR, DEFAULT_INT_IN_MAP_RANGE);
       this.keyRandom = new IntRandom(range);
+      this.keyObjectInspector = PrimitiveObjectInspectorFactory.javaIntObjectInspector;
     } else if (DataType.DOUBLE_STR.equals(keyType)) {
       int range = prop.getInt(DOUBLE_IN_MAP_RANGE_STR,
           DEFAULT_DOUBLE_IN_MAP_RANGE);
       this.keyRandom = new DoubleRandom(range);
+      this.keyObjectInspector = PrimitiveObjectInspectorFactory.javaDoubleObjectInspector;
     } else if (DataType.STRING_STR.equals(keyType)) {
       int length = prop.getInt(STRING_IN_MAP_length_STR,
           DEFAULT_STRING_IN_MAP_LENGTH);
       this.keyRandom = new StringRandom(length);
+      this.keyObjectInspector = PrimitiveObjectInspectorFactory.javaStringObjectInspector;
     } else {
       throw new TablePropertyException("The key type " + keyType
           + " is not supported");
@@ -56,14 +66,17 @@ public class MapColumn extends Column<Map> {
     if (DataType.INT_STR.equals(valueType)) {
       int range = prop.getInt(INT_IN_MAP_RANGE_STR, DEFAULT_INT_IN_MAP_RANGE);
       this.valueRandom = new IntRandom(range);
+      this.valueObjectInspector = PrimitiveObjectInspectorFactory.javaIntObjectInspector;
     } else if (DataType.DOUBLE_STR.equals(valueType)) {
       int range = prop.getInt(DOUBLE_IN_MAP_RANGE_STR,
           DEFAULT_DOUBLE_IN_MAP_RANGE);
       this.valueRandom = new DoubleRandom(range);
+      this.valueObjectInspector = PrimitiveObjectInspectorFactory.javaDoubleObjectInspector;
     } else if (DataType.STRING_STR.equals(valueType)) {
       int length = prop.getInt(STRING_IN_MAP_length_STR,
           DEFAULT_STRING_IN_MAP_LENGTH);
       this.valueRandom = new StringRandom(length);
+      this.valueObjectInspector = PrimitiveObjectInspectorFactory.javaStringObjectInspector;
     } else {
       throw new TablePropertyException("The value type " + valueType
           + " is not supported");
@@ -79,6 +92,10 @@ public class MapColumn extends Column<Map> {
     if (mapkeyDelim == null) {
       mapkeyDelim = DEFAULT_MAPKEY_DELIM;
     }
+
+    this.hiveObjectInspector = ObjectInspectorFactory
+        .getStandardMapObjectInspector(this.keyObjectInspector,
+            this.valueObjectInspector);
   }
 
   @Override
@@ -100,7 +117,7 @@ public class MapColumn extends Column<Map> {
   @Override
   public String nextValueAsString() {
     String ret = nextValue().toString();
-    ret = ret.substring(1, ret.length()-1);
+    ret = ret.substring(1, ret.length() - 1);
     ret = ret.replace(", ", collectionDelim).replace("=", mapkeyDelim);
     return ret;
   }
