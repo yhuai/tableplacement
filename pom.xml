@@ -67,6 +67,11 @@
     	<artifactId>commons-lang3</artifactId>
     	<version>3.1</version>
     </dependency>
+    <dependency>
+    	<groupId>org.apache.hive</groupId>
+    	<artifactId>hive-serde</artifactId>
+    	<version>0.9.0</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -83,6 +88,25 @@
           </manifest>
         </archive>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+                <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>
+                    ${project.build.directory}/lib
+                </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -143,6 +167,19 @@
     								<ignore></ignore>
     							</action>
     						</pluginExecution>
+    						<pluginExecution>
+		                        <pluginExecutionFilter>
+		                            <groupId>org.apache.maven.plugins</groupId>
+		                            <artifactId>maven-dependency-plugin</artifactId>
+		                            <versionRange>[1.0.0,)</versionRange>
+		                            <goals>
+		                                <goal>copy-dependencies</goal>
+		                            </goals>
+		                        </pluginExecutionFilter>
+		                        <action>
+		                            <ignore />
+		                        </action>
+	                    	</pluginExecution>
     					</pluginExecutions>
     				</lifecycleMappingMetadata>
     			</configuration>

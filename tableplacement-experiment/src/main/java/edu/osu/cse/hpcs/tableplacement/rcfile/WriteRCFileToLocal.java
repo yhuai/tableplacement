@@ -93,10 +93,10 @@ public class WriteRCFileToLocal {
           + " <table property file> <output> <rowCount>");
       System.exit(-1);
     }
-
+    
     String propertyFilePath = args[0];
     String outputPathStr = args[1];
-    int rowCount = Integer.getInteger(args[2]);
+    int rowCount = Integer.valueOf(args[2]);
     System.out.println("Table property file: " + propertyFilePath);
     System.out.println("Output file: " + outputPathStr);
     System.out.println("Total number of rows: " + rowCount);
@@ -108,7 +108,7 @@ public class WriteRCFileToLocal {
     long end = System.nanoTime();
     System.out.println("Writing to RCFile finished.");
     System.out.println("Total serialized data size: " + totalSerializedDataSize);
-    System.out.println("Elapsed time: " + totalSerializedDataSize);
+    System.out.println("Elapsed time: " + (end - start)/1000000 + " ms");
     
   }
 }

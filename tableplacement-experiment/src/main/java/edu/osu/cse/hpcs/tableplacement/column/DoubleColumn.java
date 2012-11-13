@@ -6,19 +6,22 @@ import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
 public class DoubleColumn extends Column<Double> {
 
-  public final String DOUBLE_RANGE_STR = "range.double";
-  public final int DEFAULT_DOUBLE_RANGE = 20000;
+  public final static String DOUBLE_RANGE_STR = "range.double";
+  public final static int DEFAULT_DOUBLE_RANGE = 20000;
 
   private DoubleRandom random;
 
   public DoubleColumn(String name, TableProperty prop) {
+    this(name, prop.getInt(DOUBLE_RANGE_STR, DEFAULT_DOUBLE_RANGE));
+  }
+
+  public DoubleColumn(String name, int range) {
     this.name = name;
     this.type = Column.Type.DOUBLE;
-    int range = prop.getInt(DOUBLE_RANGE_STR, DEFAULT_DOUBLE_RANGE);
     this.random = new DoubleRandom(range);
     this.hiveObjectInspector = PrimitiveObjectInspectorFactory.javaDoubleObjectInspector;
   }
-
+  
   @Override
   public Double nextValue() {
     return random.nextValue();

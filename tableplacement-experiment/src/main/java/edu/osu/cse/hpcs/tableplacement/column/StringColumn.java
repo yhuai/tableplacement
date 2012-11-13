@@ -6,15 +6,18 @@ import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
 public class StringColumn extends Column<String> {
 
-  public final String DOUBLE_LENGTH_STR = "length.string";
-  public final int DEFAULT_STRING_LENGTH = 30;
+  public final static String DOUBLE_LENGTH_STR = "length.string";
+  public final static int DEFAULT_STRING_LENGTH = 30;
 
   private StringRandom random;
 
   public StringColumn(String name, TableProperty prop) {
+    this(name, prop.getInt(DOUBLE_LENGTH_STR, DEFAULT_STRING_LENGTH));
+  }
+  
+  public StringColumn(String name, int length) {
     this.name = name;
     this.type = Column.Type.STRING;
-    int length = prop.getInt(DOUBLE_LENGTH_STR, DEFAULT_STRING_LENGTH);
     this.random = new StringRandom(length);
     this.hiveObjectInspector = PrimitiveObjectInspectorFactory.javaStringObjectInspector;
   }
