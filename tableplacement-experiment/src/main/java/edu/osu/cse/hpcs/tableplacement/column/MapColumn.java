@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.objectinspector.StandardMapObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
@@ -15,19 +14,19 @@ import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 @SuppressWarnings("rawtypes")
 public class MapColumn extends Column<Map> {
 
-  public final String INT_IN_MAP_RANGE_STR = "range.map.int";
-  public final String DOUBLE_IN_MAP_RANGE_STR = "range.map.double";
-  public final String STRING_IN_MAP_length_STR = "length.map.string";
-  public final String SIZE_MAP_STR = "size.map";
-  public final String COLLECTION_DELIM_STR = Constants.COLLECTION_DELIM;
-  public final String MAPKEY_DELIM_STR = Constants.MAPKEY_DELIM;
+  public final static String INT_IN_MAP_RANGE_STR = "range.map.int";
+  public final static String DOUBLE_IN_MAP_RANGE_STR = "range.map.double";
+  public final static String STRING_IN_MAP_length_STR = "length.map.string";
+  public final static String SIZE_MAP_STR = "size.map";
+  public final static String COLLECTION_DELIM_STR = Constants.COLLECTION_DELIM;
+  public final static String MAPKEY_DELIM_STR = Constants.MAPKEY_DELIM;
 
-  public final int DEFAULT_INT_IN_MAP_RANGE = 30000;
-  public final int DEFAULT_DOUBLE_IN_MAP_RANGE = 40000;
-  public final int DEFAULT_STRING_IN_MAP_LENGTH = 4;
-  public final int DEFAULT_SIZE_MAP = 5;
-  public final String DEFAULT_COLLECTION_DELIM = ",";
-  public final String DEFAULT_MAPKEY_DELIM = "=";
+  public final static int DEFAULT_INT_IN_MAP_RANGE = 30000;
+  public final static int DEFAULT_DOUBLE_IN_MAP_RANGE = 40000;
+  public final static int DEFAULT_STRING_IN_MAP_LENGTH = 4;
+  public final static int DEFAULT_SIZE_MAP = 5;
+  public final static String DEFAULT_COLLECTION_DELIM = ",";
+  public final static String DEFAULT_MAPKEY_DELIM = "=";
 
   private RandomWrapper keyRandom;
   private RandomWrapper valueRandom;

@@ -6,13 +6,13 @@ import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
 public class StringColumn extends Column<String> {
 
-  public final static String DOUBLE_LENGTH_STR = "length.string";
+  public final static String STRING_LENGTH_STR = "length.string";
   public final static int DEFAULT_STRING_LENGTH = 30;
 
   private StringRandom random;
 
   public StringColumn(String name, TableProperty prop) {
-    this(name, prop.getInt(DOUBLE_LENGTH_STR, DEFAULT_STRING_LENGTH));
+    this(name, prop.getInt(STRING_LENGTH_STR, DEFAULT_STRING_LENGTH));
   }
   
   public StringColumn(String name, int length) {

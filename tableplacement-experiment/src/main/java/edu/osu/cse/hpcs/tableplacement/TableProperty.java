@@ -63,25 +63,38 @@ public class TableProperty {
 
   /**
    * Load a table property from a file.
-   * 
+   * @param propsFile the table property file
    * @throws IOException
    * @throws TablePropertyException
    */
   public TableProperty(File propsFile) throws IOException,
       TablePropertyException {
+    this(propsFile, null);
+  }
+
+  /**
+   * @param propsFile the table property file
+   * @param other all properties needed to be overwritten
+   * @throws IOException
+   * @throws TablePropertyException
+   */
+  public TableProperty(File propsFile, Properties other) throws IOException,TablePropertyException {
     this();
     this.propsFile = propsFile;
     log.info("Load table property file from " + propsFile.getPath());
     FileInputStream fis = new FileInputStream(propsFile);
     prop.load(fis);
     fis.close();
+    if (other != null) {
+      prop.putAll(other);
+    }
     genColumns();
     genHiveObjectInspectors();
     this.rowHiveObjectInspector = ObjectInspectorFactory
         .getStandardStructObjectInspector(columnNames,
             columnHiveObjectInspectors);
   }
-
+  
   public void set(String key, String value) {
     prop.setProperty(key, value);
   }
