@@ -63,6 +63,8 @@ public class WriteRCFileToLocal {
         .getHiveRowObjectInspector();
 
     this.rowCount = rowCount;
+    
+    prop.dump();
   }
 
   public long doWrite() throws IOException, SerDeException {
@@ -113,7 +115,7 @@ public class WriteRCFileToLocal {
     System.out.println("Table property file: " + propertyFilePath);
     System.out.println("Output file: " + outputPathStr);
     System.out.println("Total number of rows: " + rowCount);
-    System.out.println("Writing data to RCFile ");
+    System.out.println("Writing data to RCFile ...");
     WriteRCFileToLocal writeRCFileLocal = new WriteRCFileToLocal(
         propertyFilePath, outputPathStr, rowCount, cmdProperties);
     long start = System.nanoTime();
@@ -123,6 +125,8 @@ public class WriteRCFileToLocal {
     System.out
         .println("Total serialized data size: " + totalSerializedDataSize);
     System.out.println("Elapsed time: " + (end - start) / 1000000 + " ms");
+    System.out.println("Throughput MB/s: " +
+        totalSerializedDataSize * 1.0 / 1024 / 1024 / (end - start) * 1000000000);
 
   }
 }

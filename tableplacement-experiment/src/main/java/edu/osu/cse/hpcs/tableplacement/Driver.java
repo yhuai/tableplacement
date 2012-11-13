@@ -2,6 +2,7 @@ package edu.osu.cse.hpcs.tableplacement;
 
 import org.apache.hadoop.util.ProgramDriver;
 
+import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFileFromLocal;
 import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFileToLocal;
 
 public class Driver {
@@ -11,6 +12,8 @@ public class Driver {
     try {
       pgd.addClass("WriteRCFileToLocal", WriteRCFileToLocal.class,
           "WriteRCFileToLocal");
+      pgd.addClass("ReadRCFileToLocal", ReadRCFileFromLocal.class,
+          "ReadRCFileToLocal");
       pgd.driver(argv);
 
       // Success
