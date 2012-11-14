@@ -45,10 +45,11 @@ public class TableProperty {
 
   // RCFile properties
   public final static String RCFILE_ROWGROUP_SIZE_STR = RCFile.Writer.COLUMNS_BUFFER_SIZE_CONF_STR;
-  
+
   // Default values of RCFile properties
   public final static int DEFAULT_RCFILE_ROWGROUP_SIZE_STR = 16777216; // 16MB
-  public final static String DEFAULT_RCFILE_READ_COLUMN_STR = READ_ALL_COLUMNS_STR; // all columns
+  public final static String DEFAULT_RCFILE_READ_COLUMN_STR = READ_ALL_COLUMNS_STR; // all
+                                                                                    // columns
 
   Logger log = Logger.getLogger(TableProperty.class);
 
@@ -66,7 +67,9 @@ public class TableProperty {
 
   /**
    * Load a table property from a file.
-   * @param propsFile the table property file
+   * 
+   * @param propsFile
+   *          the table property file
    * @throws IOException
    * @throws TablePropertyException
    */
@@ -76,12 +79,15 @@ public class TableProperty {
   }
 
   /**
-   * @param propsFile the table property file
-   * @param other all properties needed to be overwritten
+   * @param propsFile
+   *          the table property file
+   * @param other
+   *          all properties needed to be overwritten
    * @throws IOException
    * @throws TablePropertyException
    */
-  public TableProperty(File propsFile, Properties other) throws IOException,TablePropertyException {
+  public TableProperty(File propsFile, Properties other) throws IOException,
+      TablePropertyException {
     this();
     this.propsFile = propsFile;
     log.info("Load table property file from " + propsFile.getPath());
@@ -97,7 +103,7 @@ public class TableProperty {
         .getStandardStructObjectInspector(columnNames,
             columnHiveObjectInspectors);
   }
-  
+
   public void set(String key, String value) {
     prop.setProperty(key, value);
   }
@@ -224,7 +230,7 @@ public class TableProperty {
   public List<String> getColumnNames() {
     return columnNames;
   }
-  
+
   public void copyToHadoopConf(Configuration conf) {
     for (Entry<Object, Object> entry : prop.entrySet()) {
       conf.set((String) entry.getKey(), (String) entry.getValue());
@@ -234,11 +240,12 @@ public class TableProperty {
   public Properties getProperties() {
     return prop;
   }
-  
+
   public void dump() {
     System.out.println("Dump all table properties");
     for (Entry<Object, Object> entry : prop.entrySet()) {
-      System.out.println((String) entry.getKey() + ": " + (String) entry.getValue());
+      System.out.println((String) entry.getKey() + ": "
+          + (String) entry.getValue());
     }
   }
 

@@ -67,7 +67,8 @@ public class ReadRCFileFromLocal {
         .getHiveRowObjectInspector();
 
     readColumnStr = prop.get(TableProperty.READ_COLUMN_STR);
-    if (readColumnStr == null || TableProperty.READ_ALL_COLUMNS_STR.equals(readColumnStr)) {
+    if (readColumnStr == null
+        || TableProperty.READ_ALL_COLUMNS_STR.equals(readColumnStr)) {
       ColumnProjectionUtils.setFullyReadColumns(conf);
     } else {
       readCols = CmdTool.parseReadColumnStr(readColumnStr);
@@ -80,7 +81,7 @@ public class ReadRCFileFromLocal {
       }
       ColumnProjectionUtils.setReadColumnIDs(conf, readCols);
     }
-    
+
     prop.dump();
   }
 
@@ -89,14 +90,15 @@ public class ReadRCFileFromLocal {
 
     LongWritable rowID = new LongWritable();
     BytesRefArrayWritable braw = new BytesRefArrayWritable(columnCount);
+    braw.resetValid(columnCount);
     long rowCount = 0;
     long totalSerializedDataSize = 0;
 
     while (reader.next(rowID)) {
+      reader.getCurrentRow(braw);
       for (int j = 0; j < braw.size(); j++) {
         totalSerializedDataSize += braw.get(j).getLength();
       }
-      reader.getCurrentRow(braw);
       Object row = serde.deserialize(braw);
       rowCount++;
     }
@@ -124,8 +126,8 @@ public class ReadRCFileFromLocal {
     System.out.println("Table property file: " + propertyFilePath);
     System.out.println("Input file: " + inputPathStr);
     System.out.println("Reading data from RCFile ...");
-    ReadRCFileFromLocal readRCFileLocal = new ReadRCFileFromLocal(propertyFilePath,
-        inputPathStr, cmdProperties);
+    ReadRCFileFromLocal readRCFileLocal = new ReadRCFileFromLocal(
+        propertyFilePath, inputPathStr, cmdProperties);
     long start = System.nanoTime();
     long totalSerializedDataSize = readRCFileLocal.doRead();
     long end = System.nanoTime();
@@ -133,7 +135,7 @@ public class ReadRCFileFromLocal {
     System.out
         .println("Total serialized data size: " + totalSerializedDataSize);
     System.out.println("Elapsed time: " + (end - start) / 1000000 + " ms");
-    System.out.println("Throughput MB/s: " +
-        totalSerializedDataSize * 1.0 / 1024 / 1024 / (end - start) * 1000000000);
+    System.out.println("Throughput MB/s: " + totalSerializedDataSize * 1.0
+        / 1024 / 1024 / (end - start) * 1000000000);
   }
 }

@@ -54,7 +54,7 @@ public class TestGenData extends TestBase {
     int range = 50000;
     IntColumn column = new IntColumn("int", range);
     int count = 10000;
-    for (int i=0; i<count; i++) {
+    for (int i = 0; i < count; i++) {
       Assert.assertTrue(column.nextValue() < range);
     }
   }
@@ -64,17 +64,17 @@ public class TestGenData extends TestBase {
     int range = 50000;
     DoubleColumn column = new DoubleColumn("double", range);
     int count = 10000;
-    for (int i=0; i<count; i++) {
+    for (int i = 0; i < count; i++) {
       Assert.assertTrue(column.nextValue() < range);
     }
   }
-  
+
   @Test
   public void testStringColumnValueLength() {
     int length = 50;
     StringColumn column = new StringColumn("string", length);
     int count = 10000;
-    for (int i=0; i<count; i++) {
+    for (int i = 0; i < count; i++) {
       Assert.assertTrue(column.nextValue().length() == length);
     }
   }

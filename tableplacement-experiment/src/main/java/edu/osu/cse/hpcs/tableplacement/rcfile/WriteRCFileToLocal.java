@@ -13,6 +13,7 @@ import org.apache.hadoop.hive.ql.io.RCFile;
 import org.apache.hadoop.hive.ql.io.RCFileOutputFormat;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
+import org.apache.hadoop.hive.serde2.columnar.BytesRefWritable;
 import org.apache.hadoop.hive.serde2.columnar.ColumnarSerDeBase;
 import org.apache.hadoop.hive.serde2.objectinspector.StandardStructObjectInspector;
 import org.apache.log4j.Logger;
@@ -37,8 +38,9 @@ public class WriteRCFileToLocal {
   final long rowCount;
 
   public WriteRCFileToLocal(String propertyFilePath, String outputPath,
-      long rowCount, Properties cmdProperties) throws IOException, TablePropertyException, SerDeException,
-      InstantiationException, IllegalAccessException, ClassNotFoundException {
+      long rowCount, Properties cmdProperties) throws IOException,
+      TablePropertyException, SerDeException, InstantiationException,
+      IllegalAccessException, ClassNotFoundException {
     prop = new TableProperty(new File(propertyFilePath), cmdProperties);
     columns = prop.getColumns();
     columnCount = columns.size();
@@ -63,7 +65,7 @@ public class WriteRCFileToLocal {
         .getHiveRowObjectInspector();
 
     this.rowCount = rowCount;
-    
+
     prop.dump();
   }
 
@@ -71,6 +73,7 @@ public class WriteRCFileToLocal {
     RCFile.Writer writer = new RCFile.Writer(localFS, conf, file, null, null);
 
     long totalSerializedDataSize = 0;
+    long[] columnSerializedDataSize = new long[columnCount];
     for (long i = 0; i < rowCount; i++) {
       List<Object> row = new ArrayList<Object>(columnCount);
       for (Column col : columns) {
@@ -79,20 +82,27 @@ public class WriteRCFileToLocal {
       BytesRefArrayWritable bytes = (BytesRefArrayWritable) serde.serialize(
           row, rowHiveObjectInspector);
       for (int j = 0; j < bytes.size(); j++) {
-        totalSerializedDataSize += bytes.get(j).getLength();
+        BytesRefWritable ref = bytes.get(j);
+        int length = ref.getLength();
+        totalSerializedDataSize += length;
+        columnSerializedDataSize[j] += length;
       }
       writer.append(bytes);
     }
 
     writer.close();
     log.info("Total serialized data size: " + totalSerializedDataSize);
+    for (int i=0; i<columnCount; i++) {
+      log.info("Column " + i + " serialized data size: " + columnSerializedDataSize[i]);
+    }
     return totalSerializedDataSize;
   }
 
   public static void main(String[] args) throws Exception {
-    
+
     Properties cmdProperties = CmdTool.inputParameterParser(args);
-    String propertyFilePath = cmdProperties.getProperty(CmdTool.TABLE_PROPERTY_FILE);
+    String propertyFilePath = cmdProperties
+        .getProperty(CmdTool.TABLE_PROPERTY_FILE);
     String outputPathStr = cmdProperties.getProperty(CmdTool.OUTPUT_FILE);
     boolean getNumberFormatException = false;
     long rowCount = 0;
@@ -102,13 +112,13 @@ public class WriteRCFileToLocal {
       System.out.println("Row count should be a number");
       getNumberFormatException = true;
     }
-    
-    
-    if (getNumberFormatException || propertyFilePath == null || outputPathStr == null) {
-      System.out.println("usage: " + WriteRCFileToLocal.class.getName() +
-          " -t <table property file> -o <output> -c <rowCount> [-p ...]");
-      System.out.println("You can overwrite properties defined in the " +
-      		"table property file through '-p key value'");
+
+    if (getNumberFormatException || propertyFilePath == null
+        || outputPathStr == null) {
+      System.out.println("usage: " + WriteRCFileToLocal.class.getName()
+          + " -t <table property file> -o <output> -c <rowCount> [-p ...]");
+      System.out.println("You can overwrite properties defined in the "
+          + "table property file through '-p key value'");
       System.exit(-1);
     }
 
@@ -125,8 +135,8 @@ public class WriteRCFileToLocal {
     System.out
         .println("Total serialized data size: " + totalSerializedDataSize);
     System.out.println("Elapsed time: " + (end - start) / 1000000 + " ms");
-    System.out.println("Throughput MB/s: " +
-        totalSerializedDataSize * 1.0 / 1024 / 1024 / (end - start) * 1000000000);
+    System.out.println("Throughput MB/s: " + totalSerializedDataSize * 1.0
+        / 1024 / 1024 / (end - start) * 1000000000);
 
   }
 }

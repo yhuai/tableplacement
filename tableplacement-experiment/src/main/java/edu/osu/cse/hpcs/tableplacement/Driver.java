@@ -4,6 +4,8 @@ import org.apache.hadoop.util.ProgramDriver;
 
 import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFileFromLocal;
 import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFileToLocal;
+import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniFromLocal;
+import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
 
 public class Driver {
   public static void main(String[] argv) throws Exception {
@@ -12,8 +14,14 @@ public class Driver {
     try {
       pgd.addClass("WriteRCFileToLocal", WriteRCFileToLocal.class,
           "WriteRCFileToLocal");
-      pgd.addClass("ReadRCFileToLocal", ReadRCFileFromLocal.class,
-          "ReadRCFileToLocal");
+      pgd.addClass("ReadRCFileFromLocal", ReadRCFileFromLocal.class,
+          "ReadRCFileFromLocal");
+      
+      pgd.addClass("WriteTrevniToLocal", WriteTrevniToLocal.class,
+          "WriteTrevniToLocal");
+      pgd.addClass("ReadTrevniFromLocal", ReadTrevniFromLocal.class,
+          "ReadTrevniFromLocal");
+      
       pgd.driver(argv);
 
       // Success

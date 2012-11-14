@@ -47,8 +47,9 @@ public class TestFormatBase extends TestBase {
       localFS.delete(file, true);
     }
   }
-  
-  public static List<List<Object>> getTest4ColRows(final int rowCount, final int mapSize) {
+
+  public static List<List<Object>> getTest4ColRows(final int rowCount,
+      final int mapSize) {
     List<List<Object>> ret = new ArrayList<List<Object>>(rowCount);
     for (int i = 0; i < rowCount; i++) {
       Map<String, Integer> map = new HashMap<String, Integer>();

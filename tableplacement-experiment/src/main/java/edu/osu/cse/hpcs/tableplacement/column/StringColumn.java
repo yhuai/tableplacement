@@ -14,7 +14,7 @@ public class StringColumn extends Column<String> {
   public StringColumn(String name, TableProperty prop) {
     this(name, prop.getInt(STRING_LENGTH_STR, DEFAULT_STRING_LENGTH));
   }
-  
+
   public StringColumn(String name, int length) {
     this.name = name;
     this.type = Column.Type.STRING;

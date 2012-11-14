@@ -26,3 +26,8 @@ java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadRCFileFromL
 java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadRCFileFromLocal -t ../tableProperties/RCFile.ColumnarSerDe.properties -i ~/rcfile/text.c3000000.rg4194304 -p read.column.string 1 -p io.file.buffer.size 524288
 
 java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadRCFileFromLocal -t ../tableProperties/RCFile.ColumnarSerDe.properties -i ~/rcfile/text.c3000000.rg67108864 -p read.column.string 1 -p io.file.buffer.size 524288
+
+
+java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar WriteTrevniToLocal -t ../tableProperties/RCFile.LazyBinaryColumnarSerDe.properties -o ~/rcfile/trevni.lazy.c3000000.rg67108864 -c 3000000
+
+java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevniFromLocal -t ../tableProperties/RCFile.LazyBinaryColumnarSerDe.properties -i ~/rcfile/trevni.lazy.c3000000.rg67108864 -p read.column.string 1 -p io.file.buffer.size 524288

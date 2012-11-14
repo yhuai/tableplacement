@@ -67,5 +67,5 @@ public class TrevniRowReader {
       ref.set(v.array(), v.arrayOffset(), v.capacity());
     }
   }
-  
+
 }

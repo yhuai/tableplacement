@@ -64,7 +64,7 @@ public class TestRCFile extends TestFormatBase {
     for (int i = 0; i < rows.size(); i++) {
       BytesRefArrayWritable bytes = (BytesRefArrayWritable) serde.serialize(
           rows.get(i), rowHiveObjectInspector);
-      for (int j=0; j<bytes.size(); j++) {
+      for (int j = 0; j < bytes.size(); j++) {
         totalSerializedDataSize += bytes.get(j).getLength();
       }
       writer.append(bytes);
@@ -82,11 +82,13 @@ public class TestRCFile extends TestFormatBase {
       reader.getCurrentRow(braw);
       Object actualRow = serde.deserialize(braw);
       Object expectedRow = rows.get(indx);
-      if (0 != ObjectInspectorUtils.compare(expectedRow, rowHiveObjectInspector, actualRow,
-          out_oi, new FullMapEqualComparer())) {
+      if (0 != ObjectInspectorUtils
+          .compare(expectedRow, rowHiveObjectInspector, actualRow, out_oi,
+              new FullMapEqualComparer())) {
         System.out.println("expected = "
             + SerDeUtils.getJSONString(expectedRow, rowHiveObjectInspector));
-        System.out.println("actual = " + SerDeUtils.getJSONString(actualRow, out_oi));
+        System.out.println("actual = "
+            + SerDeUtils.getJSONString(actualRow, out_oi));
         Assert.fail("Deserialized object does not compare");
       }
       indx++;

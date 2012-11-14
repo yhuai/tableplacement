@@ -29,16 +29,17 @@ public class TestTableProperty extends TestBase {
   public TestTableProperty() throws URISyntaxException, IOException,
       TablePropertyException {
     super();
-    
+
   }
 
   @Test
-  public void testLoadTableProperty() throws TablePropertyException, IOException, URISyntaxException {
+  public void testLoadTableProperty() throws TablePropertyException,
+      IOException, URISyntaxException {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     URL url = loader.getResource("testTableProperty.properties");
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file);
-    
+
     final String hiveColumnNames = "cint,cdouble,cstring,cmap1,cmap2,cmap3";
     final String hvieColumnTypes = "int:double:string:map<int,string>:map<string,string>:map<string,double>";
     final int ioBufferSize = 524288;
@@ -77,18 +78,21 @@ public class TestTableProperty extends TestBase {
       Assert.assertEquals(expectedColumnStr.get(i), ret.get(i).toString());
     }
   }
-  
+
   @Test
-  public void testLoadTablePropertyAndOverwrite() throws TablePropertyException, IOException, URISyntaxException {
+  public void testLoadTablePropertyAndOverwrite()
+      throws TablePropertyException, IOException, URISyntaxException {
     final String hiveColumnNames = "c1,c2,c3,c4,c5";
     final String hvieColumnTypes = "int,double,string,map<string,int>,map<string,double>";
     final int ioBufferSize = 262144;
     final int rcfileRowGroupSize = 16777216;
-    
+
     // Overwrite properties
     Properties other = new Properties();
-    other.setProperty(TableProperty.HADOOP_IO_BUFFER_SIZE, Integer.toString(ioBufferSize));
-    other.setProperty(TableProperty.RCFILE_ROWGROUP_SIZE_STR, Integer.toString(rcfileRowGroupSize));
+    other.setProperty(TableProperty.HADOOP_IO_BUFFER_SIZE,
+        Integer.toString(ioBufferSize));
+    other.setProperty(TableProperty.RCFILE_ROWGROUP_SIZE_STR,
+        Integer.toString(rcfileRowGroupSize));
     other.setProperty(Constants.LIST_COLUMNS, hiveColumnNames);
     other.setProperty(Constants.LIST_COLUMN_TYPES, hvieColumnTypes);
     other.setProperty(IntColumn.INT_RANGE_STR, "10");
@@ -98,7 +102,7 @@ public class TestTableProperty extends TestBase {
     other.setProperty(MapColumn.DOUBLE_IN_MAP_RANGE_STR, "9999");
     other.setProperty(MapColumn.STRING_IN_MAP_length_STR, "9");
     other.setProperty(MapColumn.SIZE_MAP_STR, "99");
-    
+
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     URL url = loader.getResource("testTableProperty.properties");
     File file = new File(url.toURI());

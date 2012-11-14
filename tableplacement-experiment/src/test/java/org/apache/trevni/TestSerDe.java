@@ -53,7 +53,8 @@ public class TestSerDe extends TestBase {
   }
 
   public void doTestColumnarSerDe(Class<?> serDeClass) throws SerDeException,
-      TablePropertyException, InstantiationException, IllegalAccessException, IOException {
+      TablePropertyException, InstantiationException, IllegalAccessException,
+      IOException {
 
     log.info("Testing ColumnarSerDe class " + serDeClass.getCanonicalName());
 
@@ -73,24 +74,25 @@ public class TestSerDe extends TestBase {
       buffer[i] = new ByteBuffer[rows.size()];
     }
     int count = 0;
-    for (List<Object> row: rows) {
+    for (List<Object> row : rows) {
       BytesRefArrayWritable braw = (BytesRefArrayWritable) serde.serialize(row,
           rowHiveObjectInspector);
       Assert.assertEquals(columnCount, braw.size());
       for (int i = 0; i < 4; i++) {
         BytesRefWritable ref = braw.get(i);
-        buffer[i][count] = ByteBuffer.wrap(ref.getData(), ref.getStart(), ref.getLength());
+        buffer[i][count] = ByteBuffer.wrap(ref.getData(), ref.getStart(),
+            ref.getLength());
         outs[i].writeBytes(buffer[i][count]);
       }
       count++;
     }
-    
+
     ObjectInspector out_oi = serde.getObjectInspector();
     InputBuffer[] ins = new InputBuffer[4];
     for (int i = 0; i < 4; i++) {
       ins[i] = new InputBuffer(new InputBytes(outs[i].toByteArray()));
     }
-    for (int i=0; i<rows.size(); i++) {
+    for (int i = 0; i < rows.size(); i++) {
       BytesRefArrayWritable braw = new BytesRefArrayWritable();
       braw.resetValid(4);
       for (int j = 0; j < 4; j++) {
@@ -100,20 +102,23 @@ public class TestSerDe extends TestBase {
       }
       Object actualRow = serde.deserialize(braw);
       Object expectedRow = rows.get(i);
-      if (0 != ObjectInspectorUtils.compare(expectedRow, rowHiveObjectInspector, actualRow,
-          out_oi, new FullMapEqualComparer())) {
+      if (0 != ObjectInspectorUtils
+          .compare(expectedRow, rowHiveObjectInspector, actualRow, out_oi,
+              new FullMapEqualComparer())) {
         System.out.println("expected = "
             + SerDeUtils.getJSONString(expectedRow, rowHiveObjectInspector));
-        System.out.println("actual = " + SerDeUtils.getJSONString(actualRow, out_oi));
+        System.out.println("actual = "
+            + SerDeUtils.getJSONString(actualRow, out_oi));
         Assert.fail("Deserialized object does not compare");
       }
     }
-    
+
   }
 
   @Test
   public void testColumnarSerDe() throws SerDeException,
-      TablePropertyException, InstantiationException, IllegalAccessException, IOException {
+      TablePropertyException, InstantiationException, IllegalAccessException,
+      IOException {
     doTestColumnarSerDe(ColumnarSerDe.class);
     doTestColumnarSerDe(LazyBinaryColumnarSerDe.class);
   }

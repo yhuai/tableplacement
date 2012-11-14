@@ -29,13 +29,11 @@ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorUtils;
 import org.apache.hadoop.hive.serde2.objectinspector.StandardStructObjectInspector;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
-import org.apache.trevni.ColumnFileMetaData;
 import org.apache.trevni.ColumnFileReader;
 import org.apache.trevni.ColumnFileWriter;
 import org.apache.trevni.ColumnMetaData;
 import org.apache.trevni.ColumnValues;
 import org.apache.trevni.TestUtil;
-import org.apache.trevni.ValueType;
 import org.apache.trevni.avro.HadoopInput;
 
 import org.junit.Test;
@@ -44,47 +42,34 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import edu.osu.cse.hpcs.tableplacement.TestFormatBase;
-import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
 @RunWith(value = Parameterized.class)
 public class TestTrevni extends TestFormatBase {
 
   protected static Logger log = Logger.getLogger(TestTrevni.class);
-  
+
   private String codec;
   private String checksum;
   private final int rowCount = 1000;
-  
+
   @Parameters
   public static Collection<Object[]> codecs() {
-    Object[][] data = new Object[][] {{"null", "null"}};
+    Object[][] data = new Object[][] { { "null", "null" } };
     return Arrays.asList(data);
   }
-  
-  public TestTrevni(String codec, String checksum) throws URISyntaxException, IOException, TablePropertyException {
+
+  public TestTrevni(String codec, String checksum) throws URISyntaxException,
+      IOException, TablePropertyException {
     super("testColumns.properties", "testTrevni", log);
     this.codec = codec;
     this.checksum = checksum;
   }
-  
-  private ColumnFileMetaData createFileMeta() {
-    return new ColumnFileMetaData()
-      .setCodec(codec)
-      .setChecksum(checksum);
-  }
-  
-  private ColumnMetaData[] createColumnMetaData (List<Column> columns) {
-    ColumnMetaData[] columnMetadata = new ColumnMetaData[columnCount];
-    for (int i=0; i<columnCount; i++) {
-      Column col = columns.get(i);
-      columnMetadata[i] = new ColumnMetaData(col.getName(), ValueType.BYTES);
-    }
-    return columnMetadata;
-  }
-  
-  private void doTrevniFullReadTest(Class<?> serDeClass) throws InstantiationException, IllegalAccessException, SerDeException, IOException {
-    
+
+  private void doTrevniFullReadTest(Class<?> serDeClass)
+      throws InstantiationException, IllegalAccessException, SerDeException,
+      IOException {
+
     log.info("Testing Trevni write and read with ColumnarSerDe class "
         + serDeClass.getCanonicalName());
     serde = (ColumnarSerDeBase) serDeClass.newInstance();
@@ -96,20 +81,22 @@ public class TestTrevni extends TestFormatBase {
     List<List<Object>> rows = getTest4ColRows(rowCount, 3);
     log.info("Writing Trevni ...");
     int totalSerializedDataSize = 0;
-    ColumnFileWriter out =
-        new ColumnFileWriter(createFileMeta(),createColumnMetaData(columns));
+    ColumnFileWriter out = new ColumnFileWriter(
+        WriteTrevniToLocal.createFileMeta(codec, checksum),
+        WriteTrevniToLocal.createColumnMetaData(columns, columnCount));
     FSDataOutputStream trevniOutputStream = localFS.create(file);
 
     for (int i = 0; i < rows.size(); i++) {
       BytesRefArrayWritable bytes = (BytesRefArrayWritable) serde.serialize(
           rows.get(i), rowHiveObjectInspector);
       ByteBuffer[] row = new ByteBuffer[bytes.size()];
-      for (int j=0; j<bytes.size(); j++) {
+      for (int j = 0; j < bytes.size(); j++) {
         totalSerializedDataSize += bytes.get(j).getLength();
         BytesRefWritable ref = bytes.get(j);
-        row[j] = ByteBuffer.wrap(ref.getData(), ref.getStart(), ref.getLength());
+        row[j] = ByteBuffer
+            .wrap(ref.getData(), ref.getStart(), ref.getLength());
       }
-      out.writeRow((Object[])row);
+      out.writeRow((Object[]) row);
     }
     out.writeTo(trevniOutputStream);
     trevniOutputStream.close();
@@ -120,14 +107,16 @@ public class TestTrevni extends TestFormatBase {
     log.info("FileSystem: " + file.getFileSystem(hadoopConf).getClass());
     assert file.getFileSystem(hadoopConf) instanceof LocalFileSystem;
 
-    ColumnFileReader in = new ColumnFileReader(new HadoopInput(file, hadoopConf));
+    ColumnFileReader in = new ColumnFileReader(
+        new HadoopInput(file, hadoopConf));
     ColumnMetaData[] metadata = in.getColumnMetaData();
-    for (int i=0; i<metadata.length; i++) {
-      log.info(metadata[i].getName() + " " + metadata[i].getType() + " " + metadata[i].getNumber());
+    for (int i = 0; i < metadata.length; i++) {
+      log.info(metadata[i].getName() + " " + metadata[i].getType() + " "
+          + metadata[i].getNumber());
     }
     Assert.assertEquals(rowCount, in.getRowCount());
-    Assert.assertEquals(columnCount, in.getColumnCount()); 
-    
+    Assert.assertEquals(columnCount, in.getColumnCount());
+
     TrevniRowReader reader = new TrevniRowReader(in, columnCount);
     LongWritable rowID = new LongWritable();
     BytesRefArrayWritable braw = new BytesRefArrayWritable(columnCount);
@@ -137,11 +126,13 @@ public class TestTrevni extends TestFormatBase {
       reader.getCurrentRow(braw);
       Object actualRow = serde.deserialize(braw);
       Object expectedRow = rows.get(indx);
-      if (0 != ObjectInspectorUtils.compare(expectedRow, rowHiveObjectInspector, actualRow,
-          out_oi, new FullMapEqualComparer())) {
+      if (0 != ObjectInspectorUtils
+          .compare(expectedRow, rowHiveObjectInspector, actualRow, out_oi,
+              new FullMapEqualComparer())) {
         System.out.println("expected = "
             + SerDeUtils.getJSONString(expectedRow, rowHiveObjectInspector));
-        System.out.println("actual = " + SerDeUtils.getJSONString(actualRow, out_oi));
+        System.out.println("actual = "
+            + SerDeUtils.getJSONString(actualRow, out_oi));
         Assert.fail("Deserialized object does not compare");
       }
       indx++;
@@ -149,7 +140,7 @@ public class TestTrevni extends TestFormatBase {
     in.close();
     log.info("Done");
   }
-  
+
   @Test
   public void testTrevni() throws SerDeException, InstantiationException,
       IllegalAccessException, IOException {

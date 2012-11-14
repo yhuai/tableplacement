@@ -21,7 +21,7 @@ public class DoubleColumn extends Column<Double> {
     this.random = new DoubleRandom(range);
     this.hiveObjectInspector = PrimitiveObjectInspectorFactory.javaDoubleObjectInspector;
   }
-  
+
   @Override
   public Double nextValue() {
     return random.nextValue();

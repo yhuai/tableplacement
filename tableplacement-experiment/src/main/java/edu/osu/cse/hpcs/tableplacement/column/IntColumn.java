@@ -21,7 +21,7 @@ public class IntColumn extends Column<Integer> {
     this.random = new IntRandom(range);
     this.hiveObjectInspector = PrimitiveObjectInspectorFactory.javaIntObjectInspector;
   }
-  
+
   @Override
   public Integer nextValue() {
     return random.nextValue();
