@@ -31,6 +31,7 @@ public class TableProperty {
   // General properties
   public final static String HADOOP_IO_BUFFER_SIZE = "io.file.buffer.size";
   public final static String READ_ALL_COLUMNS_STR = "all";
+  public final static String READ_COLUMN_STR = "read.column.string";
 
   // Default values of general properties
   public final static int DEFAULT_HADOOP_IO_BUFFER_SIZE = 131072; // 128KB
@@ -44,7 +45,6 @@ public class TableProperty {
 
   // RCFile properties
   public final static String RCFILE_ROWGROUP_SIZE_STR = RCFile.Writer.COLUMNS_BUFFER_SIZE_CONF_STR;
-  public final static String RCFILE_READ_COLUMN_STR = "rcfile.read.column.string";
   
   // Default values of RCFile properties
   public final static int DEFAULT_RCFILE_ROWGROUP_SIZE_STR = 16777216; // 16MB
@@ -221,6 +221,10 @@ public class TableProperty {
     return columns;
   }
 
+  public List<String> getColumnNames() {
+    return columnNames;
+  }
+  
   public void copyToHadoopConf(Configuration conf) {
     for (Entry<Object, Object> entry : prop.entrySet()) {
       conf.set((String) entry.getKey(), (String) entry.getValue());

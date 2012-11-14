@@ -29,7 +29,6 @@ import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.util.CmdTool;
-import edu.osu.cse.hpcs.tableplacement.util.RCFileUtil;
 
 public class ReadRCFileFromLocal {
 
@@ -67,16 +66,16 @@ public class ReadRCFileFromLocal {
     rowHiveObjectInspector = (StandardStructObjectInspector) prop
         .getHiveRowObjectInspector();
 
-    readColumnStr = prop.get(TableProperty.RCFILE_READ_COLUMN_STR);
+    readColumnStr = prop.get(TableProperty.READ_COLUMN_STR);
     if (readColumnStr == null || TableProperty.READ_ALL_COLUMNS_STR.equals(readColumnStr)) {
       ColumnProjectionUtils.setFullyReadColumns(conf);
     } else {
-      readCols = RCFileUtil.parseRCFileReadColumnStr(readColumnStr);
+      readCols = CmdTool.parseReadColumnStr(readColumnStr);
       if (Collections.max(readCols) > columnCount - 1) {
-        log.error("Invilid " + TableProperty.RCFILE_READ_COLUMN_STR + " "
+        log.error("Invilid " + TableProperty.READ_COLUMN_STR + " "
             + readColumnStr + ". There is only " + columnCount + " columns");
         throw new TablePropertyException("Invilid "
-            + TableProperty.RCFILE_READ_COLUMN_STR + " " + readColumnStr
+            + TableProperty.READ_COLUMN_STR + " " + readColumnStr
             + ". There is only " + columnCount + " columns");
       }
       ColumnProjectionUtils.setReadColumnIDs(conf, readCols);

@@ -1,5 +1,6 @@
 package edu.osu.cse.hpcs.tableplacement.util;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -38,5 +39,14 @@ public class CmdTool {
     }
     
     return prop;
+  }
+
+  public static ArrayList<Integer> parseReadColumnStr(String readColumnStr) {
+    ArrayList<Integer> columns = new ArrayList<Integer>();
+    String[] strArray = readColumnStr.split(",");
+    for (int i=0; i<strArray.length; i++) {
+      columns.add(Integer.valueOf(strArray[i]));
+    }
+    return columns;
   }
 }

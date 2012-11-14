@@ -30,4 +30,4 @@ hive.io.rcfile.record.buffer.size=4194304
 # RCFile read column string.
 # Format: col1,col2,...
 # Default string is 'all', representing read all columns
-rcfile.read.column.string=all
+read.column.string=all

@@ -19,6 +19,7 @@ package org.apache.trevni;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -179,6 +180,42 @@ public class TestColumnFile {
     while (i.hasNext() && j.hasNext()) {
       Assert.assertEquals(random.nextInt(), i.next());
       Assert.assertEquals(TestUtil.randomString(random), j.next());
+      count++;
+    }
+    Assert.assertEquals(COUNT, count);
+  }
+  
+  @Test public void testTwoBytesColumn() throws Exception {
+    FILE.delete();
+    ColumnFileWriter out =
+      new ColumnFileWriter(createFileMeta(),
+                           new ColumnMetaData("a", ValueType.BYTES),
+                           new ColumnMetaData("b", ValueType.BYTES));
+    Random random = TestUtil.createRandom();
+    for (int i = 0; i < COUNT; i++) {
+      byte[] a = new byte[10];
+      byte[] b = new byte[10];
+      random.nextBytes(a);
+      random.nextBytes(b);
+      out.writeRow(ByteBuffer.wrap(a), ByteBuffer.wrap(b));
+    }
+      
+    out.writeTo(FILE);
+
+    random = TestUtil.createRandom();
+    ColumnFileReader in = new ColumnFileReader(FILE);
+    Assert.assertEquals(COUNT, in.getRowCount());
+    Assert.assertEquals(2, in.getColumnCount());
+    Iterator<String> i = in.getValues("a");
+    Iterator<String> j = in.getValues("b");
+    int count = 0;
+    while (i.hasNext() && j.hasNext()) {
+      byte[] a = new byte[10];
+      byte[] b = new byte[10];
+      random.nextBytes(a);
+      random.nextBytes(b);
+      Assert.assertEquals(ByteBuffer.wrap(a), i.next());
+      Assert.assertEquals(ByteBuffer.wrap(b), j.next());
       count++;
     }
     Assert.assertEquals(COUNT, count);

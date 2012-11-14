@@ -32,62 +32,20 @@ import org.junit.Test;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.TestBase;
+import edu.osu.cse.hpcs.tableplacement.TestFormatBase;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestRCFile extends TestBase {
+public class TestRCFile extends TestFormatBase {
 
-  protected Logger log = Logger.getLogger(TestRCFile.class);
-
-  protected TableProperty testTableProperty;
-  protected Configuration hadoopConf;
-  protected FileSystem localFS;
-  protected Path file;
-  protected ColumnarSerDeBase serde;
-
-  protected List<Column> columns;
-  protected final int columnCount;
+  protected static Logger log = Logger.getLogger(TestRCFile.class);
 
   public TestRCFile() throws URISyntaxException, TablePropertyException,
       IOException {
-    super();
-    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-    URL url = loader.getResource("testColumns.properties");
-    testTableProperty = new TableProperty(new File(url.toURI()));
-    columns = testTableProperty.getColumns();
-    columnCount = columns.size();
-    hadoopConf = new Configuration();
-    testTableProperty.copyToHadoopConf(hadoopConf);
-    localFS = FileSystem.getLocal(hadoopConf);
-    file = new Path(resourceDir, "testRCFile");
-    if (localFS.exists(file)) {
-      log.info(file.getName() + " already exists in " + file.getParent()
-          + ". Delete it first.");
-      localFS.delete(file, true);
-    }
-
+    super("testColumns.properties", "testRCFile", log);
   }
 
-  private List<List<Object>> getTestRows(final int rowCount, final int mapSize) {
-    List<List<Object>> ret = new ArrayList<List<Object>>(rowCount);
-    for (int i = 0; i < rowCount; i++) {
-      Map<String, Integer> map = new HashMap<String, Integer>();
-      for (int j = 0; j < mapSize; j++) {
-        map.put("r" + i + "m" + j, i * 10 + j);
-      }
-      List<Object> row = new ArrayList<Object>(4);
-      row.add(i * 100);
-      row.add(i * 100 + i * 0.001);
-      row.add("r" + i);
-      row.add(map);
-
-      ret.add(row);
-    }
-
-    return ret;
-  }
-
-  private void doRCFileTest(Class<?> serDeClass) throws SerDeException,
+  private void doRCFileFullReadTest(Class<?> serDeClass) throws SerDeException,
       InstantiationException, IllegalAccessException, IOException {
     log.info("Testing RCFile writer and reader with ColumnarSerDe class "
         + serDeClass.getCanonicalName());
@@ -98,7 +56,7 @@ public class TestRCFile extends TestBase {
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();
 
-    List<List<Object>> rows = getTestRows(10, 3);
+    List<List<Object>> rows = getTest4ColRows(10, 3);
     log.info("Writing RCFile ...");
     int totalSerializedDataSize = 0;
     RCFile.Writer writer = new RCFile.Writer(localFS, hadoopConf, file, null,
@@ -140,8 +98,8 @@ public class TestRCFile extends TestBase {
   @Test
   public void testRCFile() throws SerDeException, InstantiationException,
       IllegalAccessException, IOException {
-    doRCFileTest(ColumnarSerDe.class);
-    doRCFileTest(LazyBinaryColumnarSerDe.class);
+    doRCFileFullReadTest(ColumnarSerDe.class);
+    doRCFileFullReadTest(LazyBinaryColumnarSerDe.class);
   }
 
 }
