@@ -45,8 +45,8 @@ public class TestRCFile extends TestBase {
   protected Path file;
   protected ColumnarSerDeBase serde;
 
-  List<Column> columns;
-  final int columnCount;
+  protected List<Column> columns;
+  protected final int columnCount;
 
   public TestRCFile() throws URISyntaxException, TablePropertyException,
       IOException {
