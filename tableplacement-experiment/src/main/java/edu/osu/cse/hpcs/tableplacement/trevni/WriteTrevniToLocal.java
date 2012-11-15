@@ -57,6 +57,8 @@ public class WriteTrevniToLocal extends WriteToLocal {
     long ts;
     assert totalRowGenerationTimeInNano == 0;
     assert totalRowSerializationTimeInNano == 0;
+    long writeRowTime = 0;
+    long writeToTime = 0;
     
     ColumnFileWriter out = new ColumnFileWriter(createFileMeta("null", "null"),
         createColumnMetaData(columns, columnCount));
@@ -83,9 +85,13 @@ public class WriteTrevniToLocal extends WriteToLocal {
         buffer[j] = ByteBuffer.wrap(ref.getData(), ref.getStart(),
             ref.getLength());
       }
+      ts = System.nanoTime();
       out.writeRow((Object[]) buffer);
+      writeRowTime += System.nanoTime() - ts;
     }
+    ts = System.nanoTime();
     out.writeTo(trevniOutputStream);
+    writeToTime += System.nanoTime() - ts;
     trevniOutputStream.close();
 
     log.info("Total serialized data size: " + totalSerializedDataSize);
@@ -93,6 +99,10 @@ public class WriteTrevniToLocal extends WriteToLocal {
       log.info("Column " + i + " serialized data size: "
           + columnSerializedDataSize[i]);
     }
+    
+    otherMeasures.put("Write row time (ms)", writeRowTime / 1000000);
+    otherMeasures.put("Write to time (ms)", writeToTime / 1000000);
+    
     return totalSerializedDataSize;
   }
 

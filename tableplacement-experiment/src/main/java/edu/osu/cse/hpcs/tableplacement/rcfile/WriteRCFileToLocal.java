@@ -35,6 +35,7 @@ public class WriteRCFileToLocal extends WriteToLocal {
     long ts;
     assert totalRowGenerationTimeInNano == 0;
     assert totalRowSerializationTimeInNano == 0;
+    long rowAppendTime = 0;
     
     RCFile.Writer writer = new RCFile.Writer(localFS, conf, file, null, null);
     for (long i = 0; i < rowCount; i++) {
@@ -56,7 +57,9 @@ public class WriteRCFileToLocal extends WriteToLocal {
         totalSerializedDataSize += length;
         columnSerializedDataSize[j] += length;
       }
+      ts = System.nanoTime();
       writer.append(bytes);
+      rowAppendTime += System.nanoTime() - ts;
     }
 
     writer.close();
@@ -65,6 +68,9 @@ public class WriteRCFileToLocal extends WriteToLocal {
       log.info("Column " + i + " serialized data size: "
           + columnSerializedDataSize[i]);
     }
+    
+    otherMeasures.put("Row append time (ms)", rowAppendTime / 1000000);
+    
     return totalSerializedDataSize;
   }
 

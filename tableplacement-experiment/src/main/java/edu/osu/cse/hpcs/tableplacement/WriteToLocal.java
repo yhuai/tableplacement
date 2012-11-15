@@ -2,7 +2,10 @@ package edu.osu.cse.hpcs.tableplacement;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.hadoop.conf.Configuration;
@@ -30,6 +33,7 @@ public abstract class WriteToLocal {
   // Performance measures
   protected long totalRowGenerationTimeInNano;
   protected long totalRowSerializationTimeInNano;
+  protected Map<String, Long> otherMeasures;
 
   public WriteToLocal(String propertyFilePath, String outputPath,
       long rowCount, Properties cmdProperties, Logger log) throws IOException,
@@ -60,7 +64,8 @@ public abstract class WriteToLocal {
     this.rowCount = rowCount;
     this.totalRowGenerationTimeInNano = 0;
     this.totalRowSerializationTimeInNano = 0;
-
+    this.otherMeasures = new HashMap<String, Long>();
+    
     prop.dump();
   }
 
@@ -88,5 +93,9 @@ public abstract class WriteToLocal {
         + totalRowSerializationTimeInNano * 1.0 / 1000000 / rowCount + " ms");
     System.out.println("Throughput (MiB/s): " + totalSerializedDataSize * 1.0
         / 1024 / 1024 / (end - start) * 1000000000);
+    for (Entry<String, Long> entry: otherMeasures.entrySet()) {
+      System.out.println(entry.getKey() + ": " + entry.getValue());
+    }
+    
   }
 }

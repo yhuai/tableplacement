@@ -59,15 +59,3 @@ iostat -d -t -p $DEVICE
 java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadRCFileFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 iostat -d -t -p $DEVICE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
-
-echo "Trevni Write|Binary|RC $ROW_COUNT"
-iostat -d -t -p $DEVICE
-java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar WriteTrevniToLocal -t ../tableProperties/$TABLE -o $OUT_DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -c $ROW_COUNT -p hive.io.rcfile.record.buffer.size $ROW_GROUP_SIZE
-iostat -d -t -p $DEVICE
-echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
-
-echo "Trevni Read|Binary|Column $READ_COLUMN_STR|IOBuffer $IO_BUFFER_SIZE"
-iostat -d -t -p $DEVICE
-java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevniFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
-iostat -d -t -p $DEVICE
-echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
