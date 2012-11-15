@@ -16,12 +16,12 @@ public class Driver {
           "WriteRCFileToLocal");
       pgd.addClass("ReadRCFileFromLocal", ReadRCFileFromLocal.class,
           "ReadRCFileFromLocal");
-      
+
       pgd.addClass("WriteTrevniToLocal", WriteTrevniToLocal.class,
           "WriteTrevniToLocal");
       pgd.addClass("ReadTrevniFromLocal", ReadTrevniFromLocal.class,
           "ReadTrevniFromLocal");
-      
+
       pgd.driver(argv);
 
       // Success
