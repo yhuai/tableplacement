@@ -1,5 +1,6 @@
 package edu.osu.cse.hpcs.tableplacement.trevni;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -29,7 +30,15 @@ public class ReadTrevniFromLocal extends ReadFromLocal {
     assert totalRowReadTimeInNano == 0;
     assert totalRowDeserializationTimeInNano == 0;
 	  
-    ColumnFileReader in = new ColumnFileReader(new HadoopInput(file, conf));
+    
+    log.info("FileSystem class: " + file.getFileSystem(conf).getClass().getCanonicalName());
+    
+    // For localFS, it uses 
+    // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
+    // But it will open and close the file for every read operation.
+    // We may need to just use File instead of HadoopInput for local test.
+    // ColumnFileReader in = new ColumnFileReader(new HadoopInput(file, conf));
+    ColumnFileReader in = new ColumnFileReader(new File(file.getParent() + "/" + file.getName()));
     TrevniRowReader reader = new TrevniRowReader(in, columnCount, readCols);
     
     LongWritable rowID = new LongWritable();
