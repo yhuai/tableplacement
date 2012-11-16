@@ -38,7 +38,7 @@ public class ReadTrevniFromLocal extends ReadFromLocal {
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
     // ColumnFileReader in = new ColumnFileReader(new HadoopInput(file, conf));
-    ColumnFileReader in = new ColumnFileReader(new File(file.getParent() + "/" + file.getName()));
+    ColumnFileReader in = new ColumnFileReader(new File(file.toUri()));
     TrevniRowReader reader = new TrevniRowReader(in, columnCount, readCols);
     
     LongWritable rowID = new LongWritable();

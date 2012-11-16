@@ -1,5 +1,6 @@
 package edu.osu.cse.hpcs.tableplacement.trevni;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class WriteTrevniToLocal extends WriteToLocal {
     
     ColumnFileWriter out = new ColumnFileWriter(createFileMeta("null", "null"),
         createColumnMetaData(columns, columnCount));
-    FSDataOutputStream trevniOutputStream = localFS.create(file);
+    //FSDataOutputStream trevniOutputStream = localFS.create(file);
     for (long i = 0; i < rowCount; i++) {
       ts = System.nanoTime();
       List<Object> row = new ArrayList<Object>(columnCount);
@@ -90,9 +91,10 @@ public class WriteTrevniToLocal extends WriteToLocal {
       writeRowTime += System.nanoTime() - ts;
     }
     ts = System.nanoTime();
-    out.writeTo(trevniOutputStream);
+    //out.writeTo(trevniOutputStream);
+    out.writeTo(new File(file.toUri()));
     writeToTime += System.nanoTime() - ts;
-    trevniOutputStream.close();
+    //trevniOutputStream.close();
 
     log.info("Total serialized data size: " + totalSerializedDataSize);
     for (int i = 0; i < columnCount; i++) {
