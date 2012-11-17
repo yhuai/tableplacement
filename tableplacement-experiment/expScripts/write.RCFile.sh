@@ -2,8 +2,7 @@
 
 if [ $# -ne 4 ]
 then
-  echo "./write.RCFile.sh <output dir> <device> <read column string> <SerDe>"
-  echo "read column string format: all or col1,col2,col3,..."
+  echo "./write.RCFile.sh <output dir> <device> <SerDe> <row group size>"
   echo "SerDe: use B for binary SerDe and use T for text SerDe"
   exit
 fi

@@ -2,7 +2,7 @@
 
 if [ $# -ne 5 ]
 then
-  echo "./read.RCFile.sh <output dir> <device> <read column string> <SerDe>"
+  echo "./read.RCFile.sh <input dir> <device> <read column string> <SerDe> <row group size>"
   echo "read column string format: all or col1,col2,col3,..."
   echo "SerDe: use B for binary SerDe and use T for text SerDe"
   exit
