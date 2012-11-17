@@ -37,6 +37,6 @@ echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/
 echo "Trevni Read|Binary|Column $READ_COLUMN_STR|IOBuffer $IO_BUFFER_SIZE"
 iostat -d -t $DEVICE
 #strace -F -f -ttt -T 
-strace -F -f -ttt -T java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevniFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevniFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
 iostat -d -t $DEVICE

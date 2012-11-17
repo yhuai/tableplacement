@@ -37,6 +37,7 @@ echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/
 
 echo "RCFile Read|Binary|Column $READ_COLUMN_STR|IOBuffer $IO_BUFFER_SIZE"
 iostat -d -t $DEVICE
-strace -F -f -ttt -T java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadRCFileFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+#strace -F -f -ttt -T 
+java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadRCFileFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
 iostat -d -t $DEVICE
