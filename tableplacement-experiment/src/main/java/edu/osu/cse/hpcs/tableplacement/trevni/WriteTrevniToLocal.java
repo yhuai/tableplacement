@@ -92,7 +92,7 @@ public class WriteTrevniToLocal extends WriteToLocal {
     }
     ts = System.nanoTime();
     //out.writeTo(trevniOutputStream);
-    out.writeTo(new File(file.toUri()));
+    out.writeTo(new File(file.toUri().toString()));
     writeToTime += System.nanoTime() - ts;
     //trevniOutputStream.close();
 
