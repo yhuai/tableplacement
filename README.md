@@ -40,6 +40,7 @@ Here are short descriptions of scripts in `tableplacement-experiment/expScripts`
    Usage: `sudo ./write.RCFile.sh <output dir> <device> <SerDe> <row group size>`
 * `read.RCFile.sh` read a file from a file with the format of Trevni.
    Usage: `sudo ./read.RCFile.sh <input dir> <device> <read column string> <SerDe> <row group size>`
+
 ### Notes
 * `<output dir>` and `<input dir>` are dirs used to store files. Filenames will be automatically generated.
 * `<device>` is the storage device which experiments will work on. It should be something like `/dev/sda`
