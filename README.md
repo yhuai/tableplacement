@@ -11,6 +11,7 @@ I will add new formats in future...
 # Build
 1. Install [Apache Maven](http://maven.apache.org/) (Version 3.0.4).
 2. In the root of the SideWalk directory, execute `mvn clean package -DskipTests`
+
 ### Notes
 * During my development, Oracle Java (Version 1.6.0_26) is used.
 
