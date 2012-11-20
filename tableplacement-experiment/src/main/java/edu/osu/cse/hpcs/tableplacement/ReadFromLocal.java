@@ -96,7 +96,7 @@ public abstract class ReadFromLocal {
         + totalRowDeserializationTimeInNano * 1.0 / 1000000 + " ms");
     System.out.println("Average row deserialization time: "
         + totalRowDeserializationTimeInNano * 1.0 / 1000000 / rowCount + " ms");
-    System.out.println("Throughput MB/s: " + totalSerializedDataSize * 1.0
+    System.out.println("Throughput MiB/s: " + totalSerializedDataSize * 1.0
         / 1024 / 1024 / (end - start) * 1000000000);
   }
 }
