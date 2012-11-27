@@ -4,6 +4,11 @@
   <artifactId>tableplacement</artifactId>
   <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
+  <settings>
+  <activeProfiles>
+    <activeProfile>avro-1.7.3</activeProfile>
+  </activeProfiles>
+  </settings>
   <repositories>
     <repository>
       <id>apache release</id>
@@ -35,6 +40,23 @@
       </snapshots>
     </repository>
   </repositories>
+  <profiles>
+    <profile>
+      <id>avro-1.7.3</id>
+      <dependencies>
+  		<dependency>
+  			<groupId>org.apache.avro</groupId>
+  			<artifactId>trevni-core</artifactId>
+  			<version>1.7.3-SNAPSHOT</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.apache.avro</groupId>
+  			<artifactId>trevni-avro</artifactId>
+  			<version>1.7.3-SNAPSHOT</version>
+  		</dependency>
+ 	  </dependencies>
+    </profile>
+  </profiles>
   <dependencies>
   	<dependency>
   		<groupId>org.apache.hadoop</groupId>
