@@ -10,7 +10,8 @@ I will add new formats in future...
 
 # Build
 1. Install [Apache Maven](http://maven.apache.org/) (Version 3.0.4).
-2. In the root of the SideWalk directory, execute `mvn clean package -DskipTests`
+2. If you want to use Avro 1.7.3-SNAPSHOT, please check it out from git (`git clone https://github.com/apache/avro.git`) and intall it into your local repository (`mvn clean install`). 
+3. In the root of the SideWalk directory, if you want to use Avro 1.7.3-SNAPSHOT, then execute `mvn clean package -DskipTests`. Otherwise, `mvn clean package -DskipTests -P !avro-1.7.3`
 
 ### Notes
 * During my development, Oracle Java (Version 1.6.0_26) is used.
