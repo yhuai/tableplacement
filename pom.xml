@@ -4,11 +4,6 @@
   <artifactId>tableplacement</artifactId>
   <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <settings>
-  <activeProfiles>
-    <activeProfile>avro-1.7.3</activeProfile>
-  </activeProfiles>
-  </settings>
   <repositories>
     <repository>
       <id>apache release</id>
