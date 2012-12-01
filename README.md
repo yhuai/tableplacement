@@ -2,11 +2,11 @@
 This project aims to evaluate different table placement formats in the ecosystem of [Apache Hadoop](http://hadoop.apache.org/). This work is still in development and is in a very primitive stage. Also, currently, this work is not well documented.
 
 # Table placement formats
-RCFile in [Apache Hive](http://hive.apache.org/)
+RCFile in [Apache Hive](http://hive.apache.org/) version 0.9.0 
 
-Trevni in [Apache Avro](http://avro.apache.org/)
+Trevni in [Apache Avro](http://avro.apache.org/) version 1.7.2 and 1.7.3-SNAPSHOT
 
-Zebra in [Apache Pig](http://pig.apache.org/)
+Zebra in [Apache Pig](http://pig.apache.org/) version 0.10.0 (only lib added, no benchmarking programs available right now.)
 
 I will add new formats in future...
 
