@@ -66,12 +66,12 @@ public class TestTrevni extends TestFormatBase {
     this.checksum = checksum;
   }
 
-  private void doTrevniFullReadTest(Class<?> serDeClass)
+  private void doTrevniFullReadTest(Class<?> serDeClass, Class<?> inputClass)
       throws InstantiationException, IllegalAccessException, SerDeException,
       IOException {
 
     log.info("Testing Trevni write and read with ColumnarSerDe class "
-        + serDeClass.getCanonicalName());
+        + serDeClass.getCanonicalName() + " and InputClass " + inputClass.getCanonicalName());
     serde = (ColumnarSerDeBase) serDeClass.newInstance();
     serde.initialize(hadoopConf, testTableProperty.getProperties());
 
@@ -107,8 +107,15 @@ public class TestTrevni extends TestFormatBase {
     log.info("FileSystem: " + file.getFileSystem(hadoopConf).getClass());
     assert file.getFileSystem(hadoopConf) instanceof LocalFileSystem;
 
-    ColumnFileReader in = new ColumnFileReader(
-        new HadoopInput(file, hadoopConf));
+    ColumnFileReader in;
+    if (HadoopInput2.class.equals(inputClass)) {
+      in = new ColumnFileReader(
+          new HadoopInput2(file, hadoopConf));
+    } else {
+      in = new ColumnFileReader(
+          new HadoopInput(file, hadoopConf));
+    }
+    
     ColumnMetaData[] metadata = in.getColumnMetaData();
     for (int i = 0; i < metadata.length; i++) {
       log.info(metadata[i].getName() + " " + metadata[i].getType() + " "
@@ -144,8 +151,10 @@ public class TestTrevni extends TestFormatBase {
   @Test
   public void testTrevni() throws SerDeException, InstantiationException,
       IllegalAccessException, IOException {
-    doTrevniFullReadTest(ColumnarSerDe.class);
-    doTrevniFullReadTest(LazyBinaryColumnarSerDe.class);
+    doTrevniFullReadTest(ColumnarSerDe.class, HadoopInput.class);
+    doTrevniFullReadTest(LazyBinaryColumnarSerDe.class, HadoopInput.class);
+    doTrevniFullReadTest(ColumnarSerDe.class, HadoopInput2.class);
+    doTrevniFullReadTest(LazyBinaryColumnarSerDe.class, HadoopInput2.class);
   }
 
 }
