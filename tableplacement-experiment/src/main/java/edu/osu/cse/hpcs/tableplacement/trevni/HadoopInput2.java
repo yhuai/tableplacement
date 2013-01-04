@@ -27,7 +27,8 @@ import org.apache.hadoop.fs.FSDataInputStream;
 
 import org.apache.trevni.Input;
 
-/** Adapt a Hadoop {@link FSDataInputStream} to Trevni's {@link Input}. */
+/** Adapt a Hadoop {@link FSDataInputStream} to Trevni's {@link Input}.\
+ * This input is used for evaluation only*/
 public class HadoopInput2 implements Input {
   private final FSDataInputStream stream;
   private final long len;
@@ -48,7 +49,6 @@ public class HadoopInput2 implements Input {
     stream.seek(p);
     stream.readFully(b, s, ll);
     return ll;
-    //.read(p, b, s, l);
   }
   
 

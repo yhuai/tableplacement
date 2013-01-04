@@ -4,7 +4,7 @@ This project aims to evaluate different table placement formats in the ecosystem
 # Table placement formats
 RCFile in [Apache Hive](http://hive.apache.org/) version 0.9.0 
 
-Trevni in [Apache Avro](http://avro.apache.org/) version 1.7.2 and 1.7.3-SNAPSHOT
+Trevni in [Apache Avro](http://avro.apache.org/) version 1.7.3 and 1.7.4-SNAPSHOT
 
 Zebra in [Apache Pig](http://pig.apache.org/) version 0.10.0 (only lib added, no benchmarking programs available right now.)
 
@@ -13,8 +13,8 @@ I will add new formats in future...
 # Build
 1. Install [Apache Maven](http://maven.apache.org/) (Version 3.0.4).
 2. Install Zebra into your local maven repository. In the root directory of this project, execute `mvn install:install-file -Dfile=./lib/zebra-0.8.0-dev.jar -DgroupId=org.apache.pig -DartifactId=zebra -Dversion=0.8-dev -Dpackaging=jar`.
-2. If you want to use Avro 1.7.3-SNAPSHOT, please check it out from git (`git clone https://github.com/apache/avro.git`) and intall it into your local repository (`mvn clean install`). 
-3. In the root of the SideWalk directory, if you want to use Avro 1.7.3-SNAPSHOT, then execute `mvn clean package -P avro-1.7.3 -DskipTests`. Otherwise, `mvn clean package -DskipTests`
+2. If you want to use Avro 1.7.4-SNAPSHOT, please check it out from git (`git clone https://github.com/apache/avro.git`) and intall it into your local repository (`mvn clean install`). 
+3. In the root of the SideWalk directory, if you want to use Avro 1.7.4-SNAPSHOT, then execute `mvn clean package -P avro-1.7.4 -DskipTests`. Otherwise, `mvn clean package -DskipTests`
 
 ### Notes
 * During my development, Oracle Java (Version 1.6.0_26) is used.
