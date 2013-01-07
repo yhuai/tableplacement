@@ -6,8 +6,6 @@ RCFile in [Apache Hive](http://hive.apache.org/) version 0.9.0
 
 Trevni in [Apache Avro](http://avro.apache.org/) version 1.7.3 and 1.7.4-SNAPSHOT
 
-Zebra in [Apache Pig](http://pig.apache.org/) version 0.10.0 (only lib added, no benchmarking programs available right now.)
-
 I will add new formats in future...
 
 # Build

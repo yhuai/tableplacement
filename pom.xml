@@ -94,11 +94,6 @@
     	<artifactId>pig</artifactId>
     	<version>0.10.0</version>
     </dependency>
-    <dependency>
-    	<groupId>org.apache.pig</groupId>
-    	<artifactId>zebra</artifactId>
-    	<version>0.8-dev</version>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
