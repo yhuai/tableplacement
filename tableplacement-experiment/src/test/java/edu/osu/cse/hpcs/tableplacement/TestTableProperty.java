@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.hadoop.hive.serde.Constants;
@@ -72,7 +75,7 @@ public class TestTableProperty extends TestBase {
         TableProperty.RCFILE_ROWGROUP_SIZE_STR,
         TableProperty.DEFAULT_RCFILE_ROWGROUP_SIZE_STR));
 
-    List<Column> ret = testTableProperty.getColumns();
+    List<Column> ret = testTableProperty.getColumnList();
 
     Assert.assertEquals(expectedColumnStr.size(), ret.size());
 
@@ -133,12 +136,49 @@ public class TestTableProperty extends TestBase {
         TableProperty.RCFILE_ROWGROUP_SIZE_STR,
         TableProperty.DEFAULT_RCFILE_ROWGROUP_SIZE_STR));
 
-    List<Column> ret = testTableProperty.getColumns();
+    List<Column> ret = testTableProperty.getColumnList();
 
     Assert.assertEquals(expectedColumnStr.size(), ret.size());
 
     for (int i = 0; i < ret.size(); i++) {
       Assert.assertEquals(expectedColumnStr.get(i), ret.get(i).toString());
     }
+  }
+  
+  @Test
+  public void testColumnFileGroups() throws TablePropertyException, URISyntaxException, IOException {
+    Map<String, String> expectedColumnStr = new LinkedHashMap<String, String>();
+    expectedColumnStr
+        .put("cint", "Column[name:cint, type:INT, random: IntRandom[range=2147483647]]");
+    expectedColumnStr
+        .put("cdouble", "Column[name:cdouble, type:DOUBLE, random: DoubleRandom[range=100000]]");
+    expectedColumnStr
+        .put("cstring", "Column[name:cstring, type:STRING, random: StringRandom[length=30]]");
+    expectedColumnStr
+        .put("cmap1", "Column[name:cmap1, type:MAP, keyRandom: IntRandom[range=65535], valueRandom: StringRandom[length=4], size: 10]");
+    expectedColumnStr
+        .put("cmap2", "Column[name:cmap2, type:MAP, keyRandom: StringRandom[length=4], valueRandom: StringRandom[length=4], size: 10]");
+    expectedColumnStr
+        .put("cmap3", "Column[name:cmap3, type:MAP, keyRandom: StringRandom[length=4], valueRandom: DoubleRandom[range=100000], size: 10]");
+    expectedColumnStr
+        .put("cstruct1", "Column[name:cstruct1, Field[name:fstring, type:string, random:StringRandom[length=5]], Field[name:fint, type:int, random:IntRandom[range=100]], Field[name:fdouble, type:double, random:DoubleRandom[range=200]]");
+    
+    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+    URL url = loader.getResource("testTableProperty.properties");
+    File file = new File(url.toURI());
+    testTableProperty = new TableProperty(file);
+    testTableProperty.set(TableProperty.COLUMN_FILE_GROUP,
+        "cint,cmap3,cstruct1,cmap1,cmap2|cdouble,cstring");
+    testTableProperty.prepareColumns(); // prepare columns and column file groups again
+    List<ColumnFileGroup> columnFileGroups = testTableProperty.getColumnFileGroups();
+    Assert.assertEquals(2, columnFileGroups.size());
+    for (ColumnFileGroup group: columnFileGroups) {
+      System.out.println(group.toString());
+      for (Column column: group.getColumns()) {
+        Assert.assertEquals(expectedColumnStr.get(column.getName()), column.toString());
+      }
+    }
+    
+    
   }
 }

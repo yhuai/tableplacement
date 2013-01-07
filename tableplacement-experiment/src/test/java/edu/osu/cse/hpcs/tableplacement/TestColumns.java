@@ -48,7 +48,7 @@ public class TestColumns extends TestBase {
 
   @Test
   public void testHiveRowObjectInspector() throws TablePropertyException {
-    List<Column> columns = testTableProperty.getColumns();
+    List<Column> columns = testTableProperty.getColumnList();
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();
     int columnCount = columns.size();
@@ -99,7 +99,7 @@ public class TestColumns extends TestBase {
     ColumnarSerDeBase serde = (ColumnarSerDeBase) serDeClass.newInstance();
     serde.initialize(hadoopConf, testTableProperty.getProperties());
 
-    List<Column> columns = testTableProperty.getColumns();
+    List<Column> columns = testTableProperty.getColumnList();
     int columnCount = columns.size();
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();

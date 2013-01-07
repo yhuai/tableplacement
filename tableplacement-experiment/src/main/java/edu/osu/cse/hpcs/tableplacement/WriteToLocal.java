@@ -40,7 +40,7 @@ public abstract class WriteToLocal {
       TablePropertyException, SerDeException, InstantiationException,
       IllegalAccessException, ClassNotFoundException {
     prop = new TableProperty(new File(propertyFilePath), cmdProperties);
-    columns = prop.getColumns();
+    columns = prop.getColumnList();
     columnCount = columns.size();
     conf = new Configuration();
     prop.copyToHadoopConf(conf);

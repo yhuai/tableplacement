@@ -36,7 +36,7 @@ public class TestGenData extends TestBase {
   @SuppressWarnings("rawtypes")
   @Test
   public void testLoadTableProperty() throws TablePropertyException {
-    List<Column> columns = testTableProperty.getColumns();
+    List<Column> columns = testTableProperty.getColumnList();
 
     for (Column col : columns) {
       System.out.println("Column name:" + col.getName() + ", Column type:"

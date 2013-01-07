@@ -61,7 +61,7 @@ public class TestSerDe extends TestBase {
     ColumnarSerDeBase serde = (ColumnarSerDeBase) serDeClass.newInstance();
     serde.initialize(hadoopConf, testTableProperty.getProperties());
 
-    List<Column> columns = testTableProperty.getColumns();
+    List<Column> columns = testTableProperty.getColumnList();
     int columnCount = columns.size();
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();

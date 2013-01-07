@@ -35,7 +35,7 @@ public class TestFormatBase extends TestBase {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     URL url = loader.getResource(propertyFile);
     testTableProperty = new TableProperty(new File(url.toURI()));
-    columns = testTableProperty.getColumns();
+    columns = testTableProperty.getColumnList();
     columnCount = columns.size();
     hadoopConf = new Configuration();
     testTableProperty.copyToHadoopConf(hadoopConf);
