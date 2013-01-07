@@ -5,7 +5,7 @@ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 public abstract class Column<T> {
 
   public static enum Type {
-    INT, DOUBLE, STRING, MAP
+    INT, DOUBLE, STRING, MAP, STRUCT
   }
 
   protected String name;

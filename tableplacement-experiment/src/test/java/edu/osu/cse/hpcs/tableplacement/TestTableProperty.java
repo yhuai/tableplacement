@@ -40,8 +40,8 @@ public class TestTableProperty extends TestBase {
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file);
 
-    final String hiveColumnNames = "cint,cdouble,cstring,cmap1,cmap2,cmap3";
-    final String hvieColumnTypes = "int:double:string:map<int,string>:map<string,string>:map<string,double>";
+    final String hiveColumnNames = "cint,cdouble,cstring,cmap1,cmap2,cmap3,cstruct1";
+    final String hvieColumnTypes = "int:double:string:map<int,string>:map<string,string>:map<string,double>:struct<fstring:string,fint:int,fdouble:double>";
     final int ioBufferSize = 524288;
     final int rcfileRowGroupSize = 4194304;
 
@@ -58,6 +58,8 @@ public class TestTableProperty extends TestBase {
         .add("Column[name:cmap2, type:MAP, keyRandom: StringRandom[length=4], valueRandom: StringRandom[length=4], size: 10]");
     expectedColumnStr
         .add("Column[name:cmap3, type:MAP, keyRandom: StringRandom[length=4], valueRandom: DoubleRandom[range=100000], size: 10]");
+    expectedColumnStr
+        .add("Column[name:cstruct1, Field[name:fstring, type:string, random:StringRandom[length=5]], Field[name:fint, type:int, random:IntRandom[range=100]], Field[name:fdouble, type:double, random:DoubleRandom[range=200]]");
 
     Assert.assertEquals(hiveColumnNames,
         testTableProperty.get(Constants.LIST_COLUMNS));

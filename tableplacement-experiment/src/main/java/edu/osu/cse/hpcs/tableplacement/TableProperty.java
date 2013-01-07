@@ -14,6 +14,7 @@ import org.apache.hadoop.hive.ql.io.RCFile;
 import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
+import org.apache.hadoop.hive.serde2.typeinfo.StructTypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoUtils;
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ import edu.osu.cse.hpcs.tableplacement.column.DoubleColumn;
 import edu.osu.cse.hpcs.tableplacement.column.IntColumn;
 import edu.osu.cse.hpcs.tableplacement.column.MapColumn;
 import edu.osu.cse.hpcs.tableplacement.column.StringColumn;
+import edu.osu.cse.hpcs.tableplacement.column.StructColumn;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
 public class TableProperty {
@@ -200,6 +202,17 @@ public class TableProperty {
         String keyType = kv[0];
         String valueType = kv[1];
         Column column = new MapColumn(name, keyType, valueType, this);
+        columns.add(column);
+      } else if (type.getTypeName().startsWith(DataType.STRUCT_STR)) {
+        // Currently, Map type cannot be a field of a struct
+        StructTypeInfo structType = (StructTypeInfo)type;
+        String[] fieldNames = structType.getAllStructFieldNames().toArray(new String[0]);
+        TypeInfo[] fieldTypes = structType.getAllStructFieldTypeInfos().toArray(new TypeInfo[0]);
+        String[] fieldTypeStrs = new String[fieldTypes.length];
+        for (int j=0; j<fieldTypes.length; j++) {
+          fieldTypeStrs[j] = fieldTypes[j].getTypeName();
+        }
+        Column column = new StructColumn(name, fieldNames, fieldTypeStrs, this);
         columns.add(column);
       } else {
         throw new TablePropertyException("The type " + type.getTypeName()

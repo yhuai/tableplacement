@@ -67,9 +67,9 @@ public class TestSerDe extends TestBase {
         .getHiveRowObjectInspector();
 
     List<List<Object>> rows = TestFormatBase.getTest4ColRows(COUNT, 3);
-    ByteBuffer[][] buffer = new ByteBuffer[4][];
-    OutputBuffer[] outs = new OutputBuffer[4];
-    for (int i = 0; i < 4; i++) {
+    ByteBuffer[][] buffer = new ByteBuffer[columnCount][];
+    OutputBuffer[] outs = new OutputBuffer[columnCount];
+    for (int i = 0; i < columnCount; i++) {
       outs[i] = new OutputBuffer();
       buffer[i] = new ByteBuffer[rows.size()];
     }
@@ -78,7 +78,7 @@ public class TestSerDe extends TestBase {
       BytesRefArrayWritable braw = (BytesRefArrayWritable) serde.serialize(row,
           rowHiveObjectInspector);
       Assert.assertEquals(columnCount, braw.size());
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < columnCount; i++) {
         BytesRefWritable ref = braw.get(i);
         buffer[i][count] = ByteBuffer.wrap(ref.getData(), ref.getStart(),
             ref.getLength());
@@ -88,14 +88,14 @@ public class TestSerDe extends TestBase {
     }
 
     ObjectInspector out_oi = serde.getObjectInspector();
-    InputBuffer[] ins = new InputBuffer[4];
-    for (int i = 0; i < 4; i++) {
+    InputBuffer[] ins = new InputBuffer[columnCount];
+    for (int i = 0; i < columnCount; i++) {
       ins[i] = new InputBuffer(new InputBytes(outs[i].toByteArray()));
     }
     for (int i = 0; i < rows.size(); i++) {
       BytesRefArrayWritable braw = new BytesRefArrayWritable();
-      braw.resetValid(4);
-      for (int j = 0; j < 4; j++) {
+      braw.resetValid(columnCount);
+      for (int j = 0; j < columnCount; j++) {
         ByteBuffer actual = ins[j].readBytes(null);
         BytesRefWritable ref = braw.get(j);
         ref.set(actual.array(), actual.arrayOffset(), actual.capacity());

@@ -52,23 +52,33 @@ public class TestColumns extends TestBase {
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();
     int columnCount = columns.size();
-    Assert.assertEquals(4, columnCount);
-
-    Map<String, Integer> map = new HashMap<String, Integer>();
-    map.put("4444", 44444);
+    Assert.assertEquals(5, columnCount);
 
     List<Object> row = new ArrayList<Object>(columnCount);
     row.add(1);
     row.add(2.2);
     row.add("333");
+    
+    Map<String, Integer> map = new HashMap<String, Integer>();
+    map.put("4444", 44444);
     row.add(map);
 
+    List<Object> struct = new ArrayList<Object>();
+    struct.add("struct1");
+    struct.add(10);
+    struct.add(22.2);
+    row.add(struct);
+    
     Map<String, Integer> mapRef = new HashMap<String, Integer>();
     mapRef.put("4444", 44444);
+    List<Object> structRef = new ArrayList<Object>();
+    structRef.add("struct1");
+    structRef.add(10);
+    structRef.add(22.2);
 
     List<? extends StructField> fields = rowHiveObjectInspector
         .getAllStructFieldRefs();
-    Assert.assertEquals(4, fields.size());
+    Assert.assertEquals(5, fields.size());
     Assert.assertEquals(1,
         rowHiveObjectInspector.getStructFieldData(row, fields.get(0)));
     Assert.assertEquals(2.2,
@@ -77,6 +87,8 @@ public class TestColumns extends TestBase {
         rowHiveObjectInspector.getStructFieldData(row, fields.get(2)));
     Assert.assertEquals(mapRef,
         rowHiveObjectInspector.getStructFieldData(row, fields.get(3)));
+    Assert.assertEquals(structRef,
+        rowHiveObjectInspector.getStructFieldData(row, fields.get(4)));
   }
 
   public void doTestColumnarSerDe(Class<?> serDeClass) throws SerDeException,
@@ -92,14 +104,20 @@ public class TestColumns extends TestBase {
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();
 
-    Map<String, Integer> map = new HashMap<String, Integer>();
-    map.put("4444", 44444);
-
     List<Object> row = new ArrayList<Object>(columnCount);
     row.add(128);
     row.add(2.2);
     row.add("333");
+
+    Map<String, Integer> map = new HashMap<String, Integer>();
+    map.put("4444", 44444);
     row.add(map);
+
+    List<Object> struct = new ArrayList<Object>();
+    struct.add("struct1");
+    struct.add(10);
+    struct.add(22.2);
+    row.add(struct);
 
     BytesRefArrayWritable braw = (BytesRefArrayWritable) serde.serialize(row,
         rowHiveObjectInspector);

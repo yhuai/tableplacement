@@ -61,7 +61,11 @@ public class TestFormatBase extends TestBase {
       row.add(i * 100 + i * 0.001);
       row.add("r" + i);
       row.add(map);
-
+      List<Object> struct = new ArrayList<Object>(3);
+      struct.add("f" + i);
+      struct.add(i * 101);
+      struct.add(i * 101 + i * 0.001);
+      row.add(struct);
       ret.add(row);
     }
 
