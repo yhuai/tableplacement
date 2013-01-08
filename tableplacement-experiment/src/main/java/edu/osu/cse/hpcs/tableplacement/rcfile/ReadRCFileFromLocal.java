@@ -22,11 +22,6 @@ public class ReadRCFileFromLocal extends ReadFromLocal {
       SerDeException, InstantiationException, IllegalAccessException,
       ClassNotFoundException {
   	super(propertyFilePath, inputPath, cmdProperties, log);
-  	if (readCols == null) {
-  	  ColumnProjectionUtils.setFullyReadColumns(conf);
-  	} else {
-  	  ColumnProjectionUtils.setReadColumnIDs(conf, readCols);
-  	}
   }
 
   public long doRead() throws IOException, SerDeException {

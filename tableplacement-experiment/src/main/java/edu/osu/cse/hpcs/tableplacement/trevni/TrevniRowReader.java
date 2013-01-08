@@ -3,6 +3,7 @@ package edu.osu.cse.hpcs.tableplacement.trevni;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefWritable;
@@ -17,14 +18,14 @@ public class TrevniRowReader {
 
   private ColumnFileReader in;
   private int columnCount;
-  private ArrayList<Integer> readCols;
-
+  private List<Integer> readCols;
+  private int[] readColsArray;
   private ColumnValues<ByteBuffer>[] values;
 
   private long rowCount;
 
   public TrevniRowReader(ColumnFileReader in, int columnCount,
-      ArrayList<Integer> readColsRef) throws IOException {
+      List<Integer> readColsRef) throws IOException {
     this.in = in;
     this.columnCount = columnCount;
     if (readColsRef == null) {
@@ -36,8 +37,10 @@ public class TrevniRowReader {
       this.readCols = readColsRef;
     }
     values = new ColumnValues[this.readCols.size()];
+    readColsArray = new int[this.readCols.size()];
     for (int i = 0; i < values.length; i++) {
       values[i] = in.getValues(this.readCols.get(i));
+      readColsArray[i] = this.readCols.get(i);
     }
     log.info("Total number of columns: " + columnCount);
     log.info("Read columns: " + this.readCols.toString());
@@ -63,7 +66,7 @@ public class TrevniRowReader {
   public void getCurrentRow(BytesRefArrayWritable braw) throws IOException {
     for (int i = 0; i < values.length; i++) {
       ByteBuffer v = values[i].next();
-      BytesRefWritable ref = braw.unCheckedGet(i);
+      BytesRefWritable ref = braw.unCheckedGet(readColsArray[i]);
       ref.set(v.array(), v.arrayOffset(), v.capacity());
     }
   }

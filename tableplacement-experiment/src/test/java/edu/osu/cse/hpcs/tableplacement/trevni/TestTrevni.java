@@ -16,6 +16,7 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.hive.ql.io.RCFile;
 import org.apache.hadoop.hive.ql.io.RCFileOutputFormat;
+import org.apache.hadoop.hive.serde2.ColumnProjectionUtils;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.SerDeUtils;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
@@ -27,6 +28,8 @@ import org.apache.hadoop.hive.serde2.objectinspector.FullMapEqualComparer;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorUtils;
 import org.apache.hadoop.hive.serde2.objectinspector.StandardStructObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.StructField;
+import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 import org.apache.trevni.ColumnFileReader;
@@ -66,19 +69,11 @@ public class TestTrevni extends TestFormatBase {
     this.checksum = checksum;
   }
 
-  private void doTrevniFullReadTest(Class<?> serDeClass, Class<?> inputClass)
-      throws InstantiationException, IllegalAccessException, SerDeException,
-      IOException {
+  private void writeTrevniFile(
+      ColumnarSerDeBase serde,
+      StandardStructObjectInspector rowHiveObjectInspector,
+      List<List<Object>> rows) throws IOException, SerDeException {
 
-    log.info("Testing Trevni write and read with ColumnarSerDe class "
-        + serDeClass.getCanonicalName() + " and InputClass " + inputClass.getCanonicalName());
-    serde = (ColumnarSerDeBase) serDeClass.newInstance();
-    serde.initialize(hadoopConf, testTableProperty.getProperties());
-
-    StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
-        .getHiveRowObjectInspector();
-
-    List<List<Object>> rows = getTest4ColRows(rowCount, 3);
     log.info("Writing Trevni ...");
     int totalSerializedDataSize = 0;
     ColumnFileWriter out = new ColumnFileWriter(
@@ -101,6 +96,22 @@ public class TestTrevni extends TestFormatBase {
     out.writeTo(trevniOutputStream);
     trevniOutputStream.close();
     log.info("Total serialized data size: " + totalSerializedDataSize);
+  }
+  
+  private void doTrevniFullReadTest(Class<?> serDeClass, Class<?> inputClass)
+      throws InstantiationException, IllegalAccessException, SerDeException,
+      IOException {
+
+    log.info("Testing Trevni write and full read with ColumnarSerDe class "
+        + serDeClass.getCanonicalName() + " and InputClass " + inputClass.getCanonicalName());
+    serde = (ColumnarSerDeBase) serDeClass.newInstance();
+    serde.initialize(hadoopConf, testTableProperty.getProperties());
+
+    StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
+        .getHiveRowObjectInspector();
+
+    List<List<Object>> rows = getTest4ColRows(rowCount, 3);
+    writeTrevniFile(serde, rowHiveObjectInspector, rows);
 
     log.info("Reading Trevni ...");
     ObjectInspector out_oi = serde.getObjectInspector();
@@ -123,6 +134,10 @@ public class TestTrevni extends TestFormatBase {
     }
     Assert.assertEquals(rowCount, in.getRowCount());
     Assert.assertEquals(columnCount, in.getColumnCount());
+
+    ColumnProjectionUtils.setFullyReadColumns(hadoopConf);
+    // initialize again since notSkipIDs has been changed and need to be retrieved again.
+    serde.initialize(hadoopConf, testTableProperty.getProperties());
 
     TrevniRowReader reader = new TrevniRowReader(in, columnCount);
     LongWritable rowID = new LongWritable();
@@ -147,12 +162,81 @@ public class TestTrevni extends TestFormatBase {
     in.close();
     log.info("Done");
   }
+  
+  private void doTrevniPartialReadTest(Class<?> serDeClass, Class<?> inputClass)
+      throws InstantiationException, IllegalAccessException, SerDeException,
+      IOException {
+
+    log.info("Testing Trevni write and partial read with ColumnarSerDe class "
+        + serDeClass.getCanonicalName() + " and InputClass " + inputClass.getCanonicalName());
+    serde = (ColumnarSerDeBase) serDeClass.newInstance();
+    serde.initialize(hadoopConf, testTableProperty.getProperties());
+    StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
+        .getHiveRowObjectInspector();
+
+    List<List<Object>> rows = getTest4ColRows(rowCount, 3);
+    writeTrevniFile(serde, rowHiveObjectInspector, rows);
+
+    log.info("Reading Trevni ...");
+    ObjectInspector out_oi = serde.getObjectInspector();
+    log.info("FileSystem: " + file.getFileSystem(hadoopConf).getClass());
+    assert file.getFileSystem(hadoopConf) instanceof LocalFileSystem;
+
+    ColumnFileReader in;
+    if (HadoopInput2.class.equals(inputClass)) {
+      in = new ColumnFileReader(
+          new HadoopInput2(file, hadoopConf));
+    } else {
+      in = new ColumnFileReader(
+          new HadoopInput(file, hadoopConf));
+    }
+    
+    ColumnMetaData[] metadata = in.getColumnMetaData();
+    for (int i = 0; i < metadata.length; i++) {
+      log.info(metadata[i].getName() + " " + metadata[i].getType() + " "
+          + metadata[i].getNumber());
+    }
+    Assert.assertEquals(rowCount, in.getRowCount());
+    Assert.assertEquals(columnCount, in.getColumnCount());
+
+    for (int i=0; i<columnCount; i++) {
+      log.info("Read column " + i);
+      ColumnProjectionUtils.setReadColumnIDs(hadoopConf, new ArrayList(Arrays.asList(i)));
+      // initialize again since notSkipIDs has been changed and need to be retrieved again.
+      serde.initialize(hadoopConf, testTableProperty.getProperties());
+      TrevniRowReader reader = new TrevniRowReader(in, columnCount, Arrays.asList(i));
+      LongWritable rowID = new LongWritable();
+      BytesRefArrayWritable braw = new BytesRefArrayWritable(columnCount);
+      braw.resetValid(columnCount);
+      int indx = 0;
+      while (reader.next(rowID)) {
+        reader.getCurrentRow(braw);
+        Object actualRow = serde.deserialize(braw);
+        StructObjectInspector oi = (StructObjectInspector) out_oi;
+        List<? extends StructField> fieldRefs = oi.getAllStructFieldRefs();
+        Object fieldData = oi.getStructFieldData(actualRow, fieldRefs.get(i));
+        Object javaObjectData = 
+            ObjectInspectorUtils.copyToStandardJavaObject(fieldData,
+                fieldRefs.get(i).getFieldObjectInspector());
+
+        List<Object> expectedRow = rows.get(indx);
+        Assert.assertEquals(expectedRow.get(i), javaObjectData);
+        indx++;
+      }
+      in.close();
+    }
+
+    log.info("Done");
+  }
 
   @Test
   public void testTrevni() throws SerDeException, InstantiationException,
-      IllegalAccessException, IOException {
+      IllegalAccessException, IOException, InterruptedException {
     doTrevniFullReadTest(ColumnarSerDe.class, HadoopInput.class);
     doTrevniFullReadTest(LazyBinaryColumnarSerDe.class, HadoopInput.class);
+    doTrevniPartialReadTest(ColumnarSerDe.class, HadoopInput.class);
+    doTrevniPartialReadTest(LazyBinaryColumnarSerDe.class, HadoopInput.class);
+
     doTrevniFullReadTest(ColumnarSerDe.class, HadoopInput2.class);
     doTrevniFullReadTest(LazyBinaryColumnarSerDe.class, HadoopInput2.class);
   }

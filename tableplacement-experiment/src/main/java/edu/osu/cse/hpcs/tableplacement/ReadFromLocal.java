@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.serde2.ColumnProjectionUtils;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.ColumnarSerDeBase;
 import org.apache.hadoop.hive.serde2.objectinspector.StandardStructObjectInspector;
@@ -53,7 +54,6 @@ public abstract class ReadFromLocal {
     }
     Class serDeClass = Class.forName(serDeClassName);
     serde = (ColumnarSerDeBase) serDeClass.newInstance();
-    serde.initialize(conf, prop.getProperties());
     rowHiveObjectInspector = (StandardStructObjectInspector) prop
         .getHiveRowObjectInspector();
 
@@ -72,6 +72,15 @@ public abstract class ReadFromLocal {
       }
     }
 
+    if (readCols == null) {
+      ColumnProjectionUtils.setFullyReadColumns(conf);
+    } else {
+      ColumnProjectionUtils.setReadColumnIDs(conf, readCols);
+    }
+    // initialization must be done after read columns have been
+    // set in hadoop conf
+    serde.initialize(conf, prop.getProperties());
+    
     prop.dump();
   }
   
