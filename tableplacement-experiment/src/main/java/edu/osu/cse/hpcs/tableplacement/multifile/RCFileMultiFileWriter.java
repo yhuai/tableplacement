@@ -27,9 +27,9 @@ public class RCFileMultiFileWriter extends MultiFileWriter {
       writers[i] = new RCFile.Writer(fs, conf, outputFiles[i], 
           prop.getInt(
               TableProperty.HADOOP_IO_BUFFER_SIZE,
-              TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE),
-          (short) conf.getInt("dfs.replication", 3),
-          conf.getLong("dfs.block.size", 128 * 1024 * 1024),
+              TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE),   // IO buffer size
+          (short) conf.getInt("dfs.replication", 3),          // number of replicas
+          conf.getLong("dfs.block.size", 128 * 1024 * 1024),  // HDFS block size
           null, new Metadata(), null);
     }
   }
