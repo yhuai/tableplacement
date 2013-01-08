@@ -8,11 +8,15 @@ import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.ql.io.RCFileOutputFormat;
+import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
+import org.apache.hadoop.hive.serde2.columnar.ColumnarSerDeBase;
 import org.apache.hadoop.io.Writable;
 
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
+import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
 public abstract class MultiFileWriter<T> {
 
@@ -23,18 +27,36 @@ public abstract class MultiFileWriter<T> {
   protected Path[] outputFiles;
   protected List<ColumnFileGroup> columnFileGroups;
   protected Map<String, T> writers;
+  protected Map<String, Configuration> writeConf;
+  protected Map<String, ColumnarSerDeBase> serdes;
 
-  public MultiFileWriter(TableProperty prop, Configuration conf, Path outDIr)
-      throws IOException {
-    tableProp = prop;
+  public MultiFileWriter(Configuration conf, Path outDir)
+      throws IOException, InstantiationException, IllegalAccessException, SerDeException,
+      ClassNotFoundException, TablePropertyException {
+    tableProp = new TableProperty(conf);
+    tableProp.prepareColumns();
+    String serDeClassName = tableProp.get(TableProperty.SERDE_CLASS);
+    if (serDeClassName == null) {
+      serDeClassName = TableProperty.DEFAULT_SERDE_CLASS;
+    }
+    Class serDeClass = Class.forName(serDeClassName);
     columnFileGroups = tableProp.getColumnFileGroups();
-    outputDir = outDIr;
+    outputDir = outDir;
     fs = outputDir.getFileSystem(conf);
     outputFiles = new Path[columnFileGroups.size()];
     writers = new LinkedHashMap<String, T>();
+    serdes = new LinkedHashMap<String, ColumnarSerDeBase>();
+    writeConf = new LinkedHashMap<String, Configuration>(); 
+    
     for (int i=0; i<columnFileGroups.size(); i++) {
       ColumnFileGroup group = columnFileGroups.get(i);
       outputFiles[i] = new Path(outputDir, group.getName());
+      ColumnarSerDeBase serde = (ColumnarSerDeBase) serDeClass.newInstance();
+      serde.initialize(conf, group.getGroupProp().getProperties());
+      serdes.put(group.getName(), serde);
+      Configuration thisConf = new Configuration(conf);
+      RCFileOutputFormat.setColumnNumber(thisConf, group.getColumns().size());
+      writeConf.put(group.getName(), thisConf);
     }
   }
   
@@ -50,4 +72,8 @@ public abstract class MultiFileWriter<T> {
   public abstract void append(Map<String, BytesRefArrayWritable> vals) throws IOException;
   
   public abstract void close() throws IOException;
+  
+  public ColumnarSerDeBase getGroupSerDe(String groupName) {
+    return serdes.get(groupName);
+  }
 }

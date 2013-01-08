@@ -7,6 +7,7 @@ import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
+import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
@@ -39,7 +40,8 @@ public class MapColumn extends Column<Map> {
   private String mapkeyDelim;
 
   public MapColumn(String name, String keyType, String valueType,
-      TableProperty prop) throws TablePropertyException {
+      TableProperty prop, TypeInfo typeInfo) throws TablePropertyException {
+    super(typeInfo);
     this.name = name;
     this.type = Column.Type.MAP;
 

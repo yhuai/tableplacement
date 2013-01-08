@@ -42,6 +42,7 @@ public class TestTableProperty extends TestBase {
     URL url = loader.getResource("testTableProperty.properties");
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file);
+    testTableProperty.prepareColumns();
 
     final String hiveColumnNames = "cint,cdouble,cstring,cmap1,cmap2,cmap3,cstruct1";
     final String hvieColumnTypes = "int:double:string:map<int,string>:map<string,string>:map<string,double>:struct<fstring:string,fint:int,fdouble:double>";
@@ -112,6 +113,7 @@ public class TestTableProperty extends TestBase {
     URL url = loader.getResource("testTableProperty.properties");
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file, other);
+    testTableProperty.prepareColumns();
 
     List<String> expectedColumnStr = new ArrayList<String>();
     expectedColumnStr
@@ -168,7 +170,7 @@ public class TestTableProperty extends TestBase {
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file);
     testTableProperty.set(TableProperty.COLUMN_FILE_GROUP,
-        "cint,cmap3,cstruct1,cmap1,cmap2|cdouble,cstring");
+        "cfg1:cint,cmap3,cstruct1,cmap1,cmap2|cfg2:cdouble,cstring");
     testTableProperty.prepareColumns(); // prepare columns and column file groups again
     List<ColumnFileGroup> columnFileGroups = testTableProperty.getColumnFileGroups();
     Assert.assertEquals(2, columnFileGroups.size());

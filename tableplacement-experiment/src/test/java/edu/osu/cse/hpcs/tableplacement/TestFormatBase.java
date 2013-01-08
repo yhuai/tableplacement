@@ -23,7 +23,7 @@ public class TestFormatBase extends TestBase {
   protected TableProperty testTableProperty;
   protected Configuration hadoopConf;
   protected FileSystem localFS;
-  protected Path file;
+  protected Path path;
   protected ColumnarSerDeBase serde;
 
   protected List<Column> columns;
@@ -35,16 +35,17 @@ public class TestFormatBase extends TestBase {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     URL url = loader.getResource(propertyFile);
     testTableProperty = new TableProperty(new File(url.toURI()));
+    testTableProperty.prepareColumns();
     columns = testTableProperty.getColumnList();
     columnCount = columns.size();
     hadoopConf = new Configuration();
     testTableProperty.copyToHadoopConf(hadoopConf);
     localFS = FileSystem.getLocal(hadoopConf);
-    file = new Path(resourceDir, testDataFile);
-    if (localFS.exists(file)) {
-      log.info(file.getName() + " already exists in " + file.getParent()
+    path = new Path(resourceDir, testDataFile);
+    if (localFS.exists(path)) {
+      log.info(path.getName() + " already exists in " + path.getParent()
           + ". Delete it first.");
-      localFS.delete(file, true);
+      localFS.delete(path, true);
     }
   }
 

@@ -49,6 +49,7 @@ public class TestSerDe extends TestBase {
     URL url = loader.getResource("testColumns.properties");
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file);
+    testTableProperty.prepareColumns();
     hadoopConf = new Configuration();
   }
 

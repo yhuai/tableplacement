@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.hadoop.hive.serde.Constants;
+import org.apache.hadoop.hive.serde2.typeinfo.PrimitiveTypeInfo;
+import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,6 +33,7 @@ public class TestGenData extends TestBase {
     URL url = loader.getResource("testTableProperty.properties");
     File file = new File(url.toURI());
     testTableProperty = new TableProperty(file);
+    testTableProperty.prepareColumns();
   }
 
   @SuppressWarnings("rawtypes")
@@ -52,7 +55,7 @@ public class TestGenData extends TestBase {
   @Test
   public void testIntColumnValueRange() {
     int range = 50000;
-    IntColumn column = new IntColumn("int", range);
+    IntColumn column = new IntColumn("int", range, new PrimitiveTypeInfo());
     int count = 10000;
     for (int i = 0; i < count; i++) {
       Assert.assertTrue(column.nextValue() < range);
@@ -62,7 +65,7 @@ public class TestGenData extends TestBase {
   @Test
   public void testDoubleColumnValueRange() {
     int range = 50000;
-    DoubleColumn column = new DoubleColumn("double", range);
+    DoubleColumn column = new DoubleColumn("double", range, new PrimitiveTypeInfo());
     int count = 10000;
     for (int i = 0; i < count; i++) {
       Assert.assertTrue(column.nextValue() < range);
@@ -72,7 +75,7 @@ public class TestGenData extends TestBase {
   @Test
   public void testStringColumnValueLength() {
     int length = 50;
-    StringColumn column = new StringColumn("string", length);
+    StringColumn column = new StringColumn("string", length, new PrimitiveTypeInfo());
     int count = 10000;
     for (int i = 0; i < count; i++) {
       Assert.assertTrue(column.nextValue().length() == length);

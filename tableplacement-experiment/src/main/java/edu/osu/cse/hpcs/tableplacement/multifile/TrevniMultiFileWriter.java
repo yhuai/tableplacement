@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefWritable;
 import org.apache.trevni.ColumnFileWriter;
@@ -18,14 +19,16 @@ import org.apache.trevni.ColumnMetaData;
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
+import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
 
 public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
 
   Map<String, FSDataOutputStream> files;
-  public TrevniMultiFileWriter(TableProperty prop, Configuration conf,
-      Path outDIr) throws IOException {
-    super(prop, conf, outDIr);
+  public TrevniMultiFileWriter(Configuration conf,
+      Path outDir) throws IOException, InstantiationException, IllegalAccessException,
+      SerDeException, ClassNotFoundException, TablePropertyException {
+    super(conf, outDir);
     files = new LinkedHashMap<String, FSDataOutputStream>();
     for (int i=0; i<columnFileGroups.size(); i++) {      
       ColumnFileGroup group = columnFileGroups.get(i);
@@ -38,7 +41,7 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
       writers.put(group.getName(), writer);
 
       FSDataOutputStream file = fs.create(outputFiles[i], true,
-          prop.getInt(
+          tableProp.getInt(
               TableProperty.HADOOP_IO_BUFFER_SIZE,
               TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE),   // IO buffer size, replication,
           (short) conf.getInt("dfs.replication", 3),          // number of replicas

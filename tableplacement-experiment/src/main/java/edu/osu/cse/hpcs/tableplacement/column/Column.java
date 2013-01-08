@@ -1,6 +1,7 @@
 package edu.osu.cse.hpcs.tableplacement.column;
 
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 public abstract class Column<T> {
 
@@ -10,8 +11,13 @@ public abstract class Column<T> {
 
   protected String name;
   protected Type type;
+  protected TypeInfo typeInfo;
 
   protected ObjectInspector hiveObjectInspector;
+
+  protected Column(TypeInfo typeInfo) {
+    this.typeInfo = typeInfo;
+  }
 
   /**
    * @return next value
@@ -44,6 +50,10 @@ public abstract class Column<T> {
     return type.toString();
   }
 
+  public TypeInfo getTypeInfo() {
+    return typeInfo;
+  }
+  
   /**
    * @return the Hive object inspector of this column
    */

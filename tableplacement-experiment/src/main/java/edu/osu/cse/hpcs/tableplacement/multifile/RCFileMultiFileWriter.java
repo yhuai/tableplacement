@@ -7,31 +7,36 @@ import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.ql.io.RCFile;
+import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
 import org.apache.hadoop.io.SequenceFile.Metadata;
 import org.apache.hadoop.io.Writable;
 
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
+import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
 /*
  * A write which can write a table to multiple files in RCFile format.
  */
 public class RCFileMultiFileWriter extends MultiFileWriter<RCFile.Writer> {
 
-  public RCFileMultiFileWriter(TableProperty prop, Configuration conf, Path outputDir)
-      throws IOException {
-    super(prop, conf, outputDir);
+  public RCFileMultiFileWriter(Configuration conf, Path outputDir)
+      throws IOException, InstantiationException, IllegalAccessException, SerDeException,
+      ClassNotFoundException, TablePropertyException {
+    super(conf, outputDir);
     for (int i=0; i<columnFileGroups.size(); i++) {
       //writers[i] = new RCFile.Writer(fs, conf, outputFiles[i], null, null);
-      RCFile.Writer writer = new RCFile.Writer(fs, conf, outputFiles[i], 
-          prop.getInt(
+      ColumnFileGroup group = columnFileGroups.get(i);
+      
+      Configuration groupConf = writeConf.get(group.getName());
+      RCFile.Writer writer = new RCFile.Writer(fs, groupConf, outputFiles[i], 
+          tableProp.getInt(
               TableProperty.HADOOP_IO_BUFFER_SIZE,
               TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE),   // IO buffer size
-          (short) conf.getInt("dfs.replication", 3),          // number of replicas
-          conf.getLong("dfs.block.size", 128 * 1024 * 1024),  // HDFS block size
+          (short) groupConf.getInt("dfs.replication", 3),          // number of replicas
+          groupConf.getLong("dfs.block.size", 128 * 1024 * 1024),  // HDFS block size
           null, new Metadata(), null);
-      ColumnFileGroup group = columnFileGroups.get(i);
       writers.put(group.getName(), writer);
     }
   }

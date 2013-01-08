@@ -1,6 +1,7 @@
 package edu.osu.cse.hpcs.tableplacement.column;
 
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
+import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 
@@ -11,11 +12,12 @@ public class IntColumn extends Column<Integer> {
 
   private IntRandom random;
 
-  public IntColumn(String name, TableProperty prop) {
-    this(name, prop.getInt(INT_RANGE_STR, DEFAULT_INT_RANGE));
+  public IntColumn(String name, TableProperty prop, TypeInfo typeInfo) {
+    this(name, prop.getInt(INT_RANGE_STR, DEFAULT_INT_RANGE), typeInfo);
   }
 
-  public IntColumn(String name, int range) {
+  public IntColumn(String name, int range, TypeInfo typeInfo) {
+    super(typeInfo);
     this.name = name;
     this.type = Column.Type.INT;
     this.random = new IntRandom(range);

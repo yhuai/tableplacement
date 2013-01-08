@@ -10,6 +10,7 @@ import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
+import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
@@ -36,8 +37,9 @@ public class StructColumn extends Column<List> {
   private String fieldDelim;
 
   public StructColumn(String name, String[] structFieldNames,
-      String[] structFieldTypes, TableProperty prop)
+      String[] structFieldTypes, TableProperty prop, TypeInfo typeInfo)
       throws TablePropertyException {
+    super(typeInfo);
     this.name = name;
     this.type = Column.Type.STRUCT;
 
@@ -50,7 +52,8 @@ public class StructColumn extends Column<List> {
     fieldTypes = structFieldTypes;
     fieldRandoms = new RandomWrapper[structFieldNames.length];
     fieldObjectInspectors = new ObjectInspector[structFieldNames.length];
-    for (int i = 0; i < fieldNames.length; i++) {
+    numFields = fieldNames.length; 
+    for (int i = 0; i < numFields; i++) {
       if (DataType.INT_STR.equals(fieldTypes[i])) {
         int range = prop.getInt(INT_IN_STRUCT_RANGE_STR,
             DEFAULT_INT_IN_STRUCT_RANGE);

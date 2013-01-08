@@ -37,6 +37,7 @@ public class TableProperty {
   public final static String HADOOP_IO_BUFFER_SIZE = "io.file.buffer.size";
   public final static String READ_ALL_COLUMNS_STR = "all";
   public final static String READ_COLUMN_STR = "read.column.string";
+  public final static String READ_COLUMN_MULTI_FILE_STR = "read.column.multi.file.string";
   // In the case that a table is stored in multiple files
   // and each of the file store a subset of columns.
   // This string representing which columns are in the same file.
@@ -75,6 +76,20 @@ public class TableProperty {
   private TableProperty() {
     prop = new Properties();
   }
+  
+  public TableProperty(Properties other) {
+    this();
+    if (other != null) {
+      prop.putAll(other);
+    }
+  }
+  
+  public TableProperty(Configuration conf) {
+    this();
+    for (Entry<String, String> entry: conf) {
+      set(entry.getKey(), entry.getValue());
+    }
+  }
 
   /**
    * Load a table property from a file.
@@ -108,7 +123,6 @@ public class TableProperty {
     if (other != null) {
       prop.putAll(other);
     }
-    prepareColumns();
   }
 
   public void prepareColumns() throws TablePropertyException {
@@ -137,10 +151,10 @@ public class TableProperty {
                 " has not declared in the property file");
           }
         }
-        columnFileGroups.add(new ColumnFileGroup(groupName, group));
+        columnFileGroups.add(new ColumnFileGroup(groupName, group, this));
       }
     } else { // all columns are in the same file
-      columnFileGroups.add(new ColumnFileGroup("all", columnList));
+      columnFileGroups.add(new ColumnFileGroup("all", columnList, this));
     }
   }
   
@@ -225,15 +239,15 @@ public class TableProperty {
       TypeInfo type = columnTypes.get(i);
 
       if (DataType.INT_STR.equals(type.getTypeName())) {
-        Column column = new IntColumn(name, this);
+        Column column = new IntColumn(name, this, type);
         columnList.add(column);
         columns.put(column.getName(), column);
       } else if (DataType.DOUBLE_STR.equals(type.getTypeName())) {
-        Column column = new DoubleColumn(name, this);
+        Column column = new DoubleColumn(name, this, type);
         columnList.add(column);
         columns.put(column.getName(), column);
       } else if (DataType.STRING_STR.equals(type.getTypeName())) {
-        Column column = new StringColumn(name, this);
+        Column column = new StringColumn(name, this, type);
         columnList.add(column);
         columns.put(column.getName(), column);
       } else if (type.getTypeName().startsWith(DataType.MAP_STR)) {
@@ -242,7 +256,7 @@ public class TableProperty {
         assert kv.length == 2;
         String keyType = kv[0];
         String valueType = kv[1];
-        Column column = new MapColumn(name, keyType, valueType, this);
+        Column column = new MapColumn(name, keyType, valueType, this, type);
         columnList.add(column);
         columns.put(column.getName(), column);
       } else if (type.getTypeName().startsWith(DataType.STRUCT_STR)) {
@@ -254,7 +268,7 @@ public class TableProperty {
         for (int j=0; j<fieldTypes.length; j++) {
           fieldTypeStrs[j] = fieldTypes[j].getTypeName();
         }
-        Column column = new StructColumn(name, fieldNames, fieldTypeStrs, this);
+        Column column = new StructColumn(name, fieldNames, fieldTypeStrs, this, type);
         columnList.add(column);
         columns.put(column.getName(), column);
       } else {
@@ -295,6 +309,10 @@ public class TableProperty {
     for (Entry<Object, Object> entry : prop.entrySet()) {
       conf.set((String) entry.getKey(), (String) entry.getValue());
     }
+  }
+  
+  public String remove(String key) {
+    return (String)prop.remove(key);
   }
 
   public Properties getProperties() {

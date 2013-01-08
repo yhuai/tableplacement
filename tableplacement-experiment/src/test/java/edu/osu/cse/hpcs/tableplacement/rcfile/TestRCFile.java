@@ -48,7 +48,7 @@ public class TestRCFile extends TestFormatBase {
       List<List<Object>> rows) throws IOException, SerDeException {
     log.info("Writing RCFile ...");
     int totalSerializedDataSize = 0;
-    RCFile.Writer writer = new RCFile.Writer(localFS, hadoopConf, file, null,
+    RCFile.Writer writer = new RCFile.Writer(localFS, hadoopConf, path, null,
         null);
     for (int i = 0; i < rows.size(); i++) {
       BytesRefArrayWritable bytes = (BytesRefArrayWritable) serde.serialize(
@@ -80,7 +80,7 @@ public class TestRCFile extends TestFormatBase {
     ObjectInspector out_oi = serde.getObjectInspector();
     ColumnProjectionUtils.setFullyReadColumns(hadoopConf);
     serde.initialize(hadoopConf, testTableProperty.getProperties());
-    RCFile.Reader reader = new RCFile.Reader(localFS, file, hadoopConf);
+    RCFile.Reader reader = new RCFile.Reader(localFS, path, hadoopConf);
     LongWritable rowID = new LongWritable();
     BytesRefArrayWritable braw = new BytesRefArrayWritable(columnCount);
     int indx = 0;
@@ -124,7 +124,7 @@ public class TestRCFile extends TestFormatBase {
       // initialize again since notSkipIDs has been changed and need to be retrieved again.
       serde.initialize(hadoopConf, testTableProperty.getProperties());
       ObjectInspector out_oi = serde.getObjectInspector();
-      RCFile.Reader reader = new RCFile.Reader(localFS, file, hadoopConf);
+      RCFile.Reader reader = new RCFile.Reader(localFS, path, hadoopConf);
       LongWritable rowID = new LongWritable();
       BytesRefArrayWritable braw = new BytesRefArrayWritable(columnCount);
       braw.resetValid(columnCount);
@@ -134,7 +134,6 @@ public class TestRCFile extends TestFormatBase {
         Object actualRow = serde.deserialize(braw);
         StructObjectInspector oi = (StructObjectInspector) out_oi;
         List<? extends StructField> fieldRefs = oi.getAllStructFieldRefs();
-        ColumnarStructBase csb = (ColumnarStructBase)actualRow;
         Object fieldData = oi.getStructFieldData(actualRow, fieldRefs.get(i));
         Object javaObjectData = 
             ObjectInspectorUtils.copyToStandardJavaObject(fieldData,

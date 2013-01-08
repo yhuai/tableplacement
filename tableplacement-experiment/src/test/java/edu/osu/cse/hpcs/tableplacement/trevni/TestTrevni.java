@@ -79,7 +79,7 @@ public class TestTrevni extends TestFormatBase {
     ColumnFileWriter out = new ColumnFileWriter(
         WriteTrevniToLocal.createFileMeta(codec, checksum),
         WriteTrevniToLocal.createColumnMetaData(columns, columnCount));
-    FSDataOutputStream trevniOutputStream = localFS.create(file);
+    FSDataOutputStream trevniOutputStream = localFS.create(path);
 
     for (int i = 0; i < rows.size(); i++) {
       BytesRefArrayWritable bytes = (BytesRefArrayWritable) serde.serialize(
@@ -115,16 +115,16 @@ public class TestTrevni extends TestFormatBase {
 
     log.info("Reading Trevni ...");
     ObjectInspector out_oi = serde.getObjectInspector();
-    log.info("FileSystem: " + file.getFileSystem(hadoopConf).getClass());
-    assert file.getFileSystem(hadoopConf) instanceof LocalFileSystem;
+    log.info("FileSystem: " + path.getFileSystem(hadoopConf).getClass());
+    assert path.getFileSystem(hadoopConf) instanceof LocalFileSystem;
 
     ColumnFileReader in;
     if (HadoopInput2.class.equals(inputClass)) {
       in = new ColumnFileReader(
-          new HadoopInput2(file, hadoopConf));
+          new HadoopInput2(path, hadoopConf));
     } else {
       in = new ColumnFileReader(
-          new HadoopInput(file, hadoopConf));
+          new HadoopInput(path, hadoopConf));
     }
     
     ColumnMetaData[] metadata = in.getColumnMetaData();
@@ -179,16 +179,16 @@ public class TestTrevni extends TestFormatBase {
 
     log.info("Reading Trevni ...");
     ObjectInspector out_oi = serde.getObjectInspector();
-    log.info("FileSystem: " + file.getFileSystem(hadoopConf).getClass());
-    assert file.getFileSystem(hadoopConf) instanceof LocalFileSystem;
+    log.info("FileSystem: " + path.getFileSystem(hadoopConf).getClass());
+    assert path.getFileSystem(hadoopConf) instanceof LocalFileSystem;
 
     ColumnFileReader in;
     if (HadoopInput2.class.equals(inputClass)) {
       in = new ColumnFileReader(
-          new HadoopInput2(file, hadoopConf));
+          new HadoopInput2(path, hadoopConf));
     } else {
       in = new ColumnFileReader(
-          new HadoopInput(file, hadoopConf));
+          new HadoopInput(path, hadoopConf));
     }
     
     ColumnMetaData[] metadata = in.getColumnMetaData();
