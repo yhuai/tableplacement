@@ -58,7 +58,6 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
         ByteBuffer[] buffer = new ByteBuffer[val.size()];
         for (int j = 0; j < val.size(); j++) {
           BytesRefWritable ref = val.get(j);
-          int length = ref.getLength();
           buffer[j] = ByteBuffer.wrap(ref.getData(), ref.getStart(),
               ref.getLength());
         }
