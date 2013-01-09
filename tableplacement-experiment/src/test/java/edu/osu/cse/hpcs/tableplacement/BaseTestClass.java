@@ -6,10 +6,10 @@ import java.net.URL;
 
 import org.apache.log4j.PropertyConfigurator;
 
-public abstract class TestBase {
+public abstract class BaseTestClass {
   protected String resourceDir;
 
-  public TestBase() throws URISyntaxException {
+  public BaseTestClass() throws URISyntaxException {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     URL url = loader.getResource("log4j.properties");
     File file = new File(url.toURI());

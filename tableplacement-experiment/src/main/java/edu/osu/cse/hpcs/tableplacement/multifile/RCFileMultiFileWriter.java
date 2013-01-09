@@ -1,6 +1,8 @@
 package edu.osu.cse.hpcs.tableplacement.multifile;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -9,6 +11,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.ql.io.RCFile;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
+import org.apache.hadoop.hive.serde2.columnar.BytesRefWritable;
 import org.apache.hadoop.io.SequenceFile.Metadata;
 import org.apache.hadoop.io.Writable;
 
@@ -45,9 +48,14 @@ public class RCFileMultiFileWriter extends MultiFileWriter<RCFile.Writer> {
   public void append(Map<String, BytesRefArrayWritable> vals) throws IOException {
     for (Entry<String, BytesRefArrayWritable> entry: vals.entrySet()) {
       String groupName = entry.getKey();
+      long[] groupSerializedSize = serializedSize[serializedSizeMapping.get(groupName)];
       RCFile.Writer writer = writers.get(groupName);
       if (writer != null) {
-        Writable val = entry.getValue();
+        BytesRefArrayWritable val = entry.getValue();
+        for (int j = 0; j < val.size(); j++) {
+          BytesRefWritable ref = val.get(j);
+          groupSerializedSize[j] += ref.getLength();
+        }
         writer.append(val);
       } else {
         throw new IOException("RCFile writer for column file group " +

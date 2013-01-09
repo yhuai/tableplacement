@@ -2,10 +2,8 @@ package edu.osu.cse.hpcs.tableplacement.multifile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe;
@@ -15,22 +13,21 @@ import org.junit.Test;
 
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestRCFileMultiFile {
+public class TestTrevniMultiFile {
 
-  protected static Logger log = Logger.getLogger(TestRCFileMultiFile.class);
+  protected static Logger log = Logger.getLogger(TestTrevniMultiFile.class);
 
   @Test
-  public void testRCFileMultiFile() throws SerDeException, InstantiationException,
+  public void testTrevniMultiFile() throws SerDeException, InstantiationException,
       IllegalAccessException, IOException, ClassNotFoundException, TablePropertyException,
       URISyntaxException {
     Class[] classes = {ColumnarSerDe.class, LazyBinaryColumnarSerDe.class};
     for (int i=0; i<classes.length; i++) {
       MultiFileTestClass mftc = new MultiFileTestClass(
           classes[i],
-          "testRCFileMultiFile", log);
-      RCFileMultiFileWriter writer = mftc.getRCFileWriter();
+          "testTrevniMultiFile", log);
+      TrevniMultiFileWriter writer = mftc.getTrevniWriter();
       List<Map<String, List<Object>>> rows = mftc.writeData(writer);
-      
       
       for (String groupName: writer.getSerializedSizeMapping().keySet()) {
         long[] sizes = writer.getSerializedSize(groupName);
@@ -39,25 +36,26 @@ public class TestRCFileMultiFile {
         }
       }
       
-
+      
       Map<String, List<Integer>> readColumns =
           MultiFileReader.parseReadColumnMultiFileStr(
               MultiFileTestClass.fullReadColumnStr);
-      RCFileMultiFileReader fullReadReader = mftc.getRCFileReader(readColumns);
+      TrevniMultiFileReader fullReadReader = mftc.getTrevniReader(readColumns);
       mftc.doFullMultiFileReadTest(rows, fullReadReader, 
-          "test RCFile multi file full read with " +
+          "test Trevni multi file full read with " +
               classes[i].getCanonicalName());
       
       for (int j=0; j<MultiFileTestClass.partialReadColumnStrs.length; j++) {
         String readColumnStr = MultiFileTestClass.partialReadColumnStrs[j];
         readColumns =
             MultiFileReader.parseReadColumnMultiFileStr(readColumnStr);
-        RCFileMultiFileReader partialReadReader = mftc.getRCFileReader(readColumns);
+        TrevniMultiFileReader partialReadReader = mftc.getTrevniReader(readColumns);
         mftc.doPartialMultiFileReadTest(rows, partialReadReader, 
-            "test RCFile multi file partial read with " +
+            "test Trevni multi file partial read with " +
                 classes[i].getCanonicalName() +
                 ". Read columns: " + readColumnStr.toString());
       }
+      
     }
   }
 }

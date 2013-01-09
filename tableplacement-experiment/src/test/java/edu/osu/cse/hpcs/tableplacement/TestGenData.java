@@ -20,7 +20,7 @@ import edu.osu.cse.hpcs.tableplacement.column.IntColumn;
 import edu.osu.cse.hpcs.tableplacement.column.StringColumn;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestGenData extends TestBase {
+public class TestGenData extends BaseTestClass {
 
   Logger log = Logger.getLogger(TestGenData.class);
 

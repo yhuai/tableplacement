@@ -44,11 +44,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import edu.osu.cse.hpcs.tableplacement.TestFormatBase;
+import edu.osu.cse.hpcs.tableplacement.BaseFormatTestClass;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
 @RunWith(value = Parameterized.class)
-public class TestTrevni extends TestFormatBase {
+public class TestTrevni extends BaseFormatTestClass {
 
   protected static Logger log = Logger.getLogger(TestTrevni.class);
 

@@ -1,6 +1,7 @@
 package edu.osu.cse.hpcs.tableplacement.multifile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.apache.hadoop.io.Writable;
 
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
+import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
 public abstract class MultiFileWriter<T> {
@@ -29,6 +31,8 @@ public abstract class MultiFileWriter<T> {
   protected Map<String, T> writers;
   protected Map<String, Configuration> writeConf;
   protected Map<String, ColumnarSerDeBase> serdes;
+  protected Map<String, Integer> serializedSizeMapping;
+  protected long[][] serializedSize;
 
   public MultiFileWriter(Configuration conf, Path outDir)
       throws IOException, InstantiationException, IllegalAccessException, SerDeException,
@@ -47,7 +51,8 @@ public abstract class MultiFileWriter<T> {
     writers = new LinkedHashMap<String, T>();
     serdes = new LinkedHashMap<String, ColumnarSerDeBase>();
     writeConf = new LinkedHashMap<String, Configuration>(); 
-    
+    serializedSizeMapping = new LinkedHashMap<String, Integer>();
+    serializedSize = new long[columnFileGroups.size()][];
     for (int i=0; i<columnFileGroups.size(); i++) {
       ColumnFileGroup group = columnFileGroups.get(i);
       outputFiles[i] = new Path(outputDir, group.getName());
@@ -57,6 +62,12 @@ public abstract class MultiFileWriter<T> {
       Configuration thisConf = new Configuration(conf);
       RCFileOutputFormat.setColumnNumber(thisConf, group.getColumns().size());
       writeConf.put(group.getName(), thisConf);
+      serializedSize[i] = new long[group.getColumns().size()];
+      for (int j=0; j<serializedSize[i].length; j++) {
+        serializedSize[i][j] = 0;
+      }
+      serializedSizeMapping.put(group.getName(), i);
+      
     }
   }
   
@@ -75,5 +86,13 @@ public abstract class MultiFileWriter<T> {
   
   public ColumnarSerDeBase getGroupSerDe(String groupName) {
     return serdes.get(groupName);
+  }
+
+  public Map<String, Integer> getSerializedSizeMapping() {
+    return serializedSizeMapping;
+  }
+  
+  public long[] getSerializedSize(String groupName) {
+    return serializedSize[serializedSizeMapping.get(groupName)];
   }
 }

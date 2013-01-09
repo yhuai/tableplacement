@@ -23,7 +23,7 @@ import edu.osu.cse.hpcs.tableplacement.column.MapColumn;
 import edu.osu.cse.hpcs.tableplacement.column.StringColumn;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestTableProperty extends TestBase {
+public class TestTableProperty extends BaseTestClass {
 
   Logger log = Logger.getLogger(TestTableProperty.class);
 

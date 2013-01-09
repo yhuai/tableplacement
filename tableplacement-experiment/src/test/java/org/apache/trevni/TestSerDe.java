@@ -28,12 +28,12 @@ import org.apache.trevni.OutputBuffer;
 import org.junit.Test;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
-import edu.osu.cse.hpcs.tableplacement.TestBase;
-import edu.osu.cse.hpcs.tableplacement.TestFormatBase;
+import edu.osu.cse.hpcs.tableplacement.BaseTestClass;
+import edu.osu.cse.hpcs.tableplacement.BaseFormatTestClass;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestSerDe extends TestBase {
+public class TestSerDe extends BaseTestClass {
 
   protected Logger log = Logger.getLogger(TestSerDe.class);
 
@@ -67,7 +67,7 @@ public class TestSerDe extends TestBase {
     StandardStructObjectInspector rowHiveObjectInspector = (StandardStructObjectInspector) testTableProperty
         .getHiveRowObjectInspector();
 
-    List<List<Object>> rows = TestFormatBase.getTest4ColRows(COUNT, 3);
+    List<List<Object>> rows = BaseFormatTestClass.getTest4ColRows(COUNT, 3);
     ByteBuffer[][] buffer = new ByteBuffer[columnCount][];
     OutputBuffer[] outs = new OutputBuffer[columnCount];
     for (int i = 0; i < columnCount; i++) {

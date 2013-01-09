@@ -28,10 +28,10 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import edu.osu.cse.hpcs.tableplacement.TestFormatBase;
+import edu.osu.cse.hpcs.tableplacement.BaseFormatTestClass;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestRCFile extends TestFormatBase {
+public class TestRCFile extends BaseFormatTestClass {
 
   protected static Logger log = Logger.getLogger(TestRCFile.class);
 

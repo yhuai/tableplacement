@@ -13,6 +13,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefWritable;
+import org.apache.log4j.Logger;
 import org.apache.trevni.ColumnFileWriter;
 import org.apache.trevni.ColumnMetaData;
 
@@ -24,6 +25,8 @@ import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
 
 public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
 
+  private static Logger log = Logger.getLogger(TrevniMultiFileWriter.class);
+
   Map<String, FSDataOutputStream> files;
   public TrevniMultiFileWriter(Configuration conf,
       Path outDir) throws IOException, InstantiationException, IllegalAccessException,
@@ -32,6 +35,7 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
     files = new LinkedHashMap<String, FSDataOutputStream>();
     for (int i=0; i<columnFileGroups.size(); i++) {      
       ColumnFileGroup group = columnFileGroups.get(i);
+      Configuration groupConf = writeConf.get(group.getName());
       List<Column> columns = group.getColumns();
       ColumnMetaData[] metaData =
           WriteTrevniToLocal.createColumnMetaData(columns, columns.size());
@@ -44,8 +48,8 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
           tableProp.getInt(
               TableProperty.HADOOP_IO_BUFFER_SIZE,
               TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE),   // IO buffer size, replication,
-          (short) conf.getInt("dfs.replication", 3),          // number of replicas
-          conf.getLong("dfs.block.size", 128 * 1024 * 1024),  // HDFS block size
+          (short) groupConf.getInt("dfs.replication", 3),          // number of replicas
+          groupConf.getLong("dfs.block.size", 128 * 1024 * 1024),  // HDFS block size
           null);
       files.put(group.getName(), file);
     }
@@ -55,6 +59,7 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
   public void append(Map<String, BytesRefArrayWritable> vals) throws IOException {
     for (Entry<String, BytesRefArrayWritable> entry: vals.entrySet()) {
       String groupName = entry.getKey();
+      long[] groupSerializedSize = serializedSize[serializedSizeMapping.get(groupName)];
       ColumnFileWriter writer = writers.get(groupName);
       if (writer != null) {
         BytesRefArrayWritable val = entry.getValue();
@@ -63,6 +68,7 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
           BytesRefWritable ref = val.get(j);
           buffer[j] = ByteBuffer.wrap(ref.getData(), ref.getStart(),
               ref.getLength());
+          groupSerializedSize[j] += ref.getLength();
         }
         writer.writeRow((Object[]) buffer);
       } else {
@@ -76,9 +82,11 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
   public void close() throws IOException {
     for (Entry<String, ColumnFileWriter> entry: writers.entrySet()) {
       String groupName = entry.getKey();
+      log.info("Write data of " + groupName + " from buffer to filesystem");
       ColumnFileWriter writer = entry.getValue();
       FSDataOutputStream file = files.get(groupName);
       writer.writeTo(file);  // Write data from in memory buffer to file
+      file.close();          // close the output stream
     }
   }
 

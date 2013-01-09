@@ -115,8 +115,16 @@ public abstract class MultiFileReader<T> {
   public ColumnarSerDeBase getGroupSerDe(String groupName) {
     return serdes.get(groupName);
   }
+
+  public Map<String, List<Integer>> getReadColumns() {
+    return readColumns;
+  }
+
+  public List<ColumnFileGroup> getColumnFileGroups() {
+    return columnFileGroups;
+  }
   
-  public abstract void close();
+  public abstract void close() throws IOException;
   
   public static Map<String, List<Integer>> parseReadColumnMultiFileStr(String str) {
     log.info("Parsing multi file column read string: " + str);

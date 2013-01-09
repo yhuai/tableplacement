@@ -29,7 +29,7 @@ import org.junit.Test;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestColumns extends TestBase {
+public class TestColumns extends BaseTestClass {
 
   protected Logger log = Logger.getLogger(TestColumns.class);
 

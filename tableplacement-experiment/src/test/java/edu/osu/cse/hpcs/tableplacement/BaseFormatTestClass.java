@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 
-public class TestFormatBase extends TestBase {
+public class BaseFormatTestClass extends BaseTestClass {
 
   protected TableProperty testTableProperty;
   protected Configuration hadoopConf;
@@ -28,8 +28,10 @@ public class TestFormatBase extends TestBase {
 
   protected List<Column> columns;
   protected final int columnCount;
+  
+  protected final Logger log;
 
-  public TestFormatBase(String propertyFile, String testDataFile, Logger log)
+  public BaseFormatTestClass(String propertyFile, String testDataFile, Logger log)
       throws URISyntaxException, IOException, TablePropertyException {
     super();
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -42,8 +44,9 @@ public class TestFormatBase extends TestBase {
     testTableProperty.copyToHadoopConf(hadoopConf);
     localFS = FileSystem.getLocal(hadoopConf);
     path = new Path(resourceDir, testDataFile);
+    this.log = log;
     if (localFS.exists(path)) {
-      log.info(path.getName() + " already exists in " + path.getParent()
+      this.log.info(path.getName() + " already exists in " + path.getParent()
           + ". Delete it first.");
       localFS.delete(path, true);
     }
