@@ -17,6 +17,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.trevni.ColumnFileReader;
 import org.apache.trevni.avro.HadoopInput;
 
+import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniRowReader;
@@ -32,6 +33,7 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
     super(conf, inDir, readColumns);
     rowReaders = new LinkedHashMap<String, TrevniRowReader>();
     for (String groupName: readColumns.keySet()) {
+      ColumnFileGroup group = columnFileGroupsMap.get(groupName);
       Path file = columnFileGroupFiles.get(groupName);
       Configuration groupConf = readConf.get(groupName);
       groupConf.setInt(
@@ -40,7 +42,8 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
       ColumnFileReader reader = new ColumnFileReader(new HadoopInput(file, groupConf));
       readers.put(groupName, reader);
       List<Integer> readCols = readColumns.get(groupName);
-      rowReaders.put(groupName, new TrevniRowReader(reader, readCols.size(), readCols));
+      rowReaders.put(groupName,
+          new TrevniRowReader(reader, group.getColumns().size(), readCols));
     }
   }
 
@@ -66,7 +69,8 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
     for (Entry<String, TrevniRowReader> entry: rowReaders.entrySet()) {
       String groupName = entry.getKey();
       TrevniRowReader reader = entry.getValue();
-      reader.getCurrentRow(ret.get(groupName));
+      BytesRefArrayWritable braw = ret.get(groupName);
+      reader.getCurrentRow(braw);
     }
   }
 
