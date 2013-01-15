@@ -211,6 +211,5 @@
   </build>
   <modules>
   	<module>tableplacement-experiment</module>
-  	<module>tableplacement-costanalysis</module>
   </modules>
 </project>
