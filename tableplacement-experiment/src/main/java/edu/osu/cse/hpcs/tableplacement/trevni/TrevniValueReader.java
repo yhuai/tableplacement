@@ -3,6 +3,7 @@ package edu.osu.cse.hpcs.tableplacement.trevni;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class TrevniValueReader {
   protected int columnCount;
   protected List<Integer> readCols;
   protected int[] readColsArray;
+  protected HashMap<Integer, Integer> columnMapping;
   protected HashSet<Integer> readColsSet;
   protected ColumnValues<ByteBuffer>[] values;
   protected long rowCount;
@@ -36,10 +38,13 @@ public class TrevniValueReader {
     }
     values = new ColumnValues[this.readCols.size()];
     readColsArray = new int[this.readCols.size()];
+    readColsSet = new HashSet<Integer>();
+    columnMapping = new HashMap<Integer, Integer>();
     for (int i = 0; i < values.length; i++) {
       readColsArray[i] = this.readCols.get(i);
       values[i] = in.getValues(readColsArray[i]);
       readColsSet.add(readColsArray[i]);
+      columnMapping.put(readColsArray[i], i);
     }
     this.log = log;
     this.log.info("Total number of columns: " + columnCount);

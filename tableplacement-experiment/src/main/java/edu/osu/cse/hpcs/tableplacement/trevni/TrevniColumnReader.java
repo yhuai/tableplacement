@@ -36,9 +36,10 @@ public class TrevniColumnReader extends TrevniValueReader {
     if (!readColsSet.contains(col)) {
       return false;
     }
-    if (values[col].hasNext()) {
-      rowCounts[col]++;
-      rowID.set(rowCounts[col]);
+    int pos = columnMapping.get(col);
+    if (values[pos].hasNext()) {
+      rowCounts[pos]++;
+      rowID.set(rowCounts[pos]);
       return true;
     } else {
       return false;
@@ -54,7 +55,8 @@ public class TrevniColumnReader extends TrevniValueReader {
    */
   public void getCurrentColumnValue(BytesRefArrayWritable braw, int col)
       throws IOException {
-    ByteBuffer v = values[col].next();
+    int pos = columnMapping.get(col);
+    ByteBuffer v = values[pos].next();
     braw.resetValid(columnCount);
     BytesRefWritable ref = braw.unCheckedGet(col);
     ref.set(v.array(), v.arrayOffset(), v.capacity());

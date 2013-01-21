@@ -200,7 +200,7 @@ public class TestTrevni extends BaseFormatTestClass {
     Assert.assertEquals(columnCount, in.getColumnCount());
 
     for (int i=0; i<columnCount; i++) {
-      log.info("Read column " + i);
+      log.info("Read column " + i + " with row reader");
       ColumnProjectionUtils.setReadColumnIDs(hadoopConf, new ArrayList(Arrays.asList(i)));
       // initialize again since notSkipIDs has been changed and need to be retrieved again.
       serde.initialize(hadoopConf, testTableProperty.getProperties());
@@ -211,6 +211,33 @@ public class TestTrevni extends BaseFormatTestClass {
       int indx = 0;
       while (reader.next(rowID)) {
         reader.getCurrentRow(braw);
+        Object actualRow = serde.deserialize(braw);
+        StructObjectInspector oi = (StructObjectInspector) out_oi;
+        List<? extends StructField> fieldRefs = oi.getAllStructFieldRefs();
+        Object fieldData = oi.getStructFieldData(actualRow, fieldRefs.get(i));
+        Object javaObjectData = 
+            ObjectInspectorUtils.copyToStandardJavaObject(fieldData,
+                fieldRefs.get(i).getFieldObjectInspector());
+
+        List<Object> expectedRow = rows.get(indx);
+        Assert.assertEquals(expectedRow.get(i), javaObjectData);
+        indx++;
+      }
+      in.close();
+    }
+
+    for (int i=0; i<columnCount; i++) {
+      log.info("Read column " + i + " with column reader");
+      ColumnProjectionUtils.setReadColumnIDs(hadoopConf, new ArrayList(Arrays.asList(i)));
+      // initialize again since notSkipIDs has been changed and need to be retrieved again.
+      serde.initialize(hadoopConf, testTableProperty.getProperties());
+      TrevniColumnReader reader = new TrevniColumnReader(in, columnCount, Arrays.asList(i));
+      LongWritable rowID = new LongWritable();
+      BytesRefArrayWritable braw = new BytesRefArrayWritable(columnCount);
+      braw.resetValid(columnCount);
+      int indx = 0;
+      while (reader.next(rowID, i)) {
+        reader.getCurrentColumnValue(braw, i);
         Object actualRow = serde.deserialize(braw);
         StructObjectInspector oi = (StructObjectInspector) out_oi;
         List<? extends StructField> fieldRefs = oi.getAllStructFieldRefs();
