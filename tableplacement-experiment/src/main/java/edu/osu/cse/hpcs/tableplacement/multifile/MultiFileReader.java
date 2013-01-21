@@ -109,8 +109,9 @@ public abstract class MultiFileReader<T> {
   /**
    * Read a value of a column. Make sure call {@link #next(LongWritable)} first.
    * @param ret
+   * @throws IOException 
    */
-  public abstract void getCurrentColumnValue(BytesRefArrayWritable ret, String groupName, int column);
+  public abstract void getCurrentColumnValue(BytesRefArrayWritable ret, String groupName, int column) throws IOException;
 
   public ColumnarSerDeBase getGroupSerDe(String groupName) {
     return serdes.get(groupName);

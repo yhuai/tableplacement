@@ -20,11 +20,13 @@ import org.apache.trevni.avro.HadoopInput;
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
+import edu.osu.cse.hpcs.tableplacement.trevni.TrevniColumnReader;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniRowReader;
 
 public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
 
   private Map<String, TrevniRowReader> rowReaders;
+  private Map<String, TrevniColumnReader> columnReaders;
 
   public TrevniMultiFileReader(Configuration conf, Path inDir,
       Map<String, List<Integer>> readColumns) throws IOException,
@@ -32,6 +34,7 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
       IllegalAccessException, TablePropertyException {
     super(conf, inDir, readColumns);
     rowReaders = new LinkedHashMap<String, TrevniRowReader>();
+    columnReaders = new LinkedHashMap<String, TrevniColumnReader>();
     for (String groupName: readColumns.keySet()) {
       ColumnFileGroup group = columnFileGroupsMap.get(groupName);
       Path file = columnFileGroupFiles.get(groupName);
@@ -44,6 +47,8 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
       List<Integer> readCols = readColumns.get(groupName);
       rowReaders.put(groupName,
           new TrevniRowReader(reader, group.getColumns().size(), readCols));
+      columnReaders.put(groupName,
+          new TrevniColumnReader(reader, group.getColumns().size(), readCols));
     }
   }
 
@@ -59,8 +64,8 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
 
   @Override
   public boolean next(LongWritable rowID, String groupName, int column) {
-    // TODO to be implemented
-    return false;
+    TrevniColumnReader reader = columnReaders.get(groupName);
+    return reader.next(rowID, column);
   }
 
   @Override
@@ -76,9 +81,9 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
 
   @Override
   public void getCurrentColumnValue(BytesRefArrayWritable ret,
-      String groupName, int column) {
-    // TODO to be implemented
-    
+      String groupName, int column) throws IOException {
+    TrevniColumnReader reader = columnReaders.get(groupName);
+    reader.getCurrentColumnValue(ret, column);
   }
 
   @Override

@@ -12,40 +12,13 @@ import org.apache.log4j.Logger;
 import org.apache.trevni.ColumnFileReader;
 import org.apache.trevni.ColumnValues;
 
-public class TrevniRowReader {
+public class TrevniRowReader extends TrevniValueReader {
 
-  protected Logger log = Logger.getLogger(TrevniRowReader.class);
-
-  private ColumnFileReader in;
-  private int columnCount;
-  private List<Integer> readCols;
-  private int[] readColsArray;
-  private ColumnValues<ByteBuffer>[] values;
-
-  private long rowCount;
+  protected static Logger log = Logger.getLogger(TrevniRowReader.class);
 
   public TrevniRowReader(ColumnFileReader in, int columnCount,
       List<Integer> readColsRef) throws IOException {
-    this.in = in;
-    this.columnCount = columnCount;
-    if (readColsRef == null) {
-      this.readCols = new ArrayList<Integer>(columnCount);
-      for (int i = 0; i < columnCount; i++) {
-        this.readCols.add(i);
-      }
-    } else {
-      this.readCols = readColsRef;
-    }
-    values = new ColumnValues[this.readCols.size()];
-    readColsArray = new int[this.readCols.size()];
-    for (int i = 0; i < values.length; i++) {
-      values[i] = in.getValues(this.readCols.get(i));
-      readColsArray[i] = this.readCols.get(i);
-    }
-    log.info("Total number of columns: " + columnCount);
-    log.info("Read columns: " + this.readCols.toString());
-
-    rowCount = 0;
+    super(in, columnCount, readColsRef, log);
   }
 
   public TrevniRowReader(ColumnFileReader in, int columnCount)
@@ -63,6 +36,13 @@ public class TrevniRowReader {
     }
   }
 
+  /**
+   * get values of current and store those values in the corresponding
+   * position in braw. For those columns which are not needed,
+   * those positions in braw are unset. Must call {@link next} first
+   * @param braw
+   * @throws IOException
+   */
   public void getCurrentRow(BytesRefArrayWritable braw) throws IOException {
     for (int i = 0; i < values.length; i++) {
       ByteBuffer v = values[i].next();
