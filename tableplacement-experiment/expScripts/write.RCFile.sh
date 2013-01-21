@@ -35,6 +35,6 @@ echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/
 
 echo "RCFile Write|Binary|RC $ROW_COUNT|RG $ROW_GROUP_SIZE"
 iostat -d -t $DEVICE
-java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar WriteRCFileToLocal -t ../tableProperties/$TABLE -o $OUT_DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -c $ROW_COUNT -p hive.io.rcfile.record.buffer.size $ROW_GROUP_SIZE
+java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar WriteRCFile -t ../tableProperties/$TABLE -o $OUT_DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -c $ROW_COUNT -p hive.io.rcfile.record.buffer.size $ROW_GROUP_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
 iostat -d -t $DEVICE

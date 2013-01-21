@@ -6,14 +6,14 @@ import java.util.Properties;
 import org.apache.hadoop.hive.serde2.SerDeException;
 
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
-import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFileFromLocal;
-import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFileToLocal;
-import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniFromLocal;
-import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
+import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFile;
+import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFile;
+import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevni;
+import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 import edu.osu.cse.hpcs.tableplacement.util.CmdTool;
 
-public class ReadFromLocalFactory {
-  public static ReadFromLocal get(String[] args, Class theClass)
+public class ReadFactory {
+  public static ReadFrom get(String[] args, Class theClass)
       throws IOException, TablePropertyException, SerDeException,
       InstantiationException, IllegalAccessException, ClassNotFoundException {
     Properties cmdProperties = CmdTool.inputParameterParser(args);
@@ -33,11 +33,11 @@ public class ReadFromLocalFactory {
     System.out.println("Input file: " + inputPathStr);
 
     // If we have several formats to support, we use reflection for this part
-    ReadFromLocal ret = null;
-    if (ReadRCFileFromLocal.class.equals(theClass)) {
-      ret = new ReadRCFileFromLocal(propertyFilePath, inputPathStr, cmdProperties);
-    } else if (ReadTrevniFromLocal.class.equals(theClass)) {
-      ret = new ReadTrevniFromLocal(propertyFilePath, inputPathStr, cmdProperties);
+    ReadFrom ret = null;
+    if (ReadRCFile.class.equals(theClass)) {
+      ret = new ReadRCFile(propertyFilePath, inputPathStr, cmdProperties);
+    } else if (ReadTrevni.class.equals(theClass)) {
+      ret = new ReadTrevni(propertyFilePath, inputPathStr, cmdProperties);
     } else {
       throw new IllegalArgumentException("Class " + theClass.getCanonicalName()
           + " is not supported");

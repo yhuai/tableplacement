@@ -3,7 +3,8 @@
 if [ $# -ne 4 ]
 then
   echo "./read.Trevni.sh <input dir> <device> <read column string> <SerDe>"
-  echo "read column string format: all or col1,col2,col3,..."
+  echo "read column string format: groupName1:col1,col2\|groupName2:col3\|..."
+  echo "in read column string, col must be represented by an integer id"
   echo "SerDe: use B for binary SerDe and use T for text SerDe"
   exit
 fi
@@ -37,6 +38,6 @@ echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/
 echo "Trevni Read|Binary|Column $READ_COLUMN_STR|IOBuffer $IO_BUFFER_SIZE"
 iostat -d -t $DEVICE
 #strace -F -f -ttt -T
-java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevniFromLocal -t ../tableProperties/$TABLE -i $OUT_DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevni -t ../tableProperties/$TABLE -i $OUT_DIR/ -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su
 iostat -d -t $DEVICE

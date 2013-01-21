@@ -6,12 +6,12 @@ import java.util.Properties;
 import org.apache.hadoop.hive.serde2.SerDeException;
 
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
-import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFileToLocal;
-import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
+import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFile;
+import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 import edu.osu.cse.hpcs.tableplacement.util.CmdTool;
 
-public class WriteToLocalFactory {
-  public static WriteToLocal get(String[] args, Class theClass)
+public class WriteFactory {
+  public static WriteTo get(String[] args, Class theClass)
       throws IOException, TablePropertyException, SerDeException,
       InstantiationException, IllegalAccessException, ClassNotFoundException {
     Properties cmdProperties = CmdTool.inputParameterParser(args);
@@ -41,12 +41,12 @@ public class WriteToLocalFactory {
     System.out.println("Total number of rows: " + rowCount);
 
     // If we have several formats to support, we use reflection for this part
-    WriteToLocal ret = null;
-    if (WriteRCFileToLocal.class.equals(theClass)) {
-      ret = new WriteRCFileToLocal(propertyFilePath, outputPathStr, rowCount,
+    WriteTo ret = null;
+    if (WriteRCFile.class.equals(theClass)) {
+      ret = new WriteRCFile(propertyFilePath, outputPathStr, rowCount,
           cmdProperties);
-    } else if (WriteTrevniToLocal.class.equals(theClass)) {
-      ret = new WriteTrevniToLocal(propertyFilePath, outputPathStr, rowCount,
+    } else if (WriteTrevni.class.equals(theClass)) {
+      ret = new WriteTrevni(propertyFilePath, outputPathStr, rowCount,
           cmdProperties);
     } else {
       throw new IllegalArgumentException("Class " + theClass.getCanonicalName()

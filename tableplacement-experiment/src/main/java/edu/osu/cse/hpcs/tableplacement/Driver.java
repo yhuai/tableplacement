@@ -2,25 +2,25 @@ package edu.osu.cse.hpcs.tableplacement;
 
 import org.apache.hadoop.util.ProgramDriver;
 
-import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFileFromLocal;
-import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFileToLocal;
-import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniFromLocal;
-import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
+import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFile;
+import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFile;
+import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevni;
+import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 
 public class Driver {
   public static void main(String[] argv) throws Exception {
     int exitCode = -1;
     ProgramDriver pgd = new ProgramDriver();
     try {
-      pgd.addClass("WriteRCFileToLocal", WriteRCFileToLocal.class,
-          "WriteRCFileToLocal");
-      pgd.addClass("ReadRCFileFromLocal", ReadRCFileFromLocal.class,
-          "ReadRCFileFromLocal");
+      pgd.addClass("WriteRCFile", WriteRCFile.class,
+          "WriteRCFile");
+      pgd.addClass("ReadRCFile", ReadRCFile.class,
+          "ReadRCFile");
 
-      pgd.addClass("WriteTrevniToLocal", WriteTrevniToLocal.class,
-          "WriteTrevniToLocal");
-      pgd.addClass("ReadTrevniFromLocal", ReadTrevniFromLocal.class,
-          "ReadTrevniFromLocal");
+      pgd.addClass("WriteTrevni", WriteTrevni.class,
+          "WriteTrevni");
+      pgd.addClass("ReadTrevni", ReadTrevni.class,
+          "ReadTrevni");
 
       pgd.driver(argv);
 

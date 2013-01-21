@@ -21,7 +21,7 @@ import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.column.Column;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
-import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevniToLocal;
+import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 
 public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
 
@@ -38,9 +38,9 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
       Configuration groupConf = writeConf.get(group.getName());
       List<Column> columns = group.getColumns();
       ColumnMetaData[] metaData =
-          WriteTrevniToLocal.createColumnMetaData(columns, columns.size());
+          WriteTrevni.createColumnMetaData(columns, columns.size());
       ColumnFileWriter writer = new ColumnFileWriter(
-          WriteTrevniToLocal.createFileMeta("null", "null"),
+          WriteTrevni.createFileMeta("null", "null"),
           metaData);
       writers.put(group.getName(), writer);
 

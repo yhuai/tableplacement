@@ -77,8 +77,8 @@ public class TestTrevni extends BaseFormatTestClass {
     log.info("Writing Trevni ...");
     int totalSerializedDataSize = 0;
     ColumnFileWriter out = new ColumnFileWriter(
-        WriteTrevniToLocal.createFileMeta(codec, checksum),
-        WriteTrevniToLocal.createColumnMetaData(columns, columnCount));
+        WriteTrevni.createFileMeta(codec, checksum),
+        WriteTrevni.createColumnMetaData(columns, columnCount));
     FSDataOutputStream trevniOutputStream = localFS.create(path);
 
     for (int i = 0; i < rows.size(); i++) {
