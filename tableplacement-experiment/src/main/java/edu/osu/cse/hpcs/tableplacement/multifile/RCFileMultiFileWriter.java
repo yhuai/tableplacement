@@ -14,6 +14,7 @@ import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefWritable;
 import org.apache.hadoop.io.SequenceFile.Metadata;
 import org.apache.hadoop.io.Writable;
+import org.apache.log4j.Logger;
 
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
@@ -24,6 +25,8 @@ import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
  */
 public class RCFileMultiFileWriter extends MultiFileWriter<RCFile.Writer> {
 
+  private static Logger log = Logger.getLogger(RCFileMultiFileWriter.class);
+  
   public RCFileMultiFileWriter(Configuration conf, Path outputDir)
       throws IOException, InstantiationException, IllegalAccessException, SerDeException,
       ClassNotFoundException, TablePropertyException {

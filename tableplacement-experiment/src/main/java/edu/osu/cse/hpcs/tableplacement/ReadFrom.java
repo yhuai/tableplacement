@@ -38,6 +38,8 @@ public abstract class ReadFrom {
   protected long rowCount;
   protected Map<String, List<Integer>> readColumns;
   
+  protected boolean isReadLocalFS;
+  
   //Performance measures
  protected long totalRowReadTimeInNano;
  //protected long totalRowDeserializationTimeInNano;
@@ -55,6 +57,11 @@ public abstract class ReadFrom {
     //fs = FileSystem.getLocal(conf);
     inputDir = new Path(inputPath);
     fs = inputDir.getFileSystem(conf);
+    
+    isReadLocalFS = false;
+    if (inputPath.toLowerCase().startsWith("file")) {
+      isReadLocalFS = true;
+    }
     
     readColumns = MultiFileReader.parseReadColumnMultiFileStr(
         prop.get(TableProperty.READ_COLUMN_STR));

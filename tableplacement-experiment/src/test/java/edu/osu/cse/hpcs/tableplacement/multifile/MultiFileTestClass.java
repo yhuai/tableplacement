@@ -97,7 +97,7 @@ public class MultiFileTestClass extends BaseFormatTestClass {
   public TrevniMultiFileReader getTrevniReader(Map<String, List<Integer>> readColumns)
       throws IOException, InstantiationException, IllegalAccessException,
       SerDeException, ClassNotFoundException, TablePropertyException {
-    return new TrevniMultiFileReader(hadoopConf, path, readColumns);
+    return new TrevniMultiFileReader(hadoopConf, path, readColumns, true);
   }
 
   public List<Map<String, List<Object>>> writeData(

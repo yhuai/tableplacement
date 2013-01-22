@@ -14,7 +14,9 @@ import org.apache.hadoop.hive.ql.io.RCFile.Reader;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.columnar.BytesRefArrayWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.log4j.Logger;
 import org.apache.trevni.ColumnFileReader;
+import org.apache.trevni.InputFile;
 import org.apache.trevni.avro.HadoopInput;
 
 import edu.osu.cse.hpcs.tableplacement.ColumnFileGroup;
@@ -24,12 +26,14 @@ import edu.osu.cse.hpcs.tableplacement.trevni.TrevniColumnReader;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniRowReader;
 
 public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
+  
+  private static Logger log = Logger.getLogger(TrevniMultiFileReader.class);
 
   private Map<String, TrevniRowReader> rowReaders;
   private Map<String, TrevniColumnReader> columnReaders;
 
   public TrevniMultiFileReader(Configuration conf, Path inDir,
-      Map<String, List<Integer>> readColumns) throws IOException,
+      Map<String, List<Integer>> readColumns, boolean isReadLocalFS) throws IOException,
       ClassNotFoundException, SerDeException, InstantiationException,
       IllegalAccessException, TablePropertyException {
     super(conf, inDir, readColumns);
@@ -42,7 +46,20 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
       groupConf.setInt(
               TableProperty.HADOOP_IO_BUFFER_SIZE,
               TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE);   // IO buffer size
-      ColumnFileReader reader = new ColumnFileReader(new HadoopInput(file, groupConf));
+      ColumnFileReader reader;
+      if (isReadLocalFS) {
+        log.info("Local file system is used. " +
+        		"Use org.apache.trevni.InputFile");
+        String pathString = file.toUri().toString();
+        if (pathString.startsWith("file:")) {
+          pathString = pathString.substring("file:".length());
+        }
+        reader = new ColumnFileReader(new InputFile(new File(pathString)));
+      } else {
+        log.info("Distributed file system is used. " +
+        		"Use org.apache.trevni.avro.HadoopInput.HadoopInput");
+        reader = new ColumnFileReader(new HadoopInput(file, groupConf));
+      }
       readers.put(groupName, reader);
       List<Integer> readCols = readColumns.get(groupName);
       rowReaders.put(groupName,

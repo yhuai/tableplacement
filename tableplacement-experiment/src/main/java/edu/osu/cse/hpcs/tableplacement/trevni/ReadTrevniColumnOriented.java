@@ -74,7 +74,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
-    TrevniMultiFileReader reader = new TrevniMultiFileReader(conf, inputDir, readColumns);
+    TrevniMultiFileReader reader = new TrevniMultiFileReader(conf, inputDir, readColumns, isReadLocalFS);
     return doRead(reader, log);
   }
   
