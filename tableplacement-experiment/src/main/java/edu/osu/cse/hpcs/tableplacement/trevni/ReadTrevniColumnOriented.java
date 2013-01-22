@@ -39,7 +39,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
       throws IOException, SerDeException {
     long ts;
     assert totalRowReadTimeInNano == 0;
-    assert totalRowDeserializationTimeInNano == 0;
+    //assert totalRowDeserializationTimeInNano == 0;
 
     Map<String, BytesRefArrayWritable> ret = new HashMap<String, BytesRefArrayWritable>();
     List<ColumnFileGroup> groups = reader.getColumnFileGroups();

@@ -40,7 +40,7 @@ public abstract class ReadFrom {
   
   //Performance measures
  protected long totalRowReadTimeInNano;
- protected long totalRowDeserializationTimeInNano;
+ //protected long totalRowDeserializationTimeInNano;
   
   public ReadFrom(String propertyFilePath, String inputPath,
       Properties cmdProperties, Logger log) throws IOException, TablePropertyException,
@@ -68,7 +68,7 @@ public abstract class ReadFrom {
       throws IOException, SerDeException {
     long ts;
     assert totalRowReadTimeInNano == 0;
-    assert totalRowDeserializationTimeInNano == 0;
+    //assert totalRowDeserializationTimeInNano == 0;
 
     Map<String, BytesRefArrayWritable> ret = new HashMap<String, BytesRefArrayWritable>();
     List<ColumnFileGroup> groups = reader.getColumnFileGroups();
@@ -122,10 +122,10 @@ public abstract class ReadFrom {
         + totalRowReadTimeInNano * 1.0 / 1000000 + " ms");
     System.out.println("Average row read time: "
         + totalRowReadTimeInNano * 1.0 / 1000000 / rowCount + " ms");
-    System.out.println("Total row deserialization time: "
-        + totalRowDeserializationTimeInNano * 1.0 / 1000000 + " ms");
-    System.out.println("Average row deserialization time: "
-        + totalRowDeserializationTimeInNano * 1.0 / 1000000 / rowCount + " ms");
+    //System.out.println("Total row deserialization time: "
+    //    + totalRowDeserializationTimeInNano * 1.0 / 1000000 + " ms");
+    //System.out.println("Average row deserialization time: "
+    //    + totalRowDeserializationTimeInNano * 1.0 / 1000000 / rowCount + " ms");
     System.out.println("Throughput MiB/s: " + totalSerializedDataSize * 1.0
         / 1024 / 1024 / (end - start) * 1000000000);
   }
