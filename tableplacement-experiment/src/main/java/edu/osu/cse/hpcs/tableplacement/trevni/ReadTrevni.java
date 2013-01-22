@@ -41,7 +41,7 @@ public class ReadTrevni extends ReadFrom {
   }
 
   public static void main(String[] args) throws Exception {
-    ReadTrevni readTrevniLocal = (ReadTrevni) ReadFactory.get(args, ReadTrevni.class);
-    readTrevniLocal.runTest();
+    ReadTrevni readTrevni = (ReadTrevni) ReadFactory.get(args, ReadTrevni.class);
+    readTrevni.runTest();
   }
 }

@@ -91,11 +91,10 @@ public abstract class ReadFrom {
       for (Entry<String, BytesRefArrayWritable> entry: ret.entrySet()) {
         String groupName = entry.getKey();
         BytesRefArrayWritable braw = entry.getValue();
-        ts = System.nanoTime();
-        ColumnarSerDeBase serde = reader.getGroupSerDe(groupName);
-        //System.out.println(groupName + " " + serde.toString() + " " + (braw == null));
-        serde.deserialize(braw);        
-        totalRowDeserializationTimeInNano += System.nanoTime() - ts;
+        //ts = System.nanoTime();
+        //ColumnarSerDeBase serde = reader.getGroupSerDe(groupName);
+        //serde.deserialize(braw);        
+        //totalRowDeserializationTimeInNano += System.nanoTime() - ts;
         for (int j = 0; j < braw.size(); j++) {
           totalSerializedDataSize += braw.get(j).getLength();
         }
