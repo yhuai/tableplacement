@@ -35,7 +35,7 @@ public class ReadRCFile extends ReadFrom {
   }
 
   public long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException {
-    RCFileMultiFileReader reader = new RCFileMultiFileReader(conf, inputDir, readColumns);
+    RCFileMultiFileReader reader = new RCFileMultiFileReader(conf, inputDir, readColumnsStr);
     return doRead(reader, log);
   }
 

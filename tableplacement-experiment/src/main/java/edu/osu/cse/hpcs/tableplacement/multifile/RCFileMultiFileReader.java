@@ -22,10 +22,10 @@ public class RCFileMultiFileReader extends MultiFileReader<RCFile.Reader> {
   private static Logger log = Logger.getLogger(RCFileMultiFileReader.class);
   
   public RCFileMultiFileReader(Configuration conf,
-      Path inDir, Map<String, List<Integer>> readColumns) throws IOException,
+      Path inDir, String readColumnsStr) throws IOException,
       ClassNotFoundException, SerDeException, InstantiationException,
       IllegalAccessException, TablePropertyException {
-    super(conf, inDir, readColumns);
+    super(conf, inDir, readColumnsStr);
     for (String groupName: readColumns.keySet()) {
       Path file = columnFileGroupFiles.get(groupName);
       Configuration groupConf = readConf.get(groupName);

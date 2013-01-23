@@ -41,7 +41,7 @@ public abstract class MultiFileReader<T> {
   protected Map<String, ColumnarSerDeBase> serdes;
 
   public MultiFileReader(Configuration conf, Path inDir,
-      Map<String, List<Integer>> readColumns)
+      String readColumnsStr)
         throws IOException, ClassNotFoundException, SerDeException,
         InstantiationException, IllegalAccessException, TablePropertyException {
     tableProp = new TableProperty(conf);
@@ -67,7 +67,8 @@ public abstract class MultiFileReader<T> {
       columnFileGroupFiles.put(group.getName(), inputFiles[i]);
     }
 
-    this.readColumns = readColumns;
+    this.readColumns = parseReadColumnMultiFileStr(
+        readColumnsStr, columnFileGroupsMap);
     serdes = new LinkedHashMap<String, ColumnarSerDeBase>();
     for (Entry<String, List<Integer>> entry: readColumns.entrySet()) {
       String groupName = entry.getKey();
@@ -127,6 +128,7 @@ public abstract class MultiFileReader<T> {
   
   public abstract void close() throws IOException;
   
+  /*
   public static Map<String, List<Integer>> parseReadColumnMultiFileStr(String str) {
     log.info("Parsing multi file column read string: " + str);
     Map<String, List<Integer>> ret = new HashMap<String, List<Integer>>();
@@ -145,4 +147,32 @@ public abstract class MultiFileReader<T> {
     }
     return ret;
   }
+  */
+  public static Map<String, List<Integer>> parseReadColumnMultiFileStr(
+      String str, Map<String, ColumnFileGroup> columnFileGroupMap) {
+    log.info("Parsing multi file column read string: " + str);
+    Map<String, List<Integer>> ret = new HashMap<String, List<Integer>>();
+    String[] groups = str.split("\\|");
+    for (int i=0; i<groups.length; i++) {
+      String[] tmp = groups[i].split(":");
+      
+      assert tmp.length == 2; // a name of the group and a string for columns
+      String groupName = tmp[0];
+      List<Integer> columns = new ArrayList<Integer>();
+      if ("all".equals(tmp[1])) {
+        ColumnFileGroup group = columnFileGroupMap.get(groupName);
+        for (int j=0; j<group.getColumns().size(); j++) {
+          columns.add(j);
+        }
+      } else {
+        String[] columnIds = tmp[1].split(",");
+        for (int j=0; j<columnIds.length; j++) {
+          columns.add(Integer.valueOf(columnIds[j]));
+        }
+      }
+      ret.put(groupName, columns);
+    }
+    return ret;
+  }
+  
 }

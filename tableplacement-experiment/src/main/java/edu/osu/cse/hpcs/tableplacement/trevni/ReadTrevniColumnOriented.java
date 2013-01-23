@@ -43,6 +43,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
 
     Map<String, BytesRefArrayWritable> ret = new HashMap<String, BytesRefArrayWritable>();
     List<ColumnFileGroup> groups = reader.getColumnFileGroups();
+    Map<String, List<Integer>> readColumns = reader.getReadColumns();
     for (ColumnFileGroup group: groups) {
       if (!readColumns.keySet().contains(group.getName())) {
         continue;
@@ -74,7 +75,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
-    TrevniMultiFileReader reader = new TrevniMultiFileReader(conf, inputDir, readColumns, isReadLocalFS);
+    TrevniMultiFileReader reader = new TrevniMultiFileReader(conf, inputDir, readColumnsStr, isReadLocalFS);
     return doRead(reader, log);
   }
   

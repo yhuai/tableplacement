@@ -35,21 +35,16 @@ public class TestTrevniMultiFile {
           System.out.println(groupName + " " + j + " " + sizes[j]);
         }
       }
-      
-      
-      Map<String, List<Integer>> readColumns =
-          MultiFileReader.parseReadColumnMultiFileStr(
-              MultiFileTestClass.fullReadColumnStr);
-      TrevniMultiFileReader fullReadReader = mftc.getTrevniReader(readColumns);
+
+      TrevniMultiFileReader fullReadReader = mftc.getTrevniReader(
+          MultiFileTestClass.fullReadColumnStr);
       mftc.doFullMultiFileReadTest(rows, fullReadReader, 
           "test Trevni multi file full read with " +
               classes[i].getCanonicalName());
       
       for (int j=0; j<MultiFileTestClass.partialReadColumnStrs.length; j++) {
         String readColumnStr = MultiFileTestClass.partialReadColumnStrs[j];
-        readColumns =
-            MultiFileReader.parseReadColumnMultiFileStr(readColumnStr);
-        TrevniMultiFileReader partialReadReader = mftc.getTrevniReader(readColumns);
+        TrevniMultiFileReader partialReadReader = mftc.getTrevniReader(readColumnStr);
         mftc.doPartialMultiFileReadTest(rows, partialReadReader, 
             "test Trevni multi file partial read with " +
                 classes[i].getCanonicalName() +

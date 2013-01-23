@@ -4,7 +4,7 @@ if [ $# -ne 4 ]
 then
   echo "./read.RCFile.sh <input dir> <device> <read column string> <SerDe> <row group size>"
   echo "read column string format: groupName1:col1,col2\|groupName2:col3\|..."
-  echo "in read column string, col must be represented by an integer id"
+  echo "in read column string, col must be represented by an integer id. You can also use 'all' to read all columns"
   echo "SerDe: use B for binary SerDe and use T for text SerDe"
   exit
 fi

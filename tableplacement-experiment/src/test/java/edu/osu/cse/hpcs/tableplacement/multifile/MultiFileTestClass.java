@@ -38,7 +38,7 @@ public class MultiFileTestClass extends BaseFormatTestClass {
   protected final int rowCount = 1000;
   
   protected static final String fullReadColumnStr =
-      "cfg1:0,1|cfg2:0,1|cfg3:0";
+      "cfg1:all|cfg2:all|cfg3:all";
   protected static final String[] partialReadColumnStrs =
     {"cfg1:0", "cfg2:1", "cfg3:0", "cfg1:0|cfg2:0|cfg3:0"};
 
@@ -88,16 +88,16 @@ public class MultiFileTestClass extends BaseFormatTestClass {
     return new TrevniMultiFileWriter(hadoopConf, path);
   }
 
-  public RCFileMultiFileReader getRCFileReader(Map<String, List<Integer>> readColumns)
+  public RCFileMultiFileReader getRCFileReader(String readColumnsStr)
       throws IOException, InstantiationException, IllegalAccessException,
       SerDeException, ClassNotFoundException, TablePropertyException {
-    return new RCFileMultiFileReader(hadoopConf, path, readColumns);
+    return new RCFileMultiFileReader(hadoopConf, path, readColumnsStr);
   }
   
-  public TrevniMultiFileReader getTrevniReader(Map<String, List<Integer>> readColumns)
+  public TrevniMultiFileReader getTrevniReader(String readColumnsStr)
       throws IOException, InstantiationException, IllegalAccessException,
       SerDeException, ClassNotFoundException, TablePropertyException {
-    return new TrevniMultiFileReader(hadoopConf, path, readColumns, true);
+    return new TrevniMultiFileReader(hadoopConf, path, readColumnsStr, true);
   }
 
   public List<Map<String, List<Object>>> writeData(

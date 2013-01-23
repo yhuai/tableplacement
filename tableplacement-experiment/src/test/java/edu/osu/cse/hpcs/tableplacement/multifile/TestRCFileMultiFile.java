@@ -39,24 +39,19 @@ public class TestRCFileMultiFile {
         }
       }
       
-
-      Map<String, List<Integer>> readColumns =
-          MultiFileReader.parseReadColumnMultiFileStr(
-              MultiFileTestClass.fullReadColumnStr);
-      RCFileMultiFileReader fullReadReader = mftc.getRCFileReader(readColumns);
+      RCFileMultiFileReader fullReadReader = mftc.getRCFileReader(
+          MultiFileTestClass.fullReadColumnStr);
       mftc.doFullMultiFileReadTest(rows, fullReadReader, 
           "test RCFile multi file full read with " +
               classes[i].getCanonicalName());
       
       for (int j=0; j<MultiFileTestClass.partialReadColumnStrs.length; j++) {
-        String readColumnStr = MultiFileTestClass.partialReadColumnStrs[j];
-        readColumns =
-            MultiFileReader.parseReadColumnMultiFileStr(readColumnStr);
-        RCFileMultiFileReader partialReadReader = mftc.getRCFileReader(readColumns);
+        String readColumnsStr = MultiFileTestClass.partialReadColumnStrs[j];
+        RCFileMultiFileReader partialReadReader = mftc.getRCFileReader(readColumnsStr);
         mftc.doPartialMultiFileReadTest(rows, partialReadReader, 
             "test RCFile multi file partial read with " +
                 classes[i].getCanonicalName() +
-                ". Read columns: " + readColumnStr.toString());
+                ". Read columns: " + readColumnsStr.toString());
       }
     }
   }

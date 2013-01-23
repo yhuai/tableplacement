@@ -33,10 +33,9 @@ public abstract class ReadFrom {
   protected ColumnarSerDeBase serde;
   protected StandardStructObjectInspector rowHiveObjectInspector;
   protected int columnCount;
-  protected String readColumnStr;
   protected ArrayList<Integer> readCols;
   protected long rowCount;
-  protected Map<String, List<Integer>> readColumns;
+  protected String readColumnsStr;
   
   protected boolean isReadLocalFS;
   
@@ -63,8 +62,7 @@ public abstract class ReadFrom {
       isReadLocalFS = true;
     }
     
-    readColumns = MultiFileReader.parseReadColumnMultiFileStr(
-        prop.get(TableProperty.READ_COLUMN_STR));
+    readColumnsStr = prop.get(TableProperty.READ_COLUMN_STR);
 
     prop.dump();
   }
@@ -79,6 +77,7 @@ public abstract class ReadFrom {
 
     Map<String, BytesRefArrayWritable> ret = new HashMap<String, BytesRefArrayWritable>();
     List<ColumnFileGroup> groups = reader.getColumnFileGroups();
+    Map<String, List<Integer>> readColumns = reader.getReadColumns();
     for (ColumnFileGroup group: groups) {
       if (!readColumns.keySet().contains(group.getName())) {
         continue;

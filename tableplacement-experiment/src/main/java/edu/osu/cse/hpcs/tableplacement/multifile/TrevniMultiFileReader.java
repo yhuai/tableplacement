@@ -33,10 +33,10 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
   private Map<String, TrevniColumnReader> columnReaders;
 
   public TrevniMultiFileReader(Configuration conf, Path inDir,
-      Map<String, List<Integer>> readColumns, boolean isReadLocalFS) throws IOException,
+      String readColumnsStr, boolean isReadLocalFS) throws IOException,
       ClassNotFoundException, SerDeException, InstantiationException,
       IllegalAccessException, TablePropertyException {
-    super(conf, inDir, readColumns);
+    super(conf, inDir, readColumnsStr);
     rowReaders = new LinkedHashMap<String, TrevniRowReader>();
     columnReaders = new LinkedHashMap<String, TrevniColumnReader>();
     for (String groupName: readColumns.keySet()) {
