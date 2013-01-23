@@ -22,6 +22,11 @@ Test all cases: `mvn test`
 
 Test a single case: `mvn -Dtest=<class_name> test`
 
+#Table Property File
+A table is defined by a table property file. There are a few examples located in '/tableplacement-experiment/tableProperties'. Properties can be defined in this file are introduced below.
+
+[TODO: add explainations of a table property file]
+
 # Execute experiments
 In `tableplacement-experiment/expScripts`, there are four scripts which are used to execute experiments of read/write operations with RCFile and Trevni.
 Please execute those scripts in the directory of `tableplacement-experiment/expScripts`.
@@ -48,10 +53,10 @@ Here are short descriptions of scripts in `tableplacement-experiment/expScripts`
 * `<output dir>` and `<input dir>` are dirs used to store files. Filenames will be automatically generated.
 * `<device>` is the storage device which experiments will work on. It should be something like `/dev/sda`
 * In current implementation, I used ColumnarSerDe in Hive for serilization and deserilization. `<SerDe>` represents which type of ColumnarSerDe will be used. `B` means `LazyBinaryColumnarSerDe`, which is binary-based, and `T` means `ColumnarSerDe`, which is text-based.
-* In experiments for read operations, you can specify which column(s) you want to read through `<read column string>`. For example, `0,1,2,5` means to read first three columns and sixth column. To read all columns, just use string `all`.
+* [FIXIT]In experiments for read operations, you can specify which column(s) you want to read through `<read column string>`. For example, `0,1,2,5` means to read first three columns and sixth column. To read all columns, just use string `all`.
 * The table which will be generated is described in `tableplacement-experiment/tableProperties/RCFile.LazyBinaryColumnarSerDe.properties`. The table has 6 int columns, the value of which is randomly picked from 0 to 9999, 6 string columns, the length of each string is 30, and 1 map column, the size of which is 10. The type of keys in the map column is string and the length of each key string is 4. The value type of values in the map column is int and every int value is randomly picked from 0 to 2147483646.
 * In current scripts, generated files will have 3000000 rows.
-* `io.file.buffer.size` in every experiment has been set to 65536 bytes (64KiB).
+* `io.file.buffer.size` in every experiment has been set to 524288 bytes (512KiB).
 * `<row group size>` is the row group size used for RCFile.
 
 
