@@ -14,7 +14,7 @@ uname -a
 cat /etc/lsb-release
 
 
-ROW_COUNT=5000000     
+ROW_COUNT=100000000     
 IO_BUFFER_SIZE=524288  # 512KiB buffer size
 FILE_PREFIX="binary"
 RCFILE_PREFIX="rcfile"
