@@ -97,10 +97,11 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
   }
 
   @Override
-  public void getCurrentColumnValue(BytesRefArrayWritable ret,
+  public void getCurrentColumnValue(Map<String, BytesRefArrayWritable> ret,
       String groupName, int column) throws IOException {
     TrevniColumnReader reader = columnReaders.get(groupName);
-    reader.getCurrentColumnValue(ret, column);
+    BytesRefArrayWritable braw = ret.get(groupName);
+    reader.getCurrentColumnValue(braw, column);
   }
 
   @Override

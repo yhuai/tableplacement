@@ -60,7 +60,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
         LongWritable rowID = new LongWritable();
         while (reader.next(rowID, groupName, col)) {
           ts = System.nanoTime();
-          reader.getCurrentColumnValue(ret.get(groupName), groupName, col);
+          reader.getCurrentColumnValue(ret, groupName, col);
           totalRowReadTimeInNano += System.nanoTime() - ts;
           totalSerializedDataSize += ret.get(groupName).get(col).getLength();
         }
@@ -75,7 +75,8 @@ public class ReadTrevniColumnOriented extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
-    TrevniMultiFileReader reader = new TrevniMultiFileReader(conf, inputDir, readColumnsStr, isReadLocalFS);
+    TrevniMultiFileReader reader =
+        new TrevniMultiFileReader(conf, inputDir, readColumnsStr, isReadLocalFS);
     return doRead(reader, log);
   }
   

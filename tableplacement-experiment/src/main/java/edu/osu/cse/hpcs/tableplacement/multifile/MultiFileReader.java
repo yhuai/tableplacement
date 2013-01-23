@@ -112,7 +112,9 @@ public abstract class MultiFileReader<T> {
    * @param ret
    * @throws IOException 
    */
-  public abstract void getCurrentColumnValue(BytesRefArrayWritable ret, String groupName, int column) throws IOException;
+  public abstract void getCurrentColumnValue(
+      Map<String, BytesRefArrayWritable> ret,
+      String groupName, int column) throws IOException;
 
   public ColumnarSerDeBase getGroupSerDe(String groupName) {
     return serdes.get(groupName);

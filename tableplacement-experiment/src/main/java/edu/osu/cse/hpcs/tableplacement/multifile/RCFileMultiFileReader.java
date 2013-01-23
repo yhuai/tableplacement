@@ -65,7 +65,8 @@ public class RCFileMultiFileReader extends MultiFileReader<RCFile.Reader> {
   }
 
   @Override
-  public void getCurrentColumnValue(BytesRefArrayWritable ret, String groupName, int column) {
+  public void getCurrentColumnValue(Map<String, BytesRefArrayWritable> ret,
+      String groupName, int column) {
     // not implemented right now
   }
 
