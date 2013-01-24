@@ -7,6 +7,8 @@ then
   exit
 fi
 
+EXP=$1
+
 EXP_COMMON_CONF_PATH="./expConf/common.conf"
 echo "Loading parameters from $EXP_COMMON_CONF_PATH"
 source $EXP_COMMON_CONF_PATH
