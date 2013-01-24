@@ -7,11 +7,11 @@ then
   exit
 fi
 
-EXP_COMMON_CONF_PATH=./expConf/common.conf
-echo "Loading parameters from $EXP_CONF_PATH"
+EXP_COMMON_CONF_PATH="./expConf/common.conf"
+echo "Loading parameters from $EXP_COMMON_CONF_PATH"
 source $EXP_COMMON_CONF_PATH
 
-EXP_CONF_PATH=./expConf/$EXP.conf
+EXP_CONF_PATH="./expConf/$EXP.conf"
 echo "Loading parameters from $EXP_CONF_PATH"
 source $EXP_CONF_PATH
 
