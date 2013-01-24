@@ -24,7 +24,7 @@ cat /etc/lsb-release
 echo "Task 1: read testing files in the format of Trevni"
 for IO_BUFFER_SIZE in 65536 131072 262144 524288 1048576
 do
-    for READ_COLUMN_STR in "cfg1:3" "cfg1:1,3,5,7" "cfg1:all" 
+    for READ_COLUMN_STR in $COLUMNS_STR
     do
         echo "=================================================================="
         echo "Row group size:" $ROW_GROUP_SIZE
