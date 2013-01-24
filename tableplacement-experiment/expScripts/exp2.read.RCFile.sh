@@ -2,7 +2,7 @@
 
 if [ $# -ne 2 ]
 then
-  echo "./exp1.read.RCFile.sh <inputput dir> <device>"
+  echo "./exp2.read.RCFile.sh <inputput dir> <device>"
   exit
 fi
 
@@ -14,13 +14,13 @@ uname -a
 cat /etc/lsb-release
 
 
-ROW_COUNT=100000000   
+ROW_COUNT=50000000   
 IO_BUFFER_SIZE=524288  # 512KiB buffer size
 FILE_PREFIX="binary"
 RCFILE_PREFIX="rcfile"
 TREVNI_PREFIX="trevni"
 
-TABLE="../tableProperties/LazyBinaryColumnarSerDe/t1-singleFile-noColumnGroup.properties"
+TABLE="../tableProperties/LazyBinaryColumnarSerDe/t3-singleFile-noColumnGroup.properties"
 echo "Task 1: read testing files in the format of RCFile"
 for ROW_GROUP_SIZE in 1048576 4194304 16777216 67108864 268435456 1073741824
 do
