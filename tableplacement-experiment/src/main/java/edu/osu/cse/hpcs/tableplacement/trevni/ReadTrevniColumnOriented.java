@@ -68,7 +68,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
         LongWritable rowID = new LongWritable();
         long columnSerializedDataSize = 0;
         long columnReadTimeInNano = 0;
-        long startReadColumn = 0;
+        long startReadColumn = System.nanoTime();
         while (reader.next(rowID, groupName, col)) {
           ts = System.nanoTime();
           reader.getCurrentColumnValue(ret, groupName, col);
