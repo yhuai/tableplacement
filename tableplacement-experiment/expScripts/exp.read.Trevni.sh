@@ -22,9 +22,9 @@ uname -a
 cat /etc/lsb-release
 
 echo "Task 1: read testing files in the format of Trevni"
-for IO_BUFFER_SIZE in $IO_BUFFER_SIZE_LIST
+for IO_BUFFER_SIZE in "${IO_BUFFER_SIZE_LIST[@]}"
 do
-    for READ_COLUMN_STR in $COLUMNS_STR
+    for READ_COLUMN_STR in "${COLUMNS_STR[@]}"
     do
         echo "=================================================================="
         echo "I/O buffer size:" $IO_BUFFER_SIZE
