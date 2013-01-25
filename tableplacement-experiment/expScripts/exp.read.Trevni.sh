@@ -22,7 +22,7 @@ uname -a
 cat /etc/lsb-release
 
 echo "Task 1: read testing files in the format of Trevni"
-for IO_BUFFER_SIZE in 65536 131072 262144 524288 1048576
+for IO_BUFFER_SIZE in $IO_BUFFER_SIZE_LIST
 do
     for READ_COLUMN_STR in $COLUMNS_STR
     do
