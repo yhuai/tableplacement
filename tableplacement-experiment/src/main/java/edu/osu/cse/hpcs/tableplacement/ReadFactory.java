@@ -8,6 +8,7 @@ import org.apache.hadoop.hive.serde2.SerDeException;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFile;
 import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFile;
+import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniColumnOriented;
 import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniRowOriented;
 import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 import edu.osu.cse.hpcs.tableplacement.util.CmdTool;
@@ -38,6 +39,8 @@ public class ReadFactory {
       ret = new ReadRCFile(propertyFilePath, inputPathStr, cmdProperties);
     } else if (ReadTrevniRowOriented.class.equals(theClass)) {
       ret = new ReadTrevniRowOriented(propertyFilePath, inputPathStr, cmdProperties);
+    } else if (ReadTrevniColumnOriented.class.equals(theClass)) {
+      ret = new ReadTrevniColumnOriented(propertyFilePath, inputPathStr, cmdProperties);
     } else {
       throw new IllegalArgumentException("Class " + theClass.getCanonicalName()
           + " is not supported");
