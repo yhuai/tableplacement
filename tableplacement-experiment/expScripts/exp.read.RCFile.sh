@@ -22,11 +22,11 @@ uname -a
 cat /etc/lsb-release
 
 echo "Task 1: read testing files in the format of RCFile"
-for ROW_GROUP_SIZE in "${ROW_GROUP_SIZE_LIST [@]}"
+for ROW_GROUP_SIZE in "${ROW_GROUP_SIZE_LIST[@]}"
 do
-    for IO_BUFFER_SIZE in "${IO_BUFFER_SIZE_LIST [@]}"
+    for IO_BUFFER_SIZE in "${IO_BUFFER_SIZE_LIST[@]}"
     do
-        for READ_COLUMN_STR in "${COLUMNS_STR [@]}"
+        for READ_COLUMN_STR in "${COLUMNS_STR[@]}"
         do
             echo "=================================================================="
             echo "Row group size:" $ROW_GROUP_SIZE
