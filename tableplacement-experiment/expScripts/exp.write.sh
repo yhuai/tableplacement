@@ -24,7 +24,7 @@ cat /etc/lsb-release
 echo "Write I/O buffer size:" $WRITE_IO_BUFFER_SIZE  
 
 echo "Task 1: write testing files in the format of RCFile"
-for ROW_GROUP_SIZE in 1048576 4194304 16777216 67108864 268435456 1073741824
+for ROW_GROUP_SIZE in $ROW_GROUP_SIZE_LIST
 do
     echo "=================================================================="
     echo "Row group size:" $ROW_GROUP_SIZE
