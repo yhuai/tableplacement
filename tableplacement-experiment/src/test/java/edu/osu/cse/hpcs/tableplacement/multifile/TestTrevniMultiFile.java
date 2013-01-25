@@ -36,7 +36,7 @@ public class TestTrevniMultiFile {
         }
       }
 
-      TrevniMultiFileReader fullReadReader = mftc.getTrevniReader(
+      TrevniMultiFileRowReader fullReadReader = mftc.getTrevniReader(
           MultiFileTestClass.fullReadColumnStr);
       mftc.doFullMultiFileReadTest(rows, fullReadReader, 
           "test Trevni multi file full read with " +
@@ -44,7 +44,7 @@ public class TestTrevniMultiFile {
       
       for (int j=0; j<MultiFileTestClass.partialReadColumnStrs.length; j++) {
         String readColumnStr = MultiFileTestClass.partialReadColumnStrs[j];
-        TrevniMultiFileReader partialReadReader = mftc.getTrevniReader(readColumnStr);
+        TrevniMultiFileRowReader partialReadReader = mftc.getTrevniReader(readColumnStr);
         mftc.doPartialMultiFileReadTest(rows, partialReadReader, 
             "test Trevni multi file partial read with " +
                 classes[i].getCanonicalName() +

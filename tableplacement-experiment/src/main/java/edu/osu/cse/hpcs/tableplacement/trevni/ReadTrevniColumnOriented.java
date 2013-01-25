@@ -22,7 +22,8 @@ import edu.osu.cse.hpcs.tableplacement.ReadFactory;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.multifile.MultiFileReader;
 import edu.osu.cse.hpcs.tableplacement.multifile.RCFileMultiFileReader;
-import edu.osu.cse.hpcs.tableplacement.multifile.TrevniMultiFileReader;
+import edu.osu.cse.hpcs.tableplacement.multifile.TrevniMultiFileColumnReader;
+import edu.osu.cse.hpcs.tableplacement.multifile.TrevniMultiFileRowReader;
 
 public class ReadTrevniColumnOriented extends ReadFrom {
   protected static Logger log = Logger.getLogger(ReadTrevniColumnOriented.class);
@@ -75,8 +76,8 @@ public class ReadTrevniColumnOriented extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
-    TrevniMultiFileReader reader =
-        new TrevniMultiFileReader(conf, inputDir, readColumnsStr, isReadLocalFS);
+    TrevniMultiFileColumnReader reader =
+        new TrevniMultiFileColumnReader(conf, inputDir, readColumnsStr, isReadLocalFS);
     return doRead(reader, log);
   }
   

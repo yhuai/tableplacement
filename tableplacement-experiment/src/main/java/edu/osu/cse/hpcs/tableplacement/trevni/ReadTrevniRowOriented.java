@@ -14,13 +14,13 @@ import org.apache.trevni.avro.HadoopInput;
 import edu.osu.cse.hpcs.tableplacement.ReadFrom;
 import edu.osu.cse.hpcs.tableplacement.ReadFactory;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
-import edu.osu.cse.hpcs.tableplacement.multifile.TrevniMultiFileReader;
+import edu.osu.cse.hpcs.tableplacement.multifile.TrevniMultiFileRowReader;
 
 
-public class ReadTrevni extends ReadFrom {
-  protected static Logger log = Logger.getLogger(ReadTrevni.class);
+public class ReadTrevniRowOriented extends ReadFrom {
+  protected static Logger log = Logger.getLogger(ReadTrevniRowOriented.class);
 
-  public ReadTrevni(String propertyFilePath, String inputPath,
+  public ReadTrevniRowOriented(String propertyFilePath, String inputPath,
       Properties cmdProperties) throws IOException, TablePropertyException,
       SerDeException, InstantiationException, IllegalAccessException,
       ClassNotFoundException {
@@ -32,7 +32,7 @@ public class ReadTrevni extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
-    TrevniMultiFileReader reader = new TrevniMultiFileReader(conf, inputDir, readColumnsStr, isReadLocalFS);
+    TrevniMultiFileRowReader reader = new TrevniMultiFileRowReader(conf, inputDir, readColumnsStr, isReadLocalFS);
     return doRead(reader, log);
   }
   
@@ -41,7 +41,7 @@ public class ReadTrevni extends ReadFrom {
   }
 
   public static void main(String[] args) throws Exception {
-    ReadTrevni readTrevni = (ReadTrevni) ReadFactory.get(args, ReadTrevni.class);
+    ReadTrevniRowOriented readTrevni = (ReadTrevniRowOriented) ReadFactory.get(args, ReadTrevniRowOriented.class);
     readTrevni.runTest();
   }
 }

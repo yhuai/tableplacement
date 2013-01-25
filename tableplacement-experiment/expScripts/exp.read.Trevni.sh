@@ -32,7 +32,7 @@ do
         echo "Read columns str:" $READ_COLUMN_STR
         echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
         iostat -d -t $DEVICE
-        java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar ReadTrevni -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+        java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
         echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
         iostat -d -t $DEVICE
     done        

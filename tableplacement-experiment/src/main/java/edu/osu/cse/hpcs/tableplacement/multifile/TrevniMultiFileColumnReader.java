@@ -25,19 +25,17 @@ import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniColumnReader;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniRowReader;
 
-public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
+public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReader> {
   
-  private static Logger log = Logger.getLogger(TrevniMultiFileReader.class);
+  private static Logger log = Logger.getLogger(TrevniMultiFileColumnReader.class);
 
-  private Map<String, TrevniRowReader> rowReaders;
   private Map<String, TrevniColumnReader> columnReaders;
 
-  public TrevniMultiFileReader(Configuration conf, Path inDir,
+  public TrevniMultiFileColumnReader(Configuration conf, Path inDir,
       String readColumnsStr, boolean isReadLocalFS) throws IOException,
       ClassNotFoundException, SerDeException, InstantiationException,
       IllegalAccessException, TablePropertyException {
     super(conf, inDir, readColumnsStr);
-    rowReaders = new LinkedHashMap<String, TrevniRowReader>();
     columnReaders = new LinkedHashMap<String, TrevniColumnReader>();
     for (String groupName: readColumns.keySet()) {
       ColumnFileGroup group = columnFileGroupsMap.get(groupName);
@@ -62,8 +60,6 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
       }
       readers.put(groupName, reader);
       List<Integer> readCols = readColumns.get(groupName);
-      rowReaders.put(groupName,
-          new TrevniRowReader(reader, group.getColumns().size(), readCols));
       columnReaders.put(groupName,
           new TrevniColumnReader(reader, group.getColumns().size(), readCols));
     }
@@ -71,12 +67,8 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
 
   @Override
   public boolean next(LongWritable rowID) throws IOException {
-    boolean ret = true;
-    for (Entry<String, TrevniRowReader> entry: rowReaders.entrySet()) {
-      TrevniRowReader reader = entry.getValue();
-      ret = reader.next(rowID) && ret;
-    }
-    return ret;
+    // do nothing
+    return false;
   }
 
   @Override
@@ -88,12 +80,7 @@ public class TrevniMultiFileReader extends MultiFileReader<ColumnFileReader> {
   @Override
   public void getCurrentRow(Map<String, BytesRefArrayWritable> ret)
       throws IOException {
-    for (Entry<String, TrevniRowReader> entry: rowReaders.entrySet()) {
-      String groupName = entry.getKey();
-      TrevniRowReader reader = entry.getValue();
-      BytesRefArrayWritable braw = ret.get(groupName);
-      reader.getCurrentRow(braw);
-    }
+    // do nothing
   }
 
   @Override

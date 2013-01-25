@@ -4,7 +4,8 @@ import org.apache.hadoop.util.ProgramDriver;
 
 import edu.osu.cse.hpcs.tableplacement.rcfile.ReadRCFile;
 import edu.osu.cse.hpcs.tableplacement.rcfile.WriteRCFile;
-import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevni;
+import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniColumnOriented;
+import edu.osu.cse.hpcs.tableplacement.trevni.ReadTrevniRowOriented;
 import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 
 public class Driver {
@@ -19,8 +20,10 @@ public class Driver {
 
       pgd.addClass("WriteTrevni", WriteTrevni.class,
           "WriteTrevni");
-      pgd.addClass("ReadTrevni", ReadTrevni.class,
-          "ReadTrevni");
+      pgd.addClass("ReadTrevniRowOriented", ReadTrevniRowOriented.class,
+          "ReadTrevniRowOriented");
+      pgd.addClass("ReadTrevniColumnOriented", ReadTrevniColumnOriented.class,
+          "ReadTrevniColumnOriented");
 
       pgd.driver(argv);
 
