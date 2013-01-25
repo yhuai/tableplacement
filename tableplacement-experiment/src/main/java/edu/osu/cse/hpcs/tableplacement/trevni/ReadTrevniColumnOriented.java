@@ -76,7 +76,7 @@ public class ReadTrevniColumnOriented extends ReadFrom {
         }
       }
     }
-    readerCloseTimeInNano = System.nanoTime() - ts;
+    totalDataReadTimeInNano = System.nanoTime() - ts;
     ts = System.nanoTime();
     reader.close();
     readerCloseTimeInNano = System.nanoTime() - ts;

@@ -129,27 +129,7 @@ public abstract class MultiFileReader<T> {
   }
   
   public abstract void close() throws IOException;
-  
-  /*
-  public static Map<String, List<Integer>> parseReadColumnMultiFileStr(String str) {
-    log.info("Parsing multi file column read string: " + str);
-    Map<String, List<Integer>> ret = new HashMap<String, List<Integer>>();
-    String[] groups = str.split("\\|");
-    for (int i=0; i<groups.length; i++) {
-      String[] tmp = groups[i].split(":");
-      
-      assert tmp.length == 2; // a name of the group and a string for columns
-      String groupName = tmp[0];
-      String[] columnIds = tmp[1].split(",");
-      List<Integer> columns = new ArrayList<Integer>();
-      for (int j=0; j<columnIds.length; j++) {
-        columns.add(Integer.valueOf(columnIds[j]));
-      }
-      ret.put(groupName, columns);
-    }
-    return ret;
-  }
-  */
+
   public static Map<String, List<Integer>> parseReadColumnMultiFileStr(
       String str, Map<String, ColumnFileGroup> columnFileGroupMap) {
     log.info("Parsing multi file column read string: " + str);
