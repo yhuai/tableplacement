@@ -40,8 +40,15 @@ public abstract class ReadFrom {
   protected boolean isReadLocalFS;
   
   //Performance measures
- protected long totalRowReadTimeInNano;
- //protected long totalRowDeserializationTimeInNano;
+  protected long readerCreateTimeInNano;
+  protected long totalInitializationTimeInNano;
+  protected long totalRowReadTimeInNano;
+  protected long totalCalculateSizeTimeInNano;
+  // totalDataReadTimeInNano = 
+  // time on next + totalRowReadTimeInNano + totalCalculateSizeTimeInNano
+  protected long totalDataReadTimeInNano;
+  protected long readerCloseTimeInNano;
+  //protected long totalRowDeserializationTimeInNano;
   
   public ReadFrom(String propertyFilePath, String inputPath,
       Properties cmdProperties, Logger log) throws IOException, TablePropertyException,
@@ -72,9 +79,13 @@ public abstract class ReadFrom {
   public long doRead(MultiFileReader reader, Logger log)
       throws IOException, SerDeException {
     long ts;
-    assert totalRowReadTimeInNano == 0;
+    totalRowReadTimeInNano = 0;
+    totalInitializationTimeInNano = 0;
+    totalCalculateSizeTimeInNano = 0;
+    totalDataReadTimeInNano = 0;
     //assert totalRowDeserializationTimeInNano == 0;
-
+    
+    ts = System.nanoTime();
     Map<String, BytesRefArrayWritable> ret = new HashMap<String, BytesRefArrayWritable>();
     List<ColumnFileGroup> groups = reader.getColumnFileGroups();
     Map<String, List<Integer>> readColumns = reader.getReadColumns();
@@ -89,12 +100,15 @@ public abstract class ReadFrom {
     LongWritable rowID = new LongWritable();
     rowCount = 0;
     long totalSerializedDataSize = 0;
-
+    totalInitializationTimeInNano = (System.nanoTime() - ts);
+    
+    long start = System.nanoTime();
     while (reader.next(rowID)) {
       ts = System.nanoTime();
       reader.getCurrentRow(ret);
-      totalRowReadTimeInNano += System.nanoTime() - ts;
+      totalRowReadTimeInNano += (System.nanoTime() - ts);
 
+      ts = System.nanoTime();
       for (Entry<String, BytesRefArrayWritable> entry: ret.entrySet()) {
         String groupName = entry.getKey();
         BytesRefArrayWritable braw = entry.getValue();
@@ -106,10 +120,15 @@ public abstract class ReadFrom {
           totalSerializedDataSize += braw.get(j).getLength();
         }
       }
+      totalCalculateSizeTimeInNano += (System.nanoTime() - ts);
       
       rowCount++;
     }
+    totalDataReadTimeInNano = System.nanoTime() - start;
+    ts = System.nanoTime();
     reader.close();
+    readerCloseTimeInNano = System.nanoTime() - ts;
+
     log.info("Row count : " + rowCount);
     log.info("Total serialized data size: " + totalSerializedDataSize);
     return totalSerializedDataSize;
@@ -126,14 +145,27 @@ public abstract class ReadFrom {
     System.out
         .println("Total serialized data size (MiB): " + totalSerializedDataSize * 1.0 / 1024 / 1024);
     System.out.println("Total elapsed time: " + (end - start) / 1000000 + " ms");
-    System.out.println("Total row read time: "
-        + totalRowReadTimeInNano * 1.0 / 1000000 + " ms");
-    System.out.println("Average row read time: "
-        + totalRowReadTimeInNano * 1.0 / 1000000 / rowCount + " ms");
     //System.out.println("Total row deserialization time: "
     //    + totalRowDeserializationTimeInNano * 1.0 / 1000000 + " ms");
     //System.out.println("Average row deserialization time: "
     //    + totalRowDeserializationTimeInNano * 1.0 / 1000000 / rowCount + " ms");
+    System.out.println("Total reader creatiation time: " 
+        + readerCreateTimeInNano * 1.0 / 1000000 + " ms");
+    System.out.println("Total initialization time: " 
+        + totalInitializationTimeInNano * 1.0 / 1000000 + " ms");
+    System.out.println("Total row read time: "
+        + totalRowReadTimeInNano * 1.0 / 1000000 + " ms");
+    System.out.println("Average row read time: "
+        + totalRowReadTimeInNano * 1.0 / 1000000 / rowCount + " ms");
+    System.out.println("Total calculating data size time: " 
+        + totalCalculateSizeTimeInNano * 1.0 / 1000000 + " ms");
+    System.out.println("Total data read time " +
+    		"(time on calling next() + total row read time + " +
+    		"total calculating data size time): " 
+        + totalDataReadTimeInNano * 1.0 / 1000000 + " ms");
+    System.out.println("Total reader close time: " 
+        + readerCloseTimeInNano * 1.0 / 1000000 + " ms");
+    
     System.out.println("Throughput MiB/s: " + totalSerializedDataSize * 1.0
         / 1024 / 1024 / (end - start) * 1000000000);
   }

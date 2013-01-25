@@ -35,7 +35,9 @@ public class ReadRCFile extends ReadFrom {
   }
 
   public long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException {
+    long ts = System.nanoTime();
     RCFileMultiFileReader reader = new RCFileMultiFileReader(conf, inputDir, readColumnsStr);
+    readerCreateTimeInNano = System.nanoTime() - ts;
     return doRead(reader, log);
   }
 

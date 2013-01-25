@@ -32,7 +32,9 @@ public class ReadTrevniRowOriented extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
+    long ts = System.nanoTime();
     TrevniMultiFileRowReader reader = new TrevniMultiFileRowReader(conf, inputDir, readColumnsStr, isReadLocalFS);
+    readerCreateTimeInNano = System.nanoTime() - ts;
     return doRead(reader, log);
   }
   

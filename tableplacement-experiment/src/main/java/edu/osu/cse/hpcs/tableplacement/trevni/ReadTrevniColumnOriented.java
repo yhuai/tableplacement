@@ -39,9 +39,13 @@ public class ReadTrevniColumnOriented extends ReadFrom {
   public long doRead(MultiFileReader reader, Logger log)
       throws IOException, SerDeException {
     long ts;
-    assert totalRowReadTimeInNano == 0;
+    totalRowReadTimeInNano = 0;
+    totalInitializationTimeInNano = 0;
+    totalCalculateSizeTimeInNano = 0;
+    totalDataReadTimeInNano = 0;
     //assert totalRowDeserializationTimeInNano == 0;
 
+    ts = System.nanoTime();
     Map<String, BytesRefArrayWritable> ret = new HashMap<String, BytesRefArrayWritable>();
     List<ColumnFileGroup> groups = reader.getColumnFileGroups();
     Map<String, List<Integer>> readColumns = reader.getReadColumns();
@@ -55,6 +59,9 @@ public class ReadTrevniColumnOriented extends ReadFrom {
     }
     rowCount = 0;
     long totalSerializedDataSize = 0;
+    totalInitializationTimeInNano = (System.nanoTime() - ts);
+    
+    long start = System.nanoTime();
     for (Entry<String, List<Integer>> groupCols: readColumns.entrySet()) {
       String groupName = groupCols.getKey();
       for (Integer col: groupCols.getValue()) {
@@ -63,10 +70,16 @@ public class ReadTrevniColumnOriented extends ReadFrom {
           ts = System.nanoTime();
           reader.getCurrentColumnValue(ret, groupName, col);
           totalRowReadTimeInNano += System.nanoTime() - ts;
+          ts = System.nanoTime();
           totalSerializedDataSize += ret.get(groupName).get(col).getLength();
+          totalCalculateSizeTimeInNano += System.nanoTime() - ts;
         }
       }
     }
+    readerCloseTimeInNano = System.nanoTime() - ts;
+    ts = System.nanoTime();
+    reader.close();
+    readerCloseTimeInNano = System.nanoTime() - ts;
     log.info("Total serialized data size: " + totalSerializedDataSize);
     return totalSerializedDataSize;
   }
@@ -76,8 +89,10 @@ public class ReadTrevniColumnOriented extends ReadFrom {
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.
     // We may need to just use File instead of HadoopInput for local test.
+    long ts = System.nanoTime();
     TrevniMultiFileColumnReader reader =
         new TrevniMultiFileColumnReader(conf, inputDir, readColumnsStr, isReadLocalFS);
+    readerCreateTimeInNano = System.nanoTime() - ts;
     return doRead(reader, log);
   }
   
