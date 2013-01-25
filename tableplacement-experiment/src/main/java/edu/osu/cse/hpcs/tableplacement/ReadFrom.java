@@ -94,6 +94,8 @@ public abstract class ReadFrom {
       ts = System.nanoTime();
       reader.getCurrentRow(ret);
       totalRowReadTimeInNano += System.nanoTime() - ts;
+      
+      /*
       for (Entry<String, BytesRefArrayWritable> entry: ret.entrySet()) {
         String groupName = entry.getKey();
         BytesRefArrayWritable braw = entry.getValue();
@@ -105,6 +107,8 @@ public abstract class ReadFrom {
           totalSerializedDataSize += braw.get(j).getLength();
         }
       }
+      */
+      
       rowCount++;
     }
     reader.close();
