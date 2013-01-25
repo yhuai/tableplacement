@@ -81,9 +81,9 @@ public class ReadTrevniColumnOriented extends ReadFrom {
         }
         columnReadTimeInNano = System.nanoTime() - startReadColumn;
         log.info("Elapsed time on reading column " + col + 
-            " in file group " + groupName + ": " + columnReadTimeInNano);
-        log.info("Serialized data size of column " + col + 
-            " in file group " + groupName + ": " + columnSerializedDataSize);
+            " in file group " + groupName + ": " + (columnReadTimeInNano * 1.0 / 1000000) + " ms");
+        log.info("Serialized data size (MiB) of column " + col + 
+            " in file group " + groupName + ": " + (columnSerializedDataSize * 1.0 / 1024 / 1024));
       }
     }
     totalDataReadTimeInNano = System.nanoTime() - start;
