@@ -24,6 +24,7 @@ import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniColumnReader;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniRowReader;
+import edu.osu.cse.hpcs.tableplacement.util.TPMapWritable;
 
 public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> {
   
@@ -104,5 +105,14 @@ public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> 
       reader.close();
     }
   }
-
+  
+  //For RecordReaders
+  public void getCurrentRow(TPMapWritable ret) throws IOException {
+    for (Entry<String, TrevniRowReader> entry: rowReaders.entrySet()) {
+      String groupName = entry.getKey();
+      TrevniRowReader reader = entry.getValue();
+      reader.getCurrentRow(ret.get(groupName));
+    }
+  }
+  
 }

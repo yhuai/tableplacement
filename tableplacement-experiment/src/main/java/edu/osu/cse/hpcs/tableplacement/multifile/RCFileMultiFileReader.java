@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
+import edu.osu.cse.hpcs.tableplacement.util.TPMapWritable;
 
 public class RCFileMultiFileReader extends MultiFileReader<RCFile.Reader> {
 
@@ -76,5 +77,38 @@ public class RCFileMultiFileReader extends MultiFileReader<RCFile.Reader> {
       reader.close();
     }
   }
+  //For RecordReaders
+  public void getCurrentRow(TPMapWritable ret) throws IOException {
+    for (Entry<String, Reader> entry: readers.entrySet()) {
+      String groupName = entry.getKey();
+      RCFile.Reader reader = entry.getValue();
+      reader.getCurrentRow(ret.get(groupName));
+    }
+  }
+  
+  public long getPos() throws IOException {
+	  for (Reader reader: readers.values()) {
+	      return reader.getPosition();
+	  }
+	  return 0;
+  }
+  
+  protected void seek(long pos) throws IOException {
+	  for (Reader reader: readers.values()) {
+	      reader.seek(pos);
+	  }
+  }
+  
+  public void sync(long pos) throws IOException {
+	  for (Reader reader: readers.values()) {
+	      reader.sync(pos);
+	  }
+  }
 
+  public void resetBuffer() {
+	  for (Reader reader: readers.values()) {
+	      reader.resetBuffer();
+	  }
+  }
+  
 }

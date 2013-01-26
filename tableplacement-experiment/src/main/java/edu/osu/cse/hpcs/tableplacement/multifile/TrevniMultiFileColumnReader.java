@@ -2,6 +2,8 @@ package edu.osu.cse.hpcs.tableplacement.multifile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +26,16 @@ import edu.osu.cse.hpcs.tableplacement.TableProperty;
 import edu.osu.cse.hpcs.tableplacement.exception.TablePropertyException;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniColumnReader;
 import edu.osu.cse.hpcs.tableplacement.trevni.TrevniRowReader;
+import edu.osu.cse.hpcs.tableplacement.util.Pair;
+import edu.osu.cse.hpcs.tableplacement.util.TPMapWritable;
 
 public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReader> {
   
   private static Logger log = Logger.getLogger(TrevniMultiFileColumnReader.class);
 
   private Map<String, TrevniColumnReader> columnReaders;
+  private Iterator<Pair<String, Integer>> groupColsItr;
+  private Pair<String, Integer> currentGrpCol = null;
 
   public TrevniMultiFileColumnReader(Configuration conf, Path inDir,
       String readColumnsStr, boolean isReadLocalFS) throws IOException,
@@ -37,6 +43,8 @@ public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReade
       IllegalAccessException, TablePropertyException {
     super(conf, inDir, readColumnsStr);
     columnReaders = new LinkedHashMap<String, TrevniColumnReader>();
+    List<Pair<String, Integer>> groupCols= new ArrayList<Pair<String, Integer>>();
+    
     for (String groupName: readColumns.keySet()) {
       ColumnFileGroup group = columnFileGroupsMap.get(groupName);
       Path file = columnFileGroupFiles.get(groupName);
@@ -62,7 +70,9 @@ public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReade
       List<Integer> readCols = readColumns.get(groupName);
       columnReaders.put(groupName,
           new TrevniColumnReader(reader, group.getColumns().size(), readCols));
+      groupCols.add(new Pair(groupName, readCols));
     }
+    groupColsItr = groupCols.iterator();
   }
 
   @Override
@@ -75,6 +85,16 @@ public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReade
   public boolean next(LongWritable rowID, String groupName, int column) {
     TrevniColumnReader reader = columnReaders.get(groupName);
     return reader.next(rowID, column);
+  }
+  
+  public boolean nextColumn(LongWritable rowID) {
+	  if (groupColsItr.hasNext()) {
+		  Pair<String, Integer> e = groupColsItr.next();
+		  this.currentGrpCol = e;
+		  next(rowID, e.getL(), e.getR());
+		  return true;
+	  }
+	  return false;
   }
 
   @Override
@@ -89,6 +109,15 @@ public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReade
     TrevniColumnReader reader = columnReaders.get(groupName);
     BytesRefArrayWritable braw = ret.get(groupName);
     reader.getCurrentColumnValue(braw, column);
+  }
+  
+  public void getCurrentColumnValue(TPMapWritable ret) 
+		  throws IOException {
+	  if (this.currentGrpCol != null) {
+	    TrevniColumnReader reader = columnReaders.get(currentGrpCol.getL());
+	    BytesRefArrayWritable braw = ret.get(currentGrpCol.getL());
+	    reader.getCurrentColumnValue(braw, currentGrpCol.getR());
+	  }
   }
 
   @Override
