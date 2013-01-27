@@ -1,8 +1,8 @@
 #! /bin/bash
 
-if [ $# -ne 3 ]
+if [ $# -ne 4 ]
 then
-  echo "./exp.strace.read.Trevni.sh <exp> <io buffer size> <read column str>"
+  echo "./exp.strace.read.Trevni.sh <exp> <io buffer size> <read column str> <output dir>"
   echo "<exp>: exp1, exp2, exp3, ..."
   exit
 fi
@@ -10,6 +10,7 @@ fi
 EXP=$1
 IO_BUFFER_SIZE=$2
 READ_COLUMN_STR=$3
+OUT_DIR=$4
 
 EXP_COMMON_CONF_PATH="./expConf/common.conf"
 echo "Loading parameters from $EXP_COMMON_CONF_PATH"
@@ -29,6 +30,6 @@ echo "Read columns str:" $READ_COLUMN_STR
 echo "Trevni test class:" $TREVNI_TEST_CLASS
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
 iostat -d -t $DEVICE
-strace -F -f -ttt -T -o strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.out java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+strace -F -f -ttt -T -o $OUT_DIR/strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.io$IO_BUFFER_SIZE.out java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
 iostat -d -t $DEVICE
