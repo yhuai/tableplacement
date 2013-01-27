@@ -1,8 +1,8 @@
 #! /bin/bash
 
-if [ $# -ne 4 ]
+if [ $# -ne 3 ]
 then
-  echo "./exp1.read.sh <exp> <io buffer size> <read column str>"
+  echo "./exp.strace.read.Trevni.sh <exp> <io buffer size> <read column str>"
   echo "<exp>: exp1, exp2, exp3, ..."
   exit
 fi
@@ -29,6 +29,6 @@ echo "Read columns str:" $READ_COLUMN_STR
 echo "Trevni test class:" $TREVNI_TEST_CLASS
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
 iostat -d -t $DEVICE
-strace -F -f -ttt -T java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+strace -F -f -ttt -T -o strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.out java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
 iostat -d -t $DEVICE
