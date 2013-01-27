@@ -62,3 +62,4 @@ Here are short descriptions of scripts in `tableplacement-experiment/expScripts`
 
 #Developers
 Yin Huai  [http://www.cse.ohio-state.edu/~huai/](http://www.cse.ohio-state.edu/~huai/)
+Siyuan Ma [http://siyuan.biz/home](http://siyuan.biz/home)
