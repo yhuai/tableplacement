@@ -85,8 +85,8 @@ startTs = float(readOps[0][1]);
 offset = 0;
 ofn1 = open(file + ".callTimeSeries", 'w');
 ofn2 = open(file + ".read.plot", 'w');
-#ofn3 = open(file + ".read.R.plot", 'w');
-print>>ofn2, "startTS", "startPos", "endTS", "endPos";
+ofn3 = open(file + ".read.R.plot", 'w');
+print>>ofn3, "startTS", "startPos", "endTS", "endPos";
 for entry in readOps:
     call = entry[0];
     ts = float(entry[1]) - startTs;
@@ -104,7 +104,7 @@ for entry in readOps:
         offset = readEndPos;
         print>>ofn2, str(readStartTS), str(readStartPos);
         print>>ofn2, str(readEndTS), str(readEndPos);
-        #print>>ofn3, str(readStartTS), str(readStartPos), str(readEndTS), str(readEndPos);
+        print>>ofn3, str(readStartTS), str(readStartPos), str(readEndTS), str(readEndPos);
     elif (call == "pread"):
         thisOffset = long(entry[3]);
         size = entry[4];
@@ -115,7 +115,7 @@ for entry in readOps:
         readEndPos = readStartPos + long(size);
         print>>ofn2, str(readStartTS), str(readStartPos);
         print>>ofn2, str(readEndTS), str(readEndPos);
-        #print>>ofn3, str(readStartTS), str(readStartPos), str(readEndTS), str(readEndPos);
+        print>>ofn3, str(readStartTS), str(readStartPos), str(readEndTS), str(readEndPos);
 ofn1.close();
 ofn2.close();
-#ofn3.close();          
+ofn3.close();          
