@@ -116,8 +116,8 @@ public abstract class ReadFrom {
         //ColumnarSerDeBase serde = reader.getGroupSerDe(groupName);
         //serde.deserialize(braw);        
         //totalRowDeserializationTimeInNano += System.nanoTime() - ts;
-        for (int j = 0; j < braw.size(); j++) {
-          totalSerializedDataSize += braw.get(j).getLength();
+        for (Integer col: readColumns.get(groupName)) {
+          totalSerializedDataSize += braw.get(col).getLength();
         }
       }
       totalCalculateSizeTimeInNano += (System.nanoTime() - ts);
