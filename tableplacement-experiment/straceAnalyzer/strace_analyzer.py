@@ -83,10 +83,10 @@ if (len(readOps) == 0):
 
 startTs = float(readOps[0][1]);
 offset = 0;
-ofn1 = open(file + ".callTimeSeries", 'w');
-ofn2 = open(file + ".read.plot", 'w');
-ofn3 = open(file + ".read.R.plot", 'w');
-ofn4 = open(file + ".replay", 'w');
+ofn1 = open(file + ".fd" + fd + ".callTimeSeries", 'w');
+ofn2 = open(file + ".fd" + fd + ".read.plot", 'w');
+ofn3 = open(file + ".fd" + fd + ".read.R.plot", 'w');
+ofn4 = open(file + ".fd" + fd + ".replay", 'w');
 print>>ofn3, "startTS", "startPos", "endTS", "endPos";
 for entry in readOps:
     call = entry[0];
