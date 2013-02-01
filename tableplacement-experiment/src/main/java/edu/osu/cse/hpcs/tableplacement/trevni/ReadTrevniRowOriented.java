@@ -25,7 +25,6 @@ public class ReadTrevniRowOriented extends ReadFrom {
       SerDeException, InstantiationException, IllegalAccessException,
       ClassNotFoundException {
     super(propertyFilePath, inputPath, cmdProperties, log);
-    log.info("Row read will invoke startRowWithPrefetch(16)");
   }
 
   public long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException {

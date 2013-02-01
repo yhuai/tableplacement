@@ -45,7 +45,7 @@ public class TrevniRowReader extends TrevniValueReader {
    */
   public void getCurrentRow(BytesRefArrayWritable braw, int prefetchedBlock) throws IOException {
     for (int i = 0; i < values.length; i++) {
-      values[i].startRowWithPrefetch(16);
+      values[i].startRowWithPrefetch(prefetchedBlock);
       ByteBuffer v = values[i].nextValue();
       //ByteBuffer v = values[i].next();
       braw.resetValid(columnCount);

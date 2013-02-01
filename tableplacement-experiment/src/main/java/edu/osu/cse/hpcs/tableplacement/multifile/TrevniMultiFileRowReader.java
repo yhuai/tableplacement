@@ -68,6 +68,8 @@ public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> 
           new TrevniRowReader(reader, group.getColumns().size(), readCols));
     }
     prefetchedBlocks = tableProp.getInt(PREFETCH_BLOCKS_STR, 0);
+    log.info("In row oriented accesses, we will try to read " + (prefetchedBlocks + 1) + 
+        " blocks at a time instead of 1");
   }
 
   @Override
