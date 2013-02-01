@@ -145,7 +145,7 @@ public class TestTrevni extends BaseFormatTestClass {
     braw.resetValid(columnCount);
     int indx = 0;
     while (reader.next(rowID)) {
-      reader.getCurrentRow(braw);
+      reader.getCurrentRow(braw, 0);
       Object actualRow = serde.deserialize(braw);
       Object expectedRow = rows.get(indx);
       if (0 != ObjectInspectorUtils
@@ -210,7 +210,7 @@ public class TestTrevni extends BaseFormatTestClass {
       braw.resetValid(columnCount);
       int indx = 0;
       while (reader.next(rowID)) {
-        reader.getCurrentRow(braw);
+        reader.getCurrentRow(braw, 0);
         Object actualRow = serde.deserialize(braw);
         StructObjectInspector oi = (StructObjectInspector) out_oi;
         List<? extends StructField> fieldRefs = oi.getAllStructFieldRefs();

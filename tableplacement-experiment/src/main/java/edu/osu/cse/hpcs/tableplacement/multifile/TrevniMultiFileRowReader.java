@@ -28,9 +28,12 @@ import edu.osu.cse.hpcs.tableplacement.util.TPMapWritable;
 
 public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> {
   
+  private static String PREFETCH_BLOCKS_STR = "num.prefetched.blocks";
+  
   private static Logger log = Logger.getLogger(TrevniMultiFileRowReader.class);
 
   private Map<String, TrevniRowReader> rowReaders;
+  private int prefetchedBlocks = 0; // by default, do not prefetch blocks
 
   public TrevniMultiFileRowReader(Configuration conf, Path inDir,
       String readColumnsStr, boolean isReadLocalFS) throws IOException,
@@ -64,6 +67,7 @@ public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> 
       rowReaders.put(groupName,
           new TrevniRowReader(reader, group.getColumns().size(), readCols));
     }
+    prefetchedBlocks = tableProp.getInt(PREFETCH_BLOCKS_STR, 0);
   }
 
   @Override
@@ -89,7 +93,7 @@ public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> 
       String groupName = entry.getKey();
       TrevniRowReader reader = entry.getValue();
       BytesRefArrayWritable braw = ret.get(groupName);
-      reader.getCurrentRow(braw);
+      reader.getCurrentRow(braw, prefetchedBlocks);
     }
   }
 
@@ -111,7 +115,7 @@ public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> 
     for (Entry<String, TrevniRowReader> entry: rowReaders.entrySet()) {
       String groupName = entry.getKey();
       TrevniRowReader reader = entry.getValue();
-      reader.getCurrentRow(ret.get(groupName));
+      reader.getCurrentRow(ret.get(groupName), prefetchedBlocks);
     }
   }
   
