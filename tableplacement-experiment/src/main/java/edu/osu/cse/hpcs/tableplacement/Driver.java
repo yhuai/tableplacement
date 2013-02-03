@@ -10,7 +10,7 @@ import edu.osu.cse.hpcs.tableplacement.trevni.WriteTrevni;
 
 public class Driver {
   public static void main(String[] argv) throws Exception {
-    //Thread.sleep(10000);
+    // Thread.sleep(10000);
     int exitCode = -1;
     ProgramDriver pgd = new ProgramDriver();
     try {
