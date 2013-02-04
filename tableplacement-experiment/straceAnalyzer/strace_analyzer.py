@@ -1,6 +1,7 @@
 #!/usr/bin/python
 ## trace should be collected through strace -F -f -ttt -T -o <File>
 import sys
+import os
 
 if (len(sys.argv) != 3):
     print "usage: python strace_analyzer.py <file> <file descriptor>"
@@ -86,7 +87,9 @@ offset = 0;
 ofn1 = open(file + ".fd" + fd + ".callTimeSeries", 'w');
 ofn2 = open(file + ".fd" + fd + ".read.plot", 'w');
 ofn3 = open(file + ".fd" + fd + ".read.R.plot", 'w');
-ofn4 = open(file + ".fd" + fd + ".replay", 'w');
+replayPath = file + ".fd" + fd + ".replay";
+os.mkdir(replayPath);
+ofn4 = open(os.path.join(replayPath, "replay"), 'w');
 print>>ofn3, "startTS", "startPos", "endTS", "endPos", "readElapsedTime", "size";
 for entry in readOps:
     call = entry[0];
