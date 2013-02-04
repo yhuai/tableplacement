@@ -10,7 +10,7 @@ do
   do
     for BUFFER in 65536 131072 262144 524288
     do
-	    ./exp.strace.read.RCFile.sh exp1 $RG $BUFFER $COLUMNS_STR ~/Desktop/20120204/exp1/RCFile/ > ~/Desktop/20120204/exp1/RCFile/strace.$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.log
+      ./exp.strace.read.RCFile.sh exp1 $RG $BUFFER $COLUMNS_STR ~/Desktop/20120204/exp1/RCFile/ > ~/Desktop/20120204/exp1/RCFile/strace.$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.log
     done
   done
 done
