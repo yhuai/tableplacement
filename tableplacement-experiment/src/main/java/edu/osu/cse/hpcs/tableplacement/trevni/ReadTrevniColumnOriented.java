@@ -66,9 +66,9 @@ public class ReadTrevniColumnOriented extends ReadFrom {
       String groupName = groupCols.getKey();
       for (Integer col: groupCols.getValue()) {
         LongWritable rowID = new LongWritable();
-        long columnSerializedDataSize = 0;
-        long columnReadTimeInNano = 0;
-        long startReadColumn = System.nanoTime();
+        //long columnSerializedDataSize = 0;
+        //long columnReadTimeInNano = 0;
+        //long startReadColumn = System.nanoTime();
         while (reader.next(rowID, groupName, col)) {
           ts = System.nanoTime();
           reader.getCurrentColumnValue(ret, groupName, col);
@@ -76,14 +76,14 @@ public class ReadTrevniColumnOriented extends ReadFrom {
           ts = System.nanoTime();
           long size = ret.get(groupName).get(col).getLength();
           totalSerializedDataSize += size;
-          columnSerializedDataSize += size;
+          //columnSerializedDataSize += size;
           totalCalculateSizeTimeInNano += System.nanoTime() - ts;
         }
-        columnReadTimeInNano = System.nanoTime() - startReadColumn;
-        log.info("Elapsed time on reading column " + col + 
-            " in file group " + groupName + ": " + (columnReadTimeInNano * 1.0 / 1000000) + " ms");
-        log.info("Serialized data size (MiB) of column " + col + 
-            " in file group " + groupName + ": " + (columnSerializedDataSize * 1.0 / 1024 / 1024));
+        //columnReadTimeInNano = System.nanoTime() - startReadColumn;
+        //log.info("Elapsed time on reading column " + col + 
+        //    " in file group " + groupName + ": " + (columnReadTimeInNano * 1.0 / 1000000) + " ms");
+        //log.info("Serialized data size (MiB) of column " + col + 
+        //    " in file group " + groupName + ": " + (columnSerializedDataSize * 1.0 / 1024 / 1024));
       }
     }
     totalDataReadTimeInNano = System.nanoTime() - start;
