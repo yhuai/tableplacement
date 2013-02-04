@@ -15,7 +15,8 @@ I will add new formats in future...
 3. In the root of the SideWalk directory, if you want to use Avro 1.7.4-SNAPSHOT, then execute `mvn clean package -P avro-1.7.4 -DskipTests`. Otherwise, `mvn clean package -DskipTests`
 
 ### Notes
-* During my development, Oracle Java (Version 1.6.0_26) is used.
+* From 2/4/2013, I have been using OpenJDK (Version 1.7.0_09).
+* Commits before 2/4/2013 were developed and tested with Oracle Java (Version 1.6.0_26).
 
 # Test
 Test all cases: `mvn test`
@@ -39,25 +40,7 @@ Every script has 5 steps:
 5. Call `iostat` again.
 
 Here are short descriptions of scripts in `tableplacement-experiment/expScripts`.
-
-* `write.Trevni.sh` generate a file with the format of Trevni.
-   Usage: `sudo ./write.Trevni.sh <output dir> <device> <SerDe>`
-* `read.Trevni.sh` read a file from a file with the format of Trevni.
-   Usage: `sudo ./read.Trevni.sh <input dir> <device> <read column string> <SerDe>`
-* `write.RCFile.sh` generate a file with the format of RCFile.
-   Usage: `sudo ./write.RCFile.sh <output dir> <device> <SerDe> <row group size>`
-* `read.RCFile.sh` read a file from a file with the format of Trevni.
-   Usage: `sudo ./read.RCFile.sh <input dir> <device> <read column string> <SerDe> <row group size>`
-
-### Notes
-* `<output dir>` and `<input dir>` are dirs used to store files. Filenames will be automatically generated.
-* `<device>` is the storage device which experiments will work on. It should be something like `/dev/sda`
-* In current implementation, I used ColumnarSerDe in Hive for serilization and deserilization. `<SerDe>` represents which type of ColumnarSerDe will be used. `B` means `LazyBinaryColumnarSerDe`, which is binary-based, and `T` means `ColumnarSerDe`, which is text-based.
-* [FIXIT]In experiments for read operations, you can specify which column(s) you want to read through `<read column string>`. For example, `0,1,2,5` means to read first three columns and sixth column. To read all columns, just use string `all`.
-* The table which will be generated is described in `tableplacement-experiment/tableProperties/RCFile.LazyBinaryColumnarSerDe.properties`. The table has 6 int columns, the value of which is randomly picked from 0 to 9999, 6 string columns, the length of each string is 30, and 1 map column, the size of which is 10. The type of keys in the map column is string and the length of each key string is 4. The value type of values in the map column is int and every int value is randomly picked from 0 to 2147483646.
-* In current scripts, generated files will have 3000000 rows.
-* `io.file.buffer.size` in every experiment has been set to 524288 bytes (512KiB).
-* `<row group size>` is the row group size used for RCFile.
+[TODO: explainations of scripts]
 
 
 #Developers
