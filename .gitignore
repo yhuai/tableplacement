@@ -7,3 +7,4 @@
 *build/
 /tableplacement-costanalysis/build
 /tableplacement-experiment/build
+.pydevproject
