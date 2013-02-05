@@ -31,8 +31,10 @@ do
   do
     for IO_BUFFER_SIZE in "${IO_BUFFER_SIZE_LIST[@]}"
     do
+      echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su #> /dev/null
       STRACE_REPLAY_DIR=$LOGDIR/strace.$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.out.replay/    
       ./TraceReplayer7Batch-default.sh replay 3600 $DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE/$CFG $STRACE_REPLAY_DIR false 128 1 > $LOGDIR/strace.$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.out.$CFG.replayLog 2>&1
+      echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su #> /dev/null
     done
   done
 done
