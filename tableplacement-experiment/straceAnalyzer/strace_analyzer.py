@@ -3,12 +3,13 @@
 import sys
 import os
 
-if (len(sys.argv) != 3):
-    print "usage: python strace_analyzer.py <file> <file descriptor>"
+if (len(sys.argv) != 4):
+    print "usage: python strace_analyzer.py <file> <file descriptor> <column file group>"
     sys.exit(1);
     
 file = sys.argv[1];
 fd = sys.argv[2];
+cfg = sys.argv[3];
 
 print "Analyzing read, lseek, and pread system calls in " + file + \
       " for file descriptpr " + fd;
@@ -87,9 +88,9 @@ offset = 0;
 ofn1 = open(file + ".fd" + fd + ".callTimeSeries", 'w');
 ofn2 = open(file + ".fd" + fd + ".read.plot", 'w');
 ofn3 = open(file + ".fd" + fd + ".read.R.plot", 'w');
-replayPath = file + ".fd" + fd + ".replay";
+replayPath = file + ".replay";
 os.mkdir(replayPath);
-ofn4 = open(os.path.join(replayPath, "replay"), 'w');
+ofn4 = open(os.path.join(replayPath, cfg), 'w');
 print>>ofn3, "startTS", "startPos", "endTS", "endPos", "readElapsedTime", "size";
 for entry in readOps:
     call = entry[0];
