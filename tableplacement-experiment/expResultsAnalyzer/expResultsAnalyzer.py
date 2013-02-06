@@ -44,10 +44,10 @@ replayElapsedTimeInMS = float(max(endTS) - min(startTS))/1000000;
 ifn.close();
 
 sys.stdout.write(prefix + \
-                 "," + str(actualDataSizeInKB) + \
-                 "," + str(expectedDataSizeInMiB) + \
-                 "," + str(elapsedTimeInMS) + \
-                 "," + str(throughput) + \
-                 "," + str(replayElapsedTimeInMS) + \
-                 "," + str(totalTimeOnSystemCallInMS) + \
-                 "," + str(totalDataSizeReadFromSystemCallInMiB) + '\n');
+                 "|" + str(actualDataSizeInKB) + \
+                 "|" + str(expectedDataSizeInMiB) + \
+                 "|" + str(elapsedTimeInMS) + \
+                 "|" + str(throughput) + \
+                 "|" + str(replayElapsedTimeInMS) + \
+                 "|" + str(totalTimeOnSystemCallInMS) + \
+                 "|" + str(totalDataSizeReadFromSystemCallInMiB) + '\n');
