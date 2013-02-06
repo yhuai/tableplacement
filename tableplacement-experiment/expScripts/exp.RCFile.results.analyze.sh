@@ -22,7 +22,7 @@ source $EXP_CONF_PATH
 
 rm $RESULT_FILE
 
-echo "readColumnStr,rowGroupSizeInBytes,IOBufferSizeInBytes,acutalSizeOfDataReadInKB,expectedSizeOfDataReadInMiB,benchElapsedTimeInMS,benchThroughputinMiBPerSecond,replayElapsedTimeInMS,replayTimeOnSystemCallsInMS,replaySizeOfDataReadOnSystemCallsInMiB" >> $RESULT_FILE
+echo "readColumnStr|rowGroupSizeInBytes|IOBufferSizeInBytes|acutalSizeOfDataReadInKB|expectedSizeOfDataReadInMiB|benchElapsedTimeInMS|benchThroughputinMiBPerSecond|replayElapsedTimeInMS|replayTimeOnSystemCallsInMS|replaySizeOfDataReadOnSystemCallsInMiB" >> $RESULT_FILE
 for READ_COLUMN_STR in "${COLUMNS_STR[@]}"
 do
   for ROW_GROUP_SIZE in "${ROW_GROUP_SIZE_LIST[@]}"
