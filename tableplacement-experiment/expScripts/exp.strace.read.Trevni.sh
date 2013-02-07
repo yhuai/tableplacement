@@ -39,6 +39,6 @@ echo "Read columns str:" $READ_COLUMN_STR
 echo "Trevni test class:" $TREVNI_TEST_CLASS
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su #> /dev/null
 iostat -d -t $DEVICE
-strace -F -f -ttt -T -o $OUT_DIR/$ACCESS.strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.out java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
+strace -F -f -ttt -T -o $OUT_DIR/strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.ap$ACCESS.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.out java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar $TREVNI_TEST_CLASS -t $TABLE -i $DIR/$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT -p read.column.string $READ_COLUMN_STR -p io.file.buffer.size $IO_BUFFER_SIZE
 echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su #> /dev/null
 iostat -d -t $DEVICE
