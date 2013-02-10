@@ -30,7 +30,7 @@ do
     echo "Row group size:" $ROW_GROUP_SIZE
     echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
     iostat -d -t $DEVICE
-    java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar WriteRCFile -t $TABLE -o $DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -c $ROW_COUNT -p hive.io.rcfile.record.buffer.size $ROW_GROUP_SIZE -p io.file.buffer.size $WRITE_IO_BUFFER_SIZE  
+    java -jar ../target/tableplacement-experiment-0.0.1-SNAPSHOT.jar WriteRCFile -t $TABLE -o $DIR/$RCFILE_PREFIX.$FILE_PREFIX.c$ROW_COUNT.rg$ROW_GROUP_SIZE -c $ROW_COUNT -p hive.io.rcfile.record.buffer.size $ROW_GROUP_SIZE -p io.file.buffer.size $WRITE_IO_BUFFER_SIZE $OTHER_PROPERTIES
     echo "free && sync && echo 3 > /proc/sys/vm/drop_caches && free"|sudo su > /dev/null
     iostat -d -t $DEVICE
 done
