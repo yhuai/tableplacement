@@ -48,7 +48,7 @@ public class TrevniMultiFileWriter extends MultiFileWriter<ColumnFileWriter> {
           tableProp.getInt(
               TableProperty.HADOOP_IO_BUFFER_SIZE,
               TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE),   // IO buffer size, replication,
-          (short) groupConf.getInt("dfs.replication", 3),          // number of replicas
+          (short) groupConf.getInt("dfs.replication", 1),          // number of replicas
           groupConf.getLong("dfs.block.size", 128 * 1024 * 1024),  // HDFS block size
           null);
       files.put(group.getName(), file);
