@@ -1,6 +1,6 @@
 #! /bin/bash
 
-if [ $# -ne 5 ]
+if [ $# -ne 4 ]
 then
   echo "./exp.strace.read.Trevni.sh <exp> <io buffer size> <read column str> <access pattern>"
   echo "<exp>: exp1, exp2, exp3, ..."
