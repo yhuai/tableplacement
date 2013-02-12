@@ -31,7 +31,7 @@ do
     do
       LOG_FILE=$LOGDIR/strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.ap$ACCESS_PATTERN.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.log
       REPLAY_LOG_FILE=$LOGDIR/strace.$TREVNI_PREFIX.$FILE_PREFIX.c$ROW_COUNT.ap$ACCESS_PATTERN.io$IO_BUFFER_SIZE.$READ_COLUMN_STR.out.$CFG.replayLog
-      python ../expResultsAnalyzer/expResultsAnalyzer.py $LOG_FILE "$READ_COLUMN_STR|$ACCESS_PATTERN|$IO_BUFFER_SIZE" >> $RESULT_FILE
+      python ../expResultsAnalyzer/expReplayResultsAnalyzer.py $REPLAY_LOG_FILE "$READ_COLUMN_STR|$ACCESS_PATTERN|$IO_BUFFER_SIZE" >> $RESULT_FILE
     done
   done
 done
