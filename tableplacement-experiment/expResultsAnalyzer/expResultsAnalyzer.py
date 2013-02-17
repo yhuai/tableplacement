@@ -14,7 +14,7 @@ ifn = open(logFile, 'r');
 lines = ifn.readlines();
 
 ## Calculate the size of data actually read from the device
-startSizeInKB = int(lines[24].strip().split()[4]);
+startSizeInKB = int(lines[21].strip().split()[4]);
 endSizeInKB = int(lines[-2].strip().split()[4]);
 actualDataSizeInKB = endSizeInKB - startSizeInKB;
 # get measures from log file
@@ -25,7 +25,7 @@ throughput = float(lines[-15].strip().split()[2]); # MiB/s
 ifn.close();
 
 sys.stdout.write(prefix + \
-                 "|" + str(actualDataSizeInKB) + \
-                 "|" + str(expectedDataSizeInMiB) + \
-                 "|" + str(elapsedTimeInMS) + \
-                 "|" + str(throughput) + '\n');
+                 ";" + str(actualDataSizeInKB/1024) + \
+                 ";" + str(expectedDataSizeInMiB) + \
+                 ";" + str(elapsedTimeInMS) + \
+                 ";" + str(throughput) + '\n');
