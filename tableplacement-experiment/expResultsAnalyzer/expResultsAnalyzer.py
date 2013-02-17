@@ -25,7 +25,7 @@ throughput = float(lines[-15].strip().split()[2]); # MiB/s
 ifn.close();
 
 sys.stdout.write(prefix + \
-                 ";" + str(actualDataSizeInKB/1024) + \
+                 ";" + str(actualDataSizeInKB/1024.0) + \
                  ";" + str(expectedDataSizeInMiB) + \
                  ";" + str(elapsedTimeInMS) + \
                  ";" + str(throughput) + '\n');
