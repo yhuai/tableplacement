@@ -2,7 +2,7 @@
 
 if [ $# -ne 4 ]
 then
-  echo "./exp.strace.read.RCFile.sh <exp> <row group size> <io buffer size> <read column str>"
+  echo "./exp.read.RCFile.sh <exp> <row group size> <io buffer size> <read column str>"
   echo "<exp>: exp1, exp2, exp3, ..."
   exit
 fi
