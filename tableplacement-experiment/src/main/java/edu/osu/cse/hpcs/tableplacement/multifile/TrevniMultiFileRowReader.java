@@ -54,7 +54,10 @@ public class TrevniMultiFileRowReader extends MultiFileReader<ColumnFileReader> 
       } else {
         log.info("Distributed file system is used. " +
         		"Use org.apache.trevni.avro.HadoopInput.HadoopInput");
-        log.info(TableProperty.HADOOP_IO_BUFFER_SIZE + ": " + groupConf.get(TableProperty.HADOOP_IO_BUFFER_SIZE));
+        log.info(TableProperty.HADOOP_IO_BUFFER_SIZE + ": " + 
+        		file.getFileSystem(conf).getConf().getInt(
+        		    TableProperty.HADOOP_IO_BUFFER_SIZE, TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE));
+        
         reader = new ColumnFileReader(new HadoopInput(file, groupConf));
       }
       readers.put(groupName, reader);
