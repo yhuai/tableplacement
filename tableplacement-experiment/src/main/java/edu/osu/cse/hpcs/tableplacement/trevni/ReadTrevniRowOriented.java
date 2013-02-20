@@ -27,7 +27,7 @@ public class ReadTrevniRowOriented extends ReadFrom {
     super(propertyFilePath, inputPath, cmdProperties, log);
   }
 
-  public long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException {
+  public long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException, InterruptedException {
     // For localFS, it uses 
     // org.apache.hadoop.fs.ChecksumFileSystem.ChecksumFSInputChecker.ChecksumFSInputChecker.
     // But it will open and close the file for every read operation.

@@ -50,6 +50,8 @@ public abstract class ReadFrom {
   protected long readerCloseTimeInNano;
   //protected long totalRowDeserializationTimeInNano;
   
+  private int thinkTime;
+  
   public ReadFrom(String propertyFilePath, String inputPath,
       Properties cmdProperties, Logger log) throws IOException, TablePropertyException,
       SerDeException, InstantiationException, IllegalAccessException,
@@ -70,14 +72,14 @@ public abstract class ReadFrom {
     }
     
     readColumnsStr = prop.get(TableProperty.READ_COLUMN_STR);
-
+    thinkTime = prop.getInt("think.time", 0);
     prop.dump();
   }
   
-  public abstract long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException;
+  public abstract long read() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException, InterruptedException;
 
   public long doRead(MultiFileReader reader, Logger log)
-      throws IOException, SerDeException {
+      throws IOException, SerDeException, InterruptedException {
     long ts;
     totalRowReadTimeInNano = 0;
     totalInitializationTimeInNano = 0;
@@ -123,6 +125,9 @@ public abstract class ReadFrom {
       totalCalculateSizeTimeInNano += (System.nanoTime() - ts);
       
       rowCount++;
+      if (thinkTime > 0) {
+        wait(thinkTime);
+      }
     }
     totalDataReadTimeInNano = System.nanoTime() - start;
     ts = System.nanoTime();
@@ -136,7 +141,7 @@ public abstract class ReadFrom {
   
   public abstract String getFormatName();
   
-  public void runTest() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException {
+  public void runTest() throws IOException, SerDeException, ClassNotFoundException, InstantiationException, IllegalAccessException, TablePropertyException, InterruptedException {
     System.out.println("Reading data from " + getFormatName() + " ...");
     long start = System.nanoTime();
     long totalSerializedDataSize = read();
