@@ -126,7 +126,7 @@ public abstract class ReadFrom {
       
       rowCount++;
       if (thinkTime > 0) {
-        wait(thinkTime);
+        Thread.sleep(thinkTime);
       }
     }
     totalDataReadTimeInNano = System.nanoTime() - start;
