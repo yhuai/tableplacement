@@ -49,9 +49,6 @@ public class TrevniMultiFileColumnReader extends MultiFileReader<ColumnFileReade
       ColumnFileGroup group = columnFileGroupsMap.get(groupName);
       Path file = columnFileGroupFiles.get(groupName);
       Configuration groupConf = readConf.get(groupName);
-      groupConf.setInt(
-              TableProperty.HADOOP_IO_BUFFER_SIZE,
-              TableProperty.DEFAULT_HADOOP_IO_BUFFER_SIZE);   // IO buffer size
       ColumnFileReader reader;
       if (isReadLocalFS) {
         log.info("Local file system is used. " +
