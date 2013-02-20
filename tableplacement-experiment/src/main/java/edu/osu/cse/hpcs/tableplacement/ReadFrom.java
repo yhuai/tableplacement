@@ -51,6 +51,7 @@ public abstract class ReadFrom {
   //protected long totalRowDeserializationTimeInNano;
   
   private int thinkTime;
+  private long thinkInterval; // number of rows to read before think
   
   public ReadFrom(String propertyFilePath, String inputPath,
       Properties cmdProperties, Logger log) throws IOException, TablePropertyException,
@@ -73,6 +74,7 @@ public abstract class ReadFrom {
     
     readColumnsStr = prop.get(TableProperty.READ_COLUMN_STR);
     thinkTime = prop.getInt("think.time", 0);
+    thinkInterval = prop.getLong("think.time.row", 1);
     prop.dump();
   }
   
@@ -125,7 +127,7 @@ public abstract class ReadFrom {
       totalCalculateSizeTimeInNano += (System.nanoTime() - ts);
       
       rowCount++;
-      if (thinkTime > 0) {
+      if (thinkTime > 0 && rowCount % thinkInterval == 0) {
         Thread.sleep(thinkTime);
       }
     }
