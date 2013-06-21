@@ -1,0 +1,23 @@
+##############
+##analyze.sh##
+############
+1. Extract information from collected logs
+2. Summarize and present results
+
+
+###########
+##test.sh##
+#########
+Load data from Hadoop into Hive (load.sh), then execute queries (run.sh)
+
+
+###########
+##dgen.sh##
+#########
+Generate and load data into HDFS in parallel using dbgen
+
+
+############
+##setup.sh##
+##########
+Configure and initialize Hadoop and Hive
